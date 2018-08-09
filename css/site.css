@@ -1,0 +1,38 @@
+@import url("https://fonts.googleapis.com/css?family=Roboto");
+.wf__toolbar {
+  position: absolute;
+  display: inline-block;
+  font-family: "Roboto", sans-serif;
+  background: linear-gradient(#555, #222);
+  padding: 0.25em 0.25rem;
+  border-radius: 0.25em;
+  box-shadow: 0.1rem 0.1rem 1rem 0.1rem rgba(0, 0, 0, 0.55);
+}
+.wf__toolbar__btn {
+  box-sizing: border-box;
+  margin: 0 0.1rem;
+  background: none;
+  color: #fff;
+  border: 1px solid rgba(0, 0, 0, 0);
+  border-radius: 0.25em;
+  transition: all 0.2s;
+  font-size: 1em;
+  min-width: 1.75em;
+  text-align: center;
+  padding: 0.25em 0.25rem;
+  outline: none;
+}
+.wf__toolbar__btn:hover {
+  border-color: #fff;
+  background: rgba(255, 255, 255, 0.075);
+}
+.wf__toolbar__btn:active {
+  border-color: #bbb;
+  background: rgba(0, 0, 0, 0.075);
+}
+
+.hide {
+  display: none !important;
+}
+
+/*# sourceMappingURL=site.css.map */

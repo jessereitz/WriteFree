@@ -1,0 +1,44 @@
+@import 'variables';
+@import 'functions';
+@import 'mixins';
+@import 'placeholders';
+
+.#{$tb-prefix} {
+  position: absolute;
+  display: inline-block;
+  font-family: $tb__font-stack;
+  background: $tb__background;
+  padding: $tb__padding;
+  border-radius: $tb__border-radius;
+  box-shadow: $tb__box-shadow;
+
+  &__btn {
+    box-sizing: border-box;
+    // vertical-align: middle;
+    margin: 0 0.1rem;
+    background: none;
+    color: $tb__primary-color;
+    border: 1px solid $transparent;
+    border-radius: $tb__border-radius;
+    transition: all 0.2s;
+    font-size: $tb__font-size;
+    min-width: $tb__font-size * 1.75;
+    text-align: center;
+    padding: $tb__padding;
+    outline: none;
+  }
+
+  &__btn:hover {
+    border-color: $tb__primary-color;
+    background: rgba(255,255,255,0.075);
+  }
+
+  &__btn:active {
+    border-color: #bbb;
+    background: rgba(0,0,0,0.075);
+  }
+}
+
+.hide {
+  display: none !important;
+}
