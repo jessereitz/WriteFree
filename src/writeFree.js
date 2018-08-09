@@ -134,7 +134,7 @@ function WriteFree($ctn) {
       return false;
     },
     showToolBar() {
-      console.log(Toolbar);
+      // console.log(Toolbar);
     },
   };
 
