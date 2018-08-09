@@ -120,9 +120,14 @@ function WriteFree($ctn) {
    */
   const Editor = {
     initWFEditor() {
+      this.$innerCtn = generateElement('div', 'wf__editor');
+      this.$innerCtn.setAttribute('contenteditable', true);
+      $ctn.append(this.$innerCtn);
+
       const firstDiv = generateElement('div');
       firstDiv.append(generateElement('br'));
-      $ctn.append(firstDiv);
+      firstDiv.textContent = 'Try writing here...';
+      this.$innerCtn.append(firstDiv);
       Toolbar.initToolbar();
       $ctn.addEventListener('mouseup', this.mouseUpHandler.bind(this));
       $ctn.append(Toolbar.display());
