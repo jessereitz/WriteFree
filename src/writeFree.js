@@ -64,6 +64,10 @@ function WriteFree($ctn) {
      * @returns {boolean} Returns true if successful else false.
      */
     display() {
+      this.$ctn.classList.remove('hide');
+      return this.$ctn;
+    },
+    render() {
       return this.$ctn;
     },
 
@@ -73,7 +77,7 @@ function WriteFree($ctn) {
      * @returns {boolean} Returns true if successful else false.
      */
     hide() {
-      return false;
+      this.$ctn.classList.add('hide');
     },
 
     /**
@@ -111,6 +115,9 @@ function WriteFree($ctn) {
     headingBtnHandler() {
       return false;
     },
+    isTarget($target) {
+      return this.$ctn.contains($target);
+    },
   };
   /**
    * Editor - The main object representing the WriteFree editor.
@@ -130,13 +137,27 @@ function WriteFree($ctn) {
       this.$innerCtn.append(firstDiv);
       Toolbar.initToolbar();
       $ctn.addEventListener('mouseup', this.mouseUpHandler.bind(this));
-      $ctn.append(Toolbar.display());
+      $ctn.addEventListener('keypress', Toolbar.hide.bind(Toolbar));
+      $ctn.addEventListener('mousedown', this.mouseDownHandler.bind(this));
+      // $ctn.addEventListener('mousedown', this.mouseDownHandler.bind(this));
+      $ctn.append(Toolbar.render());
     },
     mouseUpHandler(e) {
-      if (e) {
-        // console.log('click!');
+      if (Toolbar.isTarget(e.target)) {
+        return false;
+      }
+      const s = window.getSelection();
+      console.log(s);
+      if (s.anchorOffset !== s.focusOffset) {
+        Toolbar.display();
+      } else {
+        Toolbar.hide();
       }
       return false;
+    },
+    mouseDownHandler(e) {
+      const s = window.getSelection();
+      s.removeAllRanges();
     },
     showToolBar() {
       // console.log(Toolbar);
