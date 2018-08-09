@@ -36,7 +36,7 @@ function WriteFree($ctn) {
      */
     initToolbar() {
       this.className = 'wf__toolbar';
-      this.$ctn = generateElement('div', this.className);
+      this.$ctn = generateElement('div', [this.className, 'hide']);
       this.$ctn.setAttribute('contenteditable', false);
       this.createToolbarBtns();
       return this;
