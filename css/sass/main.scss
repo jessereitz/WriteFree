@@ -39,6 +39,30 @@
   }
 }
 
+.#{$editor-prefix} {
+  min-height: $editor__min-height;
+  max-width: $editor__max-width;
+  margin: $editor__margin;
+  padding: $editor__padding;
+  // border: $editor__border;
+  font-size: $editor__font-size;
+  font-family: $editor__font-stack;
+  outline: none;
+  overflow: auto;
+  color: $editor__primary-color;
+
+  &:focus {
+    box-shadow: $editor__box-shadow;
+
+  }
+
+  & div {
+    margin: $editor__margin;
+  }
+}
+
+
+
 .hide {
   display: none !important;
 }

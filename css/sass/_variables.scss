@@ -1,4 +1,5 @@
-@import url('https://fonts.googleapis.com/css?family=Roboto');
+@import url('https://fonts.googleapis.com/css?family=Crimson+Text:400,700|Roboto');
+
 
 $transparent: rgba(0,0,0,0);
 
@@ -10,3 +11,16 @@ $tb__primary-color: #fff;
 $tb__padding: 0.25em 0.25rem;
 $tb__border-radius: 0.25em;
 $tb__box-shadow: 0.1rem 0.1rem 1rem 0.1rem rgba(0,0,0,0.55);
+
+$editor-prefix: wf__editor;
+$editor__primary-color: #333;
+$editor__min-height: 2em;
+$editor__max-width: 50em;
+$editor__padding: 0em 1.5rem;
+$editor__margin: 1em auto;
+
+$editor__box-shadow: 0.1rem 0.1rem 2rem 0.05rem rgba(0,0,0,0.075);
+
+$editor__font-stack: 'Crimson Text', serif;
+$editor__font-size: 1.25em;
+$editor__h1-size: 2em;

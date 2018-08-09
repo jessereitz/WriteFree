@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css?family=Roboto");
+@import url("https://fonts.googleapis.com/css?family=Crimson+Text:400,700|Roboto");
 .wf__toolbar {
   position: absolute;
   display: inline-block;
@@ -29,6 +29,24 @@
 .wf__toolbar__btn:active {
   border-color: #bbb;
   background: rgba(0, 0, 0, 0.075);
+}
+
+.wf__editor {
+  min-height: 2em;
+  max-width: 50em;
+  margin: 1em auto;
+  padding: 0em 1.5rem;
+  font-size: 1.25em;
+  font-family: "Crimson Text", serif;
+  outline: none;
+  overflow: auto;
+  color: #333;
+}
+.wf__editor:focus {
+  box-shadow: 0.1rem 0.1rem 2rem 0.05rem rgba(0, 0, 0, 0.075);
+}
+.wf__editor div {
+  margin: 1em auto;
 }
 
 .hide {
