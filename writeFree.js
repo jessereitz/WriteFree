@@ -1,13 +1,20 @@
+// writeFree.js
+
+import {
+  generateElement,
+  generateButton,
+} from './writeFreeLib.js';
+
 /**
  * WriteFree - The initialization function used to create instances of the
  *  WriteFree editor.
  *
- * @param {Element} ctn - The empty HTML Element, usually a div to be used as the
+ * @param {Element} $ctn - The empty HTML Element, usually a div to be used as the
  *  container for the WriteFree editor.
  *
  * @returns {Editor} The WriteFree editor.
  */
-function WriteFree(ctn) {
+function WriteFree($ctn) {
   /**
    * Toolbar - The toolbar used for editing text in the WFEditor.
    *
@@ -28,7 +35,28 @@ function WriteFree(ctn) {
      * @returns {Toolbar} Returns this.
      */
     initToolbar() {
+      this.className = 'wf__toolbar';
+      this.$ctn = generateElement('div', this.className);
+      this.$ctn.setAttribute('contenteditable', false);
+      this.createToolbarBtns();
       return this;
+    },
+    /**
+     * createToolbarBtns - Create the buttons to be included on the toolbar.
+     *
+     * @returns {null}
+     */
+    createToolbarBtns() {
+      const btnClassName = `${this.className}__btn`;
+      this.$boldBtn = generateButton('B', btnClassName);
+      this.$italicBtn = generateButton('i', btnClassName);
+      this.$headingBtn = generateButton('H', btnClassName);
+      this.$linkBtn = generateButton('<a/>', btnClassName);
+
+      this.$ctn.append(this.$boldBtn);
+      this.$ctn.append(this.$italicBtn);
+      this.$ctn.append(this.$headingBtn);
+      this.$ctn.append(this.$linkBtn);
     },
     /**
      * display - Display the Toolbar
@@ -36,7 +64,7 @@ function WriteFree(ctn) {
      * @returns {boolean} Returns true if successful else false.
      */
     display() {
-      return false;
+      return this.$ctn;
     },
 
     /**
@@ -87,20 +115,26 @@ function WriteFree(ctn) {
   /**
    * Editor - The main object representing the WriteFree editor.
    *
-   * @property {Element} ctn - The outermost container of the WriteFree editor.
-   *  ctn is passed in to the WriteFree instantiation function.
+   * @property {Element} $ctn - The outermost container of the WriteFree editor.
+   *  $ctn is passed in to the WriteFree instantiation function.
    */
   const Editor = {
     initWFEditor() {
-      this.ctn = ctn;
+      const firstDiv = generateElement('div');
+      firstDiv.append(generateElement('br'));
+      $ctn.append(firstDiv);
       Toolbar.initToolbar();
-      this.ctn.addEventListener('mouseup', this.mouseUpHandler.bind(this));
+      $ctn.addEventListener('mouseup', this.mouseUpHandler.bind(this));
+      $ctn.append(Toolbar.display());
     },
     mouseUpHandler(e) {
       if (e) {
-        return true;
+        // console.log('click!');
       }
       return false;
+    },
+    showToolBar() {
+      console.log(Toolbar);
     },
   };
 
@@ -108,7 +142,7 @@ function WriteFree(ctn) {
   return Editor;
 }
 
-WriteFree(document.getElementById('WriteFreeCtn'));
+window.wf = WriteFree(document.getElementById('WriteFreeCtn'));
 /*
   WFEditor
     ctn
