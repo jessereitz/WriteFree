@@ -61,6 +61,10 @@ function WriteFree($ctn) {
       this.$ctn.append(this.$headingBtn);
       this.$ctn.append(this.$linkBtn);
     },
+
+    setPosByElement($el) {
+      const rect = $el.getClientBoundingRect()
+    },
     /**
      * display - Display the Toolbar
      *
@@ -70,6 +74,7 @@ function WriteFree($ctn) {
       this.$ctn.classList.remove('hide');
       return this.$ctn;
     },
+
     render() {
       return this.$ctn;
     },
@@ -82,7 +87,10 @@ function WriteFree($ctn) {
     hide() {
       this.$ctn.classList.add('hide');
     },
+
     clickHandler(e) { e.preventDefault(); },
+
+    mouseDownHandler(e) { e.preventDefault(); },
 
     /**
      * boldBtnHandler - Handler for when $boldBtn is clicked.
@@ -130,9 +138,11 @@ function WriteFree($ctn) {
     isTarget(e) {
       return isTarget(this.$ctn, e);
     },
+
     containsNode($node) {
       return $ctn.contains($node);
     },
+
   };
 
   /**
@@ -155,21 +165,23 @@ function WriteFree($ctn) {
 
       $ctn.append(Toolbar.render());
     },
+
+    containsSelection(selection) {
+      return this.containsNode(selection.anchorNode) && this.containsNode(selection.focusNode);
+    },
     selectionHandler(selection) {
-      if (!this.containsNode(selection.anchorNode) || !this.containsNode(selection.focusNode)) {
-        return false;
-      }
-      if (selection.isCollapsed) {
+      if (!this.containsSelection(selection) || selection.isCollapsed) {
         Toolbar.hide();
       } else {
         Toolbar.display();
       }
-      console.log('selection');
       return true;
     },
+
     showToolBar() {
       // console.log(Toolbar);
     },
+
     /**
      * isTarget - Wrapper around isTarget library function. Returns true if the
      *  editor was clicked else false.
@@ -181,27 +193,20 @@ function WriteFree($ctn) {
     isTarget(e) {
       return isTarget($ctn, e);
     },
+
     containsNode($node) {
       return $ctn.contains($node);
     },
+
     getToolbar() { return Toolbar; },
+
     getSelection() { return this.selection; },
   };
 
   function mouseDownHandler(e) {
-    if (!Editor.isTarget(e) && !Toolbar.isTarget(e)) {
-      Toolbar.hide();
+    if (Toolbar.isTarget(e)) {
+      Toolbar.mouseDownHandler(e);
     }
-
-    if (!Toolbar.isTarget(e)) {
-      const s = window.getSelection();
-      s.removeAllRanges();
-      if (!s.toString()) {
-        return true;
-      }
-    }
-    if (Toolbar.isTarget(e)) { e.preventDefault(); }
-    return false;
   }
 
   function mouseUpHandler(e) {
