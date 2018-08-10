@@ -16,6 +16,7 @@ import {
  * @returns {Editor} The WriteFree editor.
  */
 function WriteFree($ctn) {
+  const toolbarOffset = 5; // The number of pixels to offset the top of the toolbar.
 
   /**
    * Toolbar - The toolbar used for editing text in the WFEditor.
@@ -65,13 +66,15 @@ function WriteFree($ctn) {
     setPosByElement($el) {
       const rect = $el.getClientBoundingRect()
     },
-    /**
-     * display - Display the Toolbar
-     *
-     * @returns {boolean} Returns true if successful else false.
-     */
-    display() {
-      this.$ctn.classList.remove('hide');
+
+    display(selection) {
+      if (selection instanceof Selection) {
+        const range = selection.getRangeAt(0);
+        const rect = range.getBoundingClientRect();
+        this.$ctn.style.top = `${rect.bottom + toolbarOffset}px`;
+        this.$ctn.style.left = `${rect.left + (rect.width / 2)}px`;
+        this.$ctn.classList.remove('hide');
+      }
       return this.$ctn;
     },
 
@@ -173,7 +176,7 @@ function WriteFree($ctn) {
       if (!this.containsSelection(selection) || selection.isCollapsed) {
         Toolbar.hide();
       } else {
-        Toolbar.display();
+        Toolbar.display(selection);
       }
       return true;
     },
