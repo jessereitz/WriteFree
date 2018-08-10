@@ -34,3 +34,18 @@ export function generateButton(value = 'Button', klasses = [], id = '') {
   $btn.textContent = value;
   return $btn;
 }
+
+
+/**
+ * isTarget - Detect whether given element or its children were the target of
+ *  a JavaScript event.
+ *
+ * @param {Element} $el The HTML element on which to detect the event target.
+ * @param {Event} e    The JavaScript event.
+ *
+ * @returns {boolean} Return true if the given element or one of its children
+ *  was the target of the event.
+ */
+export function isTarget($el, e) {
+  return $el.contains(e.target);
+}
