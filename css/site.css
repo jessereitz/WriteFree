@@ -1,4 +1,12 @@
 @import url("https://fonts.googleapis.com/css?family=Crimson+Text:400,700|Roboto");
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
 .wf__toolbar {
   position: absolute;
   display: inline-block;
@@ -7,6 +15,7 @@
   padding: 0.25em 0.25rem;
   border-radius: 0.25em;
   box-shadow: 0.1rem 0.1rem 1rem 0.1rem rgba(0, 0, 0, 0.55);
+  animation: fade-in 0.15s ease-out;
 }
 .wf__toolbar__btn {
   box-sizing: border-box;
