@@ -3,6 +3,7 @@
 import {
   generateElement,
   generateButton,
+  isTarget,
 } from './writeFreeLib.js';
 
 /**
@@ -15,6 +16,7 @@ import {
  * @returns {Editor} The WriteFree editor.
  */
 function WriteFree($ctn) {
+
   /**
    * Toolbar - The toolbar used for editing text in the WFEditor.
    *
@@ -38,6 +40,7 @@ function WriteFree($ctn) {
       this.className = 'wf__toolbar';
       this.$ctn = generateElement('div', [this.className, 'hide']);
       this.$ctn.setAttribute('contenteditable', false);
+      // this.$ctn.addEventListener('click', this.clickHandler.bind(this));
       this.createToolbarBtns();
       return this;
     },
@@ -52,7 +55,7 @@ function WriteFree($ctn) {
       this.$italicBtn = generateButton('i', btnClassName);
       this.$headingBtn = generateButton('H', btnClassName);
       this.$linkBtn = generateButton('<a/>', btnClassName);
-
+      // this.$boldBtn.addEventListener('mouseup', this.clickHandler.bind(this));
       this.$ctn.append(this.$boldBtn);
       this.$ctn.append(this.$italicBtn);
       this.$ctn.append(this.$headingBtn);
@@ -79,6 +82,7 @@ function WriteFree($ctn) {
     hide() {
       this.$ctn.classList.add('hide');
     },
+    clickHandler(e) { e.preventDefault(); },
 
     /**
      * boldBtnHandler - Handler for when $boldBtn is clicked.
@@ -115,10 +119,22 @@ function WriteFree($ctn) {
     headingBtnHandler() {
       return false;
     },
-    isTarget($target) {
-      return this.$ctn.contains($target);
+    /**
+     * isTarget - Wrapper around isTarget library function. Returns true if the
+     *  Toolbar was clicked else false.
+     *
+     * @param {Event} e The JavaScript event to use for detection.
+     *
+     * @returns {boolean} True if editor was clicked, else false.
+     */
+    isTarget(e) {
+      return isTarget(this.$ctn, e);
+    },
+    containsNode($node) {
+      return $ctn.contains($node);
     },
   };
+
   /**
    * Editor - The main object representing the WriteFree editor.
    *
@@ -136,34 +152,86 @@ function WriteFree($ctn) {
       firstDiv.textContent = 'Try writing here...';
       this.$innerCtn.append(firstDiv);
       Toolbar.initToolbar();
-      $ctn.addEventListener('mouseup', this.mouseUpHandler.bind(this));
-      $ctn.addEventListener('keypress', Toolbar.hide.bind(Toolbar));
-      $ctn.addEventListener('mousedown', this.mouseDownHandler.bind(this));
-      // $ctn.addEventListener('mousedown', this.mouseDownHandler.bind(this));
+
       $ctn.append(Toolbar.render());
     },
-    mouseUpHandler(e) {
-      if (Toolbar.isTarget(e.target)) {
+    selectionHandler(selection) {
+      if (!this.containsNode(selection.anchorNode) || !this.containsNode(selection.focusNode)) {
         return false;
       }
-      const s = window.getSelection();
-      console.log(s);
-      if (s.anchorOffset !== s.focusOffset) {
-        Toolbar.display();
-      } else {
+      if (selection.isCollapsed) {
         Toolbar.hide();
+      } else {
+        Toolbar.display();
       }
-      return false;
-    },
-    mouseDownHandler(e) {
-      const s = window.getSelection();
-      s.removeAllRanges();
+      console.log('selection');
+      return true;
     },
     showToolBar() {
       // console.log(Toolbar);
     },
+    /**
+     * isTarget - Wrapper around isTarget library function. Returns true if the
+     *  editor was clicked else false.
+     *
+     * @param {Event} e The JavaScript event to use for detection.
+     *
+     * @returns {boolean} True if editor was clicked, else false.
+     */
+    isTarget(e) {
+      return isTarget($ctn, e);
+    },
+    containsNode($node) {
+      return $ctn.contains($node);
+    },
+    getToolbar() { return Toolbar; },
+    getSelection() { return this.selection; },
   };
 
+  function mouseDownHandler(e) {
+    if (!Editor.isTarget(e) && !Toolbar.isTarget(e)) {
+      Toolbar.hide();
+    }
+
+    if (!Toolbar.isTarget(e)) {
+      const s = window.getSelection();
+      s.removeAllRanges();
+      if (!s.toString()) {
+        return true;
+      }
+    }
+    if (Toolbar.isTarget(e)) { e.preventDefault(); }
+    return false;
+  }
+
+  function mouseUpHandler(e) {
+    // if (Toolbar.isTarget(e.target)) {
+    //   return false;
+    // }
+    // this.selection = window.getSelection();
+    // if (this.selection.anchorOffset !== this.selection.focusOffset) {
+    //   Toolbar.display();
+    // } else {
+    //   Toolbar.hide();
+    // }
+    // return false;
+  }
+
+  function keypressHandler(e) {
+    if (Editor.isTarget(e) || Toolbar.isTarget(e)) {
+      Toolbar.hide.call(Toolbar);
+    }
+  }
+
+  function selectionHandler(e) {
+    const sel = window.getSelection();
+    Editor.selectionHandler(sel);
+  }
+
+  document.addEventListener('mouseup', mouseUpHandler);
+  document.addEventListener('mousedown', mouseDownHandler);
+  document.addEventListener('keypress', keypressHandler);
+  document.addEventListener('selectionchange', selectionHandler);
   Editor.initWFEditor();
   return Editor;
 }
