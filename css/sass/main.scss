@@ -9,7 +9,7 @@
 }
 
 .#{$tb-prefix} {
-  position: absolute;
+  position: fixed;
   display: inline-block;
   font-family: $tb__font-stack;
   background: $tb__background;
@@ -17,6 +17,7 @@
   border-radius: $tb__border-radius;
   box-shadow: $tb__box-shadow;
   animation: fade-in 0.15s ease-out;
+  transition: all 0.05s;
 
   &__btn {
     box-sizing: border-box;

@@ -8,7 +8,7 @@
   }
 }
 .wf__toolbar {
-  position: absolute;
+  position: fixed;
   display: inline-block;
   font-family: "Roboto", sans-serif;
   background: linear-gradient(#555, #222);
@@ -16,6 +16,7 @@
   border-radius: 0.25em;
   box-shadow: 0.1rem 0.1rem 1rem 0.1rem rgba(0, 0, 0, 0.55);
   animation: fade-in 0.15s ease-out;
+  transition: all 0.05s;
 }
 .wf__toolbar__btn {
   box-sizing: border-box;
