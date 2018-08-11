@@ -63,16 +63,21 @@ function WriteFree($ctn) {
       this.$ctn.append(this.$linkBtn);
     },
 
-    setPosByElement($el) {
-      const rect = $el.getClientBoundingRect()
-    },
-
-    display(selection) {
-      if (selection instanceof Selection) {
-        const range = selection.getRangeAt(0);
+    /**
+     * display - Optionally display the Toolbar next to the given selection.
+     *  The Toolbar is always returned as an HTML element.
+     *
+     * @param {Selection} [sel=null] The Selection next to which the Toolbar should be
+     *  displayed.
+     *
+     * @returns {Element} Returns the toolbar as an HTML element.
+     */
+    display(sel = null) {
+      if (sel instanceof Selection) {
+        const range = sel.getRangeAt(0);
         const rect = range.getBoundingClientRect();
         this.$ctn.style.top = `${rect.bottom + toolbarOffset}px`;
-        this.$ctn.style.left = `${rect.left + (rect.width / 2)}px`;
+        this.$ctn.style.left = `${rect.left}px`;
         this.$ctn.classList.remove('hide');
       }
       return this.$ctn;
