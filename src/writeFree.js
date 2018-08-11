@@ -46,9 +46,8 @@ function WriteFree($ctn) {
       return this;
     },
     /**
-     * createToolbarBtns - Create the buttons to be included on the toolbar.
-     *
-     * @returns {null}
+     * createToolbarBtns - Create the buttons to be included on the toolbar, add
+     *  appropriate event listeners, and attaches them to the $ctn.
      */
     createToolbarBtns() {
       const btnClassName = `${this.className}__btn`;
@@ -56,7 +55,10 @@ function WriteFree($ctn) {
       this.$italicBtn = generateButton('i', btnClassName);
       this.$headingBtn = generateButton('H', btnClassName);
       this.$linkBtn = generateButton('<a/>', btnClassName);
-      // this.$boldBtn.addEventListener('mouseup', this.clickHandler.bind(this));
+
+      this.$boldBtn.addEventListener('click', this.boldBtnHandler.bind(this));
+      this.$italicBtn.addEventListener('click', this.italicBtnHandler.bind(this));
+
       this.$ctn.append(this.$boldBtn);
       this.$ctn.append(this.$italicBtn);
       this.$ctn.append(this.$headingBtn);
@@ -83,7 +85,12 @@ function WriteFree($ctn) {
       return this.$ctn;
     },
 
-    render() {
+    /**
+     * renderHTML - Render the Toolbar as HTML
+     *
+     * @returns {Element} The Toolbar as HTML.
+     */
+    renderHTML() {
       return this.$ctn;
     },
 
@@ -101,21 +108,24 @@ function WriteFree($ctn) {
     mouseDownHandler(e) { e.preventDefault(); },
 
     /**
-     * boldBtnHandler - Handler for when $boldBtn is clicked.
-     *
-     * @returns {boolean} Returns true if successful else false.
+     * boldBtnHandler - Bolds current selection when $boldBtn is clicked.
      */
     boldBtnHandler() {
-      return false;
+      const sel = window.getSelection();
+      if (sel instanceof Selection) {
+        document.execCommand('bold', false);
+      }
     },
 
     /**
-     * italicBtnHandler - Handler for when $italicBtn is clicked.
-     *
-     * @returns {boolean} Returns true if successful else false.
+     * italicBtnHandler - Italicizes current selection when $italicBtn is
+     * clicked.
      */
     italicBtnHandler() {
-      return false;
+      const sel = window.getSelection();
+      if (sel instanceof Selection) {
+        document.execCommand('italic', false);
+      }
     },
 
     /**
@@ -171,7 +181,8 @@ function WriteFree($ctn) {
       this.$innerCtn.append(firstDiv);
       Toolbar.initToolbar();
 
-      $ctn.append(Toolbar.render());
+      $ctn.append(Toolbar.renderHTML());
+      $ctn.addEventListener('paste', this.pasteHandler.bind(this));
     },
 
     containsSelection(selection) {
@@ -209,6 +220,26 @@ function WriteFree($ctn) {
     getToolbar() { return Toolbar; },
 
     getSelection() { return this.selection; },
+
+    /**
+     * pasteHandler - Handles the paste event in the editor. We intercept the
+     *  normal paste event and strip all HTML from the copied text and then
+     *  insert it as HTML. This is done to ensure that each paste is essentially
+     *  a 'paste as plain text.' We use 'insertHTML' because most browsers don't
+     *  allow access to the paste action in execCommand.
+     *
+     * @param {Event} e The paste event.
+     *
+     * @returns {boolean} Returns true if hijacked paste was successful else
+     *  false.
+     */
+    pasteHandler(e) {
+      e.preventDefault();
+      if (!e.type === 'paste') return false;
+      const text = e.clipboardData.getData('text/plain');
+      document.execCommand('insertHTML', false, text);
+      return true;
+    },
   };
 
   function mouseDownHandler(e) {
@@ -217,33 +248,14 @@ function WriteFree($ctn) {
     }
   }
 
-  function mouseUpHandler(e) {
-    // if (Toolbar.isTarget(e.target)) {
-    //   return false;
-    // }
-    // this.selection = window.getSelection();
-    // if (this.selection.anchorOffset !== this.selection.focusOffset) {
-    //   Toolbar.display();
-    // } else {
-    //   Toolbar.hide();
-    // }
-    // return false;
-  }
-
-  function keypressHandler(e) {
-    if (Editor.isTarget(e) || Toolbar.isTarget(e)) {
-      Toolbar.hide.call(Toolbar);
-    }
-  }
-
   function selectionHandler(e) {
+    if (e.type !== 'selectionchange') return false;
     const sel = window.getSelection();
     Editor.selectionHandler(sel);
+    return true;
   }
 
-  document.addEventListener('mouseup', mouseUpHandler);
   document.addEventListener('mousedown', mouseDownHandler);
-  document.addEventListener('keypress', keypressHandler);
   document.addEventListener('selectionchange', selectionHandler);
   Editor.initWFEditor();
   return Editor;

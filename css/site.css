@@ -55,8 +55,17 @@
 .wf__editor:focus {
   box-shadow: 0.1rem 0.1rem 2rem 0.05rem rgba(0, 0, 0, 0.075);
 }
+.wf__editor * {
+  font-size: 1.25em;
+}
 .wf__editor div {
   margin: 1em auto;
+}
+.wf__editor h1 {
+  font-size: 2em;
+}
+.wf__editor h2 {
+  font-size: 1.5em;
 }
 
 .hide {

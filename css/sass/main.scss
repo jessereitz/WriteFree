@@ -63,8 +63,20 @@
 
   }
 
+  & * {
+    font-size: $editor__font-size;
+  }
+
   & div {
     margin: $editor__margin;
+  }
+
+  & h1 {
+    font-size: $editor__h1-size;
+  }
+
+  & h2 {
+    font-size: $editor__h2-size;
   }
 }
 
