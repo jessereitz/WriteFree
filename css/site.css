@@ -38,7 +38,7 @@
 }
 .wf__toolbar__btn:active {
   border-color: #bbb;
-  background: rgba(0, 0, 0, 0.075);
+  background: rgba(0, 0, 0, 0.2);
 }
 
 .wf__editor {
