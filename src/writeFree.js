@@ -56,14 +56,44 @@ function WriteFree($ctn) {
       this.$headingBtn = generateButton('H', btnClassName);
       this.$linkBtn = generateButton('<a/>', btnClassName);
 
-      this.$boldBtn.addEventListener('click', this.boldBtnHandler.bind(this));
-      this.$italicBtn.addEventListener('click', this.italicBtnHandler.bind(this));
-      this.$headingBtn.addEventListener('click', this.headingBtnHandler.bind(this));
+      // this.$boldBtn.addEventListener('click', this.boldBtnHandler.bind(this));
+      // this.$italicBtn.addEventListener('click', this.italicBtnHandler.bind(this));
+      // this.$headingBtn.addEventListener('click', this.headingBtnHandler.bind(this));
 
       this.$ctn.append(this.$boldBtn);
       this.$ctn.append(this.$italicBtn);
       this.$ctn.append(this.$headingBtn);
       this.$ctn.append(this.$linkBtn);
+
+      this.$ctn.addEventListener('click', this.clickHandler.bind(this));
+    },
+
+    /**
+     * clickHandler - Delegate and handle clicks on the Toolbar. This method
+     *  takes a click event and delegates it to the appropriate child's click
+     *  handler.
+     *
+     * @param {Event} e The click event to be processed.
+     *
+     * @returns {boolean} Returns true if the click event is handled
+     *  successfully, else false.
+     */
+    clickHandler(e) {
+      if (e.type !== 'click') return false;
+      switch (e.target) {
+        case this.$boldBtn:
+          this.boldBtnHandler.call(this);
+          break;
+        case this.$italicBtn:
+          this.italicBtnHandler.call(this);
+          break;
+        case this.$headingBtn:
+          this.headingBtnHandler.call(this);
+          break;
+        default:
+          return false;
+      }
+      return true;
     },
 
     /**
@@ -351,25 +381,3 @@ function WriteFree($ctn) {
 }
 
 window.wf = WriteFree(document.getElementById('WriteFreeCtn'));
-/*
-  WFEditor
-    ctn
-    toolbar
-    mouseUpHandler
-
-  WFToolbar
-    PROPS:
-    ctn (create in init)
-    boldBtn
-    italicBtn
-    headingBtn
-    linkBtn
-
-    METHODS:
-    display (selection)
-    hide
-    boldBtnHandler
-    italicBtnHandler
-    headingBtnHandler
-    linkBtnHandler
-*/
