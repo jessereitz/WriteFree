@@ -41,7 +41,6 @@ function WriteFree($ctn) {
       this.className = 'wf__toolbar';
       this.$ctn = generateElement('div', [this.className, 'hide']);
       this.$ctn.setAttribute('contenteditable', false);
-      // this.$ctn.addEventListener('click', this.clickHandler.bind(this));
       this.createToolbarBtns();
       return this;
     },
@@ -101,6 +100,10 @@ function WriteFree($ctn) {
      */
     hide() {
       this.$ctn.classList.add('hide');
+      if (this.$ctn.classList.contains('hide')) {
+        return true;
+      }
+      return false;
     },
 
     /**
@@ -160,6 +163,7 @@ function WriteFree($ctn) {
     headingBtnHandler() {
       return false;
     },
+
     /**
      * isTarget - Wrapper around isTarget library function. Returns true if the
      *  Toolbar was clicked else false.
@@ -178,8 +182,18 @@ function WriteFree($ctn) {
    *
    * @property {Element} $ctn - The outermost container of the WriteFree editor.
    *  $ctn is passed in to the WriteFree instantiation function.
+   * @property {Element} $innerCtn - The actual contetneditable-div in which the
+   *  user can write
    */
   const Editor = {
+
+    /**
+     * initWFEditor - Initializes the Editor. Creates an inner container div and
+     *  fills it with a line break (done to ensure the first block of text is
+     *  wrapped in a div); initializes the Toolbar; and adds the pasteHandler.
+     *
+     * @returns {Editor} Returns this.
+     */
     initWFEditor() {
       this.$innerCtn = generateElement('div', 'wf__editor');
       this.$innerCtn.setAttribute('contenteditable', true);
@@ -193,6 +207,7 @@ function WriteFree($ctn) {
 
       $ctn.append(Toolbar.renderHTML());
       $ctn.addEventListener('paste', this.pasteHandler.bind(this));
+      return this;
     },
 
     /**
