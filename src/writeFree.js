@@ -185,20 +185,41 @@ function WriteFree($ctn) {
       $ctn.addEventListener('paste', this.pasteHandler.bind(this));
     },
 
-    containsSelection(selection) {
-      return this.containsNode(selection.anchorNode) && this.containsNode(selection.focusNode);
-    },
-    selectionHandler(selection) {
-      if (!this.containsSelection(selection) || selection.isCollapsed) {
-        Toolbar.hide();
-      } else {
-        Toolbar.display(selection);
-      }
-      return true;
+    /**
+     * containsSelection - Tests whether this Editor contains given Selection
+     *  object (sel).
+     *
+     * @param {Selection} sel The Selection to check for in the Editor.
+     *
+     * @returns {boolean} Returns true if the given sel object is a Selection
+     *  and it is wholly contained within the Editor.
+     */
+    containsSelection(sel) {
+      if (!(sel instanceof Selection)) return false;
+      return this.containsNode(sel.anchorNode) && this.containsNode(sel.focusNode);
     },
 
-    showToolBar() {
-      // console.log(Toolbar);
+    /**
+     * selectionHandler - Handles the given Selection (sel) event. If the given
+     *  object is not a Selection this method will immediately return false.
+     *  Otherwise it will display the Toolbar if the Selection is contained
+     *  fully within this Editor and the Selection contains text. Otherwise it
+     *  will hide the Toolbar.
+     *
+     *
+     * @param {Selection} sel The current Selection within the document.
+     *
+     * @returns {boolean} Returns true if the given selection was successfully
+     *  handled, else false.
+     */
+    selectionHandler(sel) {
+      if (!(sel instanceof Selection)) return false;
+      if (!this.containsSelection(sel) || sel.isCollapsed) {
+        Toolbar.hide();
+      } else {
+        Toolbar.display(sel);
+      }
+      return true;
     },
 
     /**
@@ -213,13 +234,19 @@ function WriteFree($ctn) {
       return isTarget($ctn, e);
     },
 
+    /**
+     * containsNode - Tests whether the given node is contained within the
+     *  Editor's HTML.
+     *
+     * @param {Element} $node The HTML element to test for.
+     *
+     * @returns {boolean} Returns true if the Editor contains $node, else false.
+     */
     containsNode($node) {
       return $ctn.contains($node);
     },
 
     getToolbar() { return Toolbar; },
-
-    getSelection() { return this.selection; },
 
     /**
      * pasteHandler - Handles the paste event in the editor. We intercept the
@@ -242,12 +269,31 @@ function WriteFree($ctn) {
     },
   };
 
+  /**
+   * mouseDownHandler - Handles the mousedown event. Essentially passes
+   *  processing of the event to the Toolbar's own mouseDownHandler method.
+   *
+   * @param {Event} e The mousedown event to be handled.
+   *
+   * @returns {boolean} Returns true if mousedown event was handled successfully
+   *  else false.
+   */
   function mouseDownHandler(e) {
+    if (e.type !== 'mousedown') return false;
     if (Toolbar.isTarget(e)) {
       Toolbar.mouseDownHandler(e);
     }
+    return true;
   }
 
+  /**
+   * selectionHandler - Handles the selectionchange event.
+   *
+   * @param {Event} e The selectionchange event.
+   *
+   * @returns {boolean} Returns true if selectionchange was successfully
+   *  handled, else false.
+   */
   function selectionHandler(e) {
     if (e.type !== 'selectionchange') return false;
     const sel = window.getSelection();
