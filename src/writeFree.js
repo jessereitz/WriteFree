@@ -17,6 +17,7 @@ import {
  */
 function WriteFree($ctn) {
   const toolbarOffset = 5; // The number of pixels to offset the top of the toolbar.
+  let Editor;
 
   /**
    * Toolbar - The toolbar used for editing text in the WFEditor.
@@ -57,6 +58,7 @@ function WriteFree($ctn) {
 
       this.$boldBtn.addEventListener('click', this.boldBtnHandler.bind(this));
       this.$italicBtn.addEventListener('click', this.italicBtnHandler.bind(this));
+      this.$headingBtn.addEventListener('click', this.headingBtnHandler.bind(this));
 
       this.$ctn.append(this.$boldBtn);
       this.$ctn.append(this.$italicBtn);
@@ -161,7 +163,19 @@ function WriteFree($ctn) {
      * @returns {boolean} Returns true if successful else false.
      */
     headingBtnHandler() {
-      return false;
+      const sel = window.getSelection();
+      const parent = sel.anchorNode.parentNode;
+      let tagName;
+      if (sel instanceof Selection) {
+        if (parent.tagName === 'H1' || parent.tagName === 'H2') {
+          tagName = 'div';
+        } else if (Editor.isFirst(parent)) {
+          tagName = 'h1';
+        } else {
+          tagName = 'h2';
+        }
+        document.execCommand('formatBlock', false, tagName);
+      }
     },
 
     /**
@@ -185,7 +199,7 @@ function WriteFree($ctn) {
    * @property {Element} $innerCtn - The actual contetneditable-div in which the
    *  user can write
    */
-  const Editor = {
+  Editor = {
 
     /**
      * initWFEditor - Initializes the Editor. Creates an inner container div and
@@ -291,6 +305,12 @@ function WriteFree($ctn) {
       const text = e.clipboardData.getData('text/plain');
       document.execCommand('insertHTML', false, text);
       return true;
+    },
+    isFirst($node) {
+      if (this.$innerCtn.children[0] === $node) {
+        return true;
+      }
+      return false;
     },
   };
 
