@@ -56,10 +56,6 @@ function WriteFree($ctn) {
       this.$headingBtn = generateButton('H', btnClassName);
       this.$linkBtn = generateButton('<a/>', btnClassName);
 
-      // this.$boldBtn.addEventListener('click', this.boldBtnHandler.bind(this));
-      // this.$italicBtn.addEventListener('click', this.italicBtnHandler.bind(this));
-      // this.$headingBtn.addEventListener('click', this.headingBtnHandler.bind(this));
-
       this.$ctn.append(this.$boldBtn);
       this.$ctn.append(this.$italicBtn);
       this.$ctn.append(this.$headingBtn);
