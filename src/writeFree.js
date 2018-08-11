@@ -103,9 +103,24 @@ function WriteFree($ctn) {
       this.$ctn.classList.add('hide');
     },
 
-    clickHandler(e) { e.preventDefault(); },
-
-    mouseDownHandler(e) { e.preventDefault(); },
+    /**
+     * mouseDownHandler - Handles the mousedown event. If the Toolbar, or its
+     *  children, are the target of the click, the default behavior is
+     *  prevented. This is done so the current Selection won't change or be
+     *  emptied when applying formatting to the selected text.
+     *
+     * @param {Event} e The mousedown event.
+     *
+     * @returns {boolean} Returns true if the mousedown event is successfully
+     *  handled, else false.
+     */
+    mouseDownHandler(e) {
+      if (e.type !== 'mousedown') return false;
+      if (this.isTarget(e)) {
+        e.preventDefault();
+      }
+      return true;
+    },
 
     /**
      * boldBtnHandler - Bolds current selection when $boldBtn is clicked.
@@ -156,11 +171,6 @@ function WriteFree($ctn) {
     isTarget(e) {
       return isTarget(this.$ctn, e);
     },
-
-    containsNode($node) {
-      return $ctn.contains($node);
-    },
-
   };
 
   /**
@@ -280,9 +290,7 @@ function WriteFree($ctn) {
    */
   function mouseDownHandler(e) {
     if (e.type !== 'mousedown') return false;
-    if (Toolbar.isTarget(e)) {
-      Toolbar.mouseDownHandler(e);
-    }
+    Toolbar.mouseDownHandler(e);
     return true;
   }
 
