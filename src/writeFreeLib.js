@@ -49,3 +49,17 @@ export function generateButton(value = 'Button', klasses = [], id = '') {
 export function isTarget($el, e) {
   return $el.contains(e.target);
 }
+
+/**
+ * inputType - Returns
+ */
+export function inputType(event) {
+  console.log(event);
+  if (event.inputType) {
+    return event.inputType;
+  }
+  if (event.type) {
+    return event.type;
+  }
+  return null;
+}

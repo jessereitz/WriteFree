@@ -4,6 +4,7 @@ import {
   generateElement,
   generateButton,
   isTarget,
+  inputType,
 } from './writeFreeLib.js';
 
 /**
@@ -237,6 +238,9 @@ function WriteFree($ctn) {
     initWFEditor() {
       this.$innerCtn = generateElement('div', 'wf__editor');
       this.$innerCtn.setAttribute('contenteditable', true);
+      this.$buffer = generateElement('div', 'wf__buffer');
+      this.$buffer.setAttribute('contenteditable', true);
+      this.$innerCtn.append(this.$buffer);
       $ctn.append(this.$innerCtn);
 
       const firstDiv = generateElement('div');
@@ -247,6 +251,8 @@ function WriteFree($ctn) {
 
       $ctn.append(Toolbar.renderHTML());
       $ctn.addEventListener('paste', this.pasteHandler.bind(this));
+      // $ctn.addEventListener('input', this.inputHandler.bind(this));
+      $ctn.addEventListener('keydown', this.keydownHandler.bind(this));
       return this;
     },
 
@@ -338,6 +344,55 @@ function WriteFree($ctn) {
       }
       return false;
     },
+    inputHandler(e) {
+      console.log(e);
+
+      if (inputType(e).includes('delete')) {
+        this.deleteTextHandler.call(this, e);
+      }
+    },
+    deleteTextHandler(e) {
+      if (e.target.children.length > 1) return false;
+      console.log('ey');
+      const content = e.target.firstChild.cloneNode(true);
+      const s = window.getSelection();
+      const r = s.getRangeAt(0);
+      if (r.startContainer.parentNode === e.target.firstChild) {
+        this.lastContent = content;
+        e.preventDefault();
+        // console.log(e.target);
+        // if (e.target.firstChild.tagName === 'br') {
+        // console.log('ey');
+        // }
+      }
+      // if (e.target.firstChild === s.)
+    },
+    keydownHandler(e) {
+      console.log(e.key === 'Backspace');
+      if (this.$innerCtn.children.length === 2 && this.$innerCtn.lastChild.textContent.length === 0 && e.key === 'Backspace') {
+        // console.log(e);
+        e.preventDefault();
+      }
+      // console.log(e);
+      // if (!e.key !== 'Backspace') return false;
+      // if (e.target.firstChild.textContent.length === 1) {
+      //   let s = window.getSelection();
+      //   let r = s.getRangeAt(0);
+      //   this.$innerCtn.prepend(this.lastContent);
+      //   s = window.getSelection();
+      //   console.log(s);
+      //   // this.$innerCtn.remove(s.anchorNode);
+      //
+      //
+      // }
+      // if (e.target.firstChild.tagName === 'BR') {
+      //   console.log('ey');
+      //   const s = window.getSelection();
+      //   const r = s.getRangeAt(0);
+      //   r.surroundContents(this.lastContent);
+      //   // e.target.append(this.lastContent);
+      // }
+    }
   };
 
   /**
