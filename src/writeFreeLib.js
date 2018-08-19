@@ -54,7 +54,6 @@ export function isTarget($el, e) {
  * inputType - Returns
  */
 export function inputType(event) {
-  console.log(event);
   if (event.inputType) {
     return event.inputType;
   }

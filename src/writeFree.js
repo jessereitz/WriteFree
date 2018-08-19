@@ -345,15 +345,12 @@ function WriteFree($ctn) {
       return false;
     },
     inputHandler(e) {
-      console.log(e);
-
       if (inputType(e).includes('delete')) {
         this.deleteTextHandler.call(this, e);
       }
     },
     deleteTextHandler(e) {
       if (e.target.children.length > 1) return false;
-      console.log('ey');
       const content = e.target.firstChild.cloneNode(true);
       const s = window.getSelection();
       const r = s.getRangeAt(0);
@@ -366,9 +363,9 @@ function WriteFree($ctn) {
         // }
       }
       // if (e.target.firstChild === s.)
+      return null;
     },
     keydownHandler(e) {
-      console.log(e.key === 'Backspace');
       if (this.$innerCtn.children.length === 2 && this.$innerCtn.lastChild.textContent.length === 0 && e.key === 'Backspace') {
         // console.log(e);
         e.preventDefault();
@@ -392,7 +389,7 @@ function WriteFree($ctn) {
       //   r.surroundContents(this.lastContent);
       //   // e.target.append(this.lastContent);
       // }
-    }
+    },
   };
 
   /**
