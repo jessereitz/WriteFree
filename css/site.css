@@ -1,12 +1,9 @@
 @import url("https://fonts.googleapis.com/css?family=Crimson+Text:400,700|Roboto");
 @keyframes fade-in {
   from {
-    opacity: 0;
-  }
+    opacity: 0; }
   to {
-    opacity: 1;
-  }
-}
+    opacity: 1; } }
 .wf__toolbar {
   position: fixed;
   display: inline-block;
@@ -16,30 +13,26 @@
   border-radius: 0.25em;
   box-shadow: 0.1rem 0.1rem 1rem 0.1rem rgba(0, 0, 0, 0.55);
   animation: fade-in 0.15s ease-out;
-  transition: all 0.05s;
-}
-.wf__toolbar__btn {
-  box-sizing: border-box;
-  margin: 0 0.1rem;
-  background: none;
-  color: #fff;
-  border: 1px solid rgba(0, 0, 0, 0);
-  border-radius: 0.25em;
-  transition: all 0.2s;
-  font-size: 1em;
-  min-width: 1.75em;
-  text-align: center;
-  padding: 0.25em 0.25rem;
-  outline: none;
-}
-.wf__toolbar__btn:hover {
-  border-color: #fff;
-  background: rgba(255, 255, 255, 0.075);
-}
-.wf__toolbar__btn:active {
-  border-color: #bbb;
-  background: rgba(0, 0, 0, 0.2);
-}
+  transition: all 0.05s; }
+  .wf__toolbar__btn {
+    box-sizing: border-box;
+    margin: 0 0.1rem;
+    background: none;
+    color: #fff;
+    border: 1px solid rgba(0, 0, 0, 0);
+    border-radius: 0.25em;
+    transition: all 0.2s;
+    font-size: 1em;
+    min-width: 1.75em;
+    text-align: center;
+    padding: 0.25em 0.25rem;
+    outline: none; }
+  .wf__toolbar__btn:hover {
+    border-color: #fff;
+    background: rgba(255, 255, 255, 0.075); }
+  .wf__toolbar__btn:active {
+    border-color: #bbb;
+    background: rgba(0, 0, 0, 0.2); }
 
 .wf__editor {
   min-height: 2em;
@@ -50,26 +43,27 @@
   font-family: "Crimson Text", serif;
   outline: none;
   overflow: auto;
-  color: #333;
-}
-.wf__editor:focus {
-  box-shadow: 0.1rem 0.1rem 2rem 0.05rem rgba(0, 0, 0, 0.075);
-}
-.wf__editor * {
-  font-size: 1.25rem;
-}
-.wf__editor div {
-  margin: 1em auto;
-}
-.wf__editor h1 {
-  font-size: 2rem;
-}
-.wf__editor h2 {
-  font-size: 1.5rem;
-}
+  color: #333; }
+  .wf__editor:focus {
+    box-shadow: 0.1rem 0.1rem 2rem 0.05rem rgba(0, 0, 0, 0.075); }
+  .wf__editor * {
+    font-size: 1.25rem; }
+  .wf__editor div {
+    margin: 1em auto;
+    border: 1px solid rgba(0, 0, 0, 0.2); }
+  .wf__editor h1 {
+    font-size: 2rem; }
+  .wf__editor h2 {
+    font-size: 1.5rem; }
+  .wf__editor .wf__buffer {
+    width: 100%;
+    height: 1px;
+    background: orange;
+    margin: 0;
+    padding: 0;
+    border: none; }
 
 .hide {
-  display: none !important;
-}
+  display: none !important; }
 
 /*# sourceMappingURL=site.css.map */
