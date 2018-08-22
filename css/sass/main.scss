@@ -80,10 +80,14 @@
     font-size: $editor__h2-size;
   }
 
+  & div {
+    min-height: $editor__font-size;
+  }
+
   .wf__buffer {
     width: 100%;
     height: 1px;
-    background: orange;
+    background: none;
     margin: 0;
     padding: 0;
     border: none;

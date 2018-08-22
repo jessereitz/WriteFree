@@ -5,7 +5,12 @@ import {
   generateButton,
   isTarget,
   inputType,
+  isBackspace,
 } from './writeFreeLib.js';
+
+import {
+  deleteWord,
+} from './writeFreeMetaActions.js';
 
 /**
  * WriteFree - The initialization function used to create instances of the
@@ -18,6 +23,7 @@ import {
  */
 function WriteFree($ctn) {
   const toolbarOffset = 5; // The number of pixels to offset the top of the toolbar.
+  const isMac = navigator.platform.indexOf('Mac') > -1;
   let Editor;
 
   /**
@@ -239,13 +245,14 @@ function WriteFree($ctn) {
       this.$innerCtn = generateElement('div', 'wf__editor');
       this.$innerCtn.setAttribute('contenteditable', true);
       this.$buffer = generateElement('div', 'wf__buffer');
-      this.$buffer.setAttribute('contenteditable', true);
+      this.$buffer.setAttribute('contenteditable', false);
       this.$innerCtn.append(this.$buffer);
       $ctn.append(this.$innerCtn);
 
       const firstDiv = generateElement('div');
       firstDiv.append(generateElement('br'));
       firstDiv.textContent = 'Try writing here...';
+      this.firstDiv = firstDiv;
       this.$innerCtn.append(firstDiv);
       Toolbar.initToolbar();
 
@@ -349,46 +356,29 @@ function WriteFree($ctn) {
         this.deleteTextHandler.call(this, e);
       }
     },
-    deleteTextHandler(e) {
-      if (e.target.children.length > 1) return false;
-      const content = e.target.firstChild.cloneNode(true);
-      const s = window.getSelection();
-      const r = s.getRangeAt(0);
-      if (r.startContainer.parentNode === e.target.firstChild) {
-        this.lastContent = content;
-        e.preventDefault();
-        // console.log(e.target);
-        // if (e.target.firstChild.tagName === 'br') {
-        // console.log('ey');
-        // }
+    backspaceHandler(e) {
+      if (isBackspace(e)) {
+        const s = window.getSelection();
+        console.log(this.firstDiv === s.anchorNode.parentNode);
+        // console.log(s.anchorNode.textContent.length <= 1);
+        // console.log(s.anchorNode.textContent.length);
+        // console.log(s.anchorNode.textContent);
+        if ((s.anchorNode.textContent.length < 1) && (this.firstDiv === s.anchorNode.parentNode)) {
+          console.log('yeah');
+          e.preventDefault();
+          return null;
+        }
       }
-      // if (e.target.firstChild === s.)
+      if ((e.ctrlKey || e.altKey) && e.key === 'Backspace') {
+        e.preventDefault();
+        deleteWord();
+      }
       return null;
     },
     keydownHandler(e) {
-      if (this.$innerCtn.children.length === 2 && this.$innerCtn.lastChild.textContent.length === 0 && e.key === 'Backspace') {
-        // console.log(e);
-        e.preventDefault();
+      if (isBackspace(e)) {
+        this.backspaceHandler(e);
       }
-      // console.log(e);
-      // if (!e.key !== 'Backspace') return false;
-      // if (e.target.firstChild.textContent.length === 1) {
-      //   let s = window.getSelection();
-      //   let r = s.getRangeAt(0);
-      //   this.$innerCtn.prepend(this.lastContent);
-      //   s = window.getSelection();
-      //   console.log(s);
-      //   // this.$innerCtn.remove(s.anchorNode);
-      //
-      //
-      // }
-      // if (e.target.firstChild.tagName === 'BR') {
-      //   console.log('ey');
-      //   const s = window.getSelection();
-      //   const r = s.getRangeAt(0);
-      //   r.surroundContents(this.lastContent);
-      //   // e.target.append(this.lastContent);
-      // }
     },
   };
 

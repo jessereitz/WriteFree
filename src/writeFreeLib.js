@@ -62,3 +62,11 @@ export function inputType(event) {
   }
   return null;
 }
+
+export function isBackspace(event) {
+  return (event.key === 'Backspace')
+    || (event.ctrlKey && event.key === 'Backspace')
+    || (event.shiftKey && event.key === 'Backspace')
+    || (event.altKey && event.key === 'Backspace')
+    || (event.metaKey && event.key === 'Backspace');
+}
