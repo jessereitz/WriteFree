@@ -245,10 +245,9 @@ function WriteFree($ctn) {
       this.$buffer.setAttribute('contenteditable', false);
       // this.$innerCtn.append(this.$buffer);
       $ctn.append(this.$innerCtn);
-      this.create$firstPar();
+      this.createfirstPar();
 
       Toolbar.initToolbar();
-
       $ctn.append(Toolbar.renderHTML());
       $ctn.addEventListener('paste', this.pasteHandler.bind(this));
       $ctn.addEventListener('keydown', this.keydownHandler.bind(this));
@@ -257,13 +256,15 @@ function WriteFree($ctn) {
     },
 
     /**
-     * create$firstPar - The editor must have the a first div in order to ensure
+     * createfirstPar - The editor must have the a first div in order to ensure
      *  proper formatting. This method creates the first div and appends it to
      *  the inner container.
      */
-    create$firstPar() {
-      const $firstPar = generateElement('p', [], 'wf__editor-first');
-      $firstPar.placeholder = 'Try writing here...';
+    createfirstPar() {
+      if (!this.$firstPar) {
+        this.$firstPar = generateElement('p', [], 'wf__editor-first');
+      }
+      this.$firstPar.placeholder = 'Try writing here...';
       // $firstPar.append(generateElement('br'));
       // $firstPar.textContent = 'Try writing here...';
       // const placeholder = generateElement('span', ['wf__editor-placeholder']);
@@ -275,12 +276,11 @@ function WriteFree($ctn) {
 
       // $firstPar.append(placeholder);
       const observer = new MutationObserver((mutations) => {
-        if ($firstPar.textContent === '') $firstPar.innerHTML = '';
+        if (this.$firstPar.textContent === '') this.$firstPar.innerHTML = '';
       });
       observer.observe($firstPar, {attributes: true, childList: true, subtree: true});
 
-      this.$firstPar = $firstPar;
-      this.$innerCtn.append($firstPar);
+      this.$innerCtn.append(this.$firstPar);
     },
 
     /**
@@ -402,7 +402,7 @@ function WriteFree($ctn) {
           this.$innerCtn.innerHTML === '' || this.$innerCtn.innerHTML === '<br>'
         ) {
           this.$innerCtn.innerHTML = '';
-          this.create$firstPar();
+          this.createfirstPar();
         }
       }
     },
