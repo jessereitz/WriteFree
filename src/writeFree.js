@@ -54,8 +54,8 @@ function WriteFree($ctn) {
      */
     createToolbarBtns() {
       const btnClassName = `${this.className}__btn`;
-      this.$boldBtn = generateButton('B', btnClassName);
-      this.$italicBtn = generateButton('i', btnClassName);
+      this.$boldBtn = generateButton('<b>B</b>', btnClassName, '', true);
+      this.$italicBtn = generateButton('<i>i</i>', btnClassName, '', true);
       this.$headingBtn = generateButton('H', btnClassName);
       this.$linkBtn = generateButton('<a/>', btnClassName);
 
