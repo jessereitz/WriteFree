@@ -58,11 +58,6 @@
   overflow: auto;
   color: $editor__primary-color;
 
-  &:focus {
-    box-shadow: $editor__box-shadow;
-
-  }
-
   & * {
     font-size: $editor__font-size;
   }
@@ -89,6 +84,20 @@
     padding: 0;
     border: none;
   }
+
+  .wf__editor-placeholder {
+    color: #888;
+  }
+
+  // #wf__editor-first:empty::before {
+  //   content: 'Try writing here...';
+  //   color: #888;
+  // }
+  #wf__editor-first:empty:not(:focus):before{
+  content:'Try writing here...';
+  color:grey;
+  font-style:italic;
+}
 }
 
 
