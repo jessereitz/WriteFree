@@ -51,22 +51,28 @@ export function isTarget($el, e) {
 }
 
 /**
- * inputType - Returns
+ * isDeletionKey - Determines whether the key in the given KeyboardEvent will
+ *  delete any characters or words. Because of a peculiarity with FireFox, we
+ *  must specifically test for metakeys (ctrl, shift, alt, and
+ *  metaKey (Windows/Cmd)).
+ *
+ * @param {KeyboardEvent} event The KeyboardEvent to test.
+ *
+ * @returns {boolean} Returns true if the key is a deletion key, else false.
  */
-export function inputType(event) {
-  if (event.inputType) {
-    return event.inputType;
-  }
-  if (event.type) {
-    return event.type;
-  }
-  return null;
-}
-
-export function isBackspace(event) {
+export function isDeletionKey(event) {
   return (event.key === 'Backspace')
     || (event.ctrlKey && event.key === 'Backspace')
     || (event.shiftKey && event.key === 'Backspace')
     || (event.altKey && event.key === 'Backspace')
-    || (event.metaKey && event.key === 'Backspace');
+    || (event.metaKey && event.key === 'Backspace')
+    || (event.key === 'Delete')
+    || (event.ctrlKey && event.key === 'Delete')
+    || (event.shiftKey && event.key === 'Delete')
+    || (event.altKey && event.key === 'Delete')
+    || (event.metaKey && event.key === 'Delete')
+    || (event.ctrlKey && event.key.toLowerCase() === 'x')
+    || (event.shiftKey && event.key.toLowerCase() === 'x')
+    || (event.altKey && event.key.toLowerCase() === 'x')
+    || (event.metaKey && event.key.toLowerCase() === 'x');
 }
