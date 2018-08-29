@@ -4,13 +4,9 @@ import {
   generateElement,
   generateButton,
   isTarget,
-  inputType,
-  isBackspace,
+  isDeletionKey,
 } from './writeFreeLib.js';
 
-import {
-  deleteWord,
-} from './writeFreeMetaActions.js';
 
 /**
  * WriteFree - The initialization function used to create instances of the
@@ -246,21 +242,30 @@ function WriteFree($ctn) {
       this.$innerCtn.setAttribute('contenteditable', true);
       this.$buffer = generateElement('div', 'wf__buffer');
       this.$buffer.setAttribute('contenteditable', false);
-      this.$innerCtn.append(this.$buffer);
+      // this.$innerCtn.append(this.$buffer);
       $ctn.append(this.$innerCtn);
 
+      this.createFirstDiv();
+      Toolbar.initToolbar();
+
+      $ctn.append(Toolbar.renderHTML());
+      $ctn.addEventListener('paste', this.pasteHandler.bind(this));
+      $ctn.addEventListener('keydown', this.keydownHandler.bind(this));
+      $ctn.addEventListener('keyup', this.keyupHandler.bind(this));
+      return this;
+    },
+
+    /**
+     * createFirstDiv - The editor must have the a first div in order to ensure
+     *  proper formatting. This method creates the first div and appends it to
+     *  the inner container.
+     */
+    createFirstDiv() {
       const firstDiv = generateElement('div');
       firstDiv.append(generateElement('br'));
       firstDiv.textContent = 'Try writing here...';
       this.firstDiv = firstDiv;
       this.$innerCtn.append(firstDiv);
-      Toolbar.initToolbar();
-
-      $ctn.append(Toolbar.renderHTML());
-      $ctn.addEventListener('paste', this.pasteHandler.bind(this));
-      // $ctn.addEventListener('input', this.inputHandler.bind(this));
-      $ctn.addEventListener('keydown', this.keydownHandler.bind(this));
-      return this;
     },
 
     /**
@@ -325,7 +330,6 @@ function WriteFree($ctn) {
     },
 
     getToolbar() { return Toolbar; },
-
     /**
      * pasteHandler - Handles the paste event in the editor. We intercept the
      *  normal paste event and strip all HTML from the copied text and then
@@ -351,33 +355,39 @@ function WriteFree($ctn) {
       }
       return false;
     },
-    inputHandler(e) {
-      if (inputType(e).includes('delete')) {
-        this.deleteTextHandler.call(this, e);
-      }
-    },
-    backspaceHandler(e) {
-      if (isBackspace(e)) {
-        const s = window.getSelection();
-        console.log(this.firstDiv === s.anchorNode.parentNode);
-        // console.log(s.anchorNode.textContent.length <= 1);
-        // console.log(s.anchorNode.textContent.length);
-        // console.log(s.anchorNode.textContent);
-        if ((s.anchorNode.textContent.length < 1) && (this.firstDiv === s.anchorNode.parentNode)) {
-          console.log('yeah');
+
+    /**
+     * keydownHandler - Watches for deletion keys on keydown events and stops
+     *  them from deleting the divs inside the main container.
+     *
+     * @param {KeyboardEvent} e The KeyboardEvent to test.
+     */
+    keydownHandler(e) {
+      if (isDeletionKey(e)) {
+        const sel = window.getSelection();
+        if (
+          sel.anchorNode.textContent.length < 1
+          && this.firstDiv === sel.anchorNode.parentNode
+        ) {
           e.preventDefault();
-          return null;
         }
       }
-      if ((e.ctrlKey || e.altKey) && e.key === 'Backspace') {
-        e.preventDefault();
-        deleteWord();
-      }
-      return null;
     },
-    keydownHandler(e) {
-      if (isBackspace(e)) {
-        this.backspaceHandler(e);
+
+    /**
+     * keyupHandler - Watches for deletion keys and resets the editor container
+     *  if they remove the first inner div.
+     *
+     * @param {KeyboardEvent} e The KeyboardEvent to test.
+     */
+    keyupHandler(e) {
+      if (isDeletionKey(e)) {
+        if (
+          this.$innerCtn.innerHTML === '' || this.$innerCtn.innerHTML === '<br>'
+        ) {
+          this.$innerCtn.innerHTML = '';
+          this.createFirstDiv();
+        }
       }
     },
   };
