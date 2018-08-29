@@ -264,23 +264,20 @@ function WriteFree($ctn) {
       if (!this.$firstPar) {
         this.$firstPar = generateElement('p', [], 'wf__editor-first');
       }
+      this.$firstPar.textContent = '';
       this.$firstPar.placeholder = 'Try writing here...';
-      // $firstPar.append(generateElement('br'));
-      // $firstPar.textContent = 'Try writing here...';
-      // const placeholder = generateElement('span', ['wf__editor-placeholder']);
-      // placeholder.textContent = 'Try writing here...';
-      // $firstPar.addEventListener('focusin', (e) => {
-      //   e.preventDefault();
-      //   e.parentNode.focus();
-      // });
-
-      // $firstPar.append(placeholder);
-      const observer = new MutationObserver((mutations) => {
+      const observer = new MutationObserver(() => {
         if (this.$firstPar.textContent === '') this.$firstPar.innerHTML = '';
       });
-      observer.observe($firstPar, {attributes: true, childList: true, subtree: true});
+      observer.observe(this.$firstPar, { attributes: true, childList: true, subtree: true });
 
       this.$innerCtn.append(this.$firstPar);
+      const sel = window.getSelection();
+      const range = document.createRange();
+      range.setStart(this.$firstPar, 0);
+      range.setEnd(this.$firstPar, 0);
+      sel.removeAllRanges();
+      sel.addRange(range);
     },
 
     /**
