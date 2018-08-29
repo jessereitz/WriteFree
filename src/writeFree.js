@@ -238,14 +238,15 @@ function WriteFree($ctn) {
      * @returns {Editor} Returns this.
      */
     initWFEditor() {
+      document.execCommand('defaultParagraphSeparator', false, 'p');
       this.$innerCtn = generateElement('div', 'wf__editor');
       this.$innerCtn.setAttribute('contenteditable', true);
       this.$buffer = generateElement('div', 'wf__buffer');
       this.$buffer.setAttribute('contenteditable', false);
       // this.$innerCtn.append(this.$buffer);
       $ctn.append(this.$innerCtn);
+      this.create$firstPar();
 
-      this.createFirstDiv();
       Toolbar.initToolbar();
 
       $ctn.append(Toolbar.renderHTML());
@@ -256,16 +257,30 @@ function WriteFree($ctn) {
     },
 
     /**
-     * createFirstDiv - The editor must have the a first div in order to ensure
+     * create$firstPar - The editor must have the a first div in order to ensure
      *  proper formatting. This method creates the first div and appends it to
      *  the inner container.
      */
-    createFirstDiv() {
-      const firstDiv = generateElement('div');
-      firstDiv.append(generateElement('br'));
-      firstDiv.textContent = 'Try writing here...';
-      this.firstDiv = firstDiv;
-      this.$innerCtn.append(firstDiv);
+    create$firstPar() {
+      const $firstPar = generateElement('p', [], 'wf__editor-first');
+      $firstPar.placeholder = 'Try writing here...';
+      // $firstPar.append(generateElement('br'));
+      // $firstPar.textContent = 'Try writing here...';
+      // const placeholder = generateElement('span', ['wf__editor-placeholder']);
+      // placeholder.textContent = 'Try writing here...';
+      // $firstPar.addEventListener('focusin', (e) => {
+      //   e.preventDefault();
+      //   e.parentNode.focus();
+      // });
+
+      // $firstPar.append(placeholder);
+      const observer = new MutationObserver((mutations) => {
+        if ($firstPar.textContent === '') $firstPar.innerHTML = '';
+      });
+      observer.observe($firstPar, {attributes: true, childList: true, subtree: true});
+
+      this.$firstPar = $firstPar;
+      this.$innerCtn.append($firstPar);
     },
 
     /**
@@ -367,7 +382,7 @@ function WriteFree($ctn) {
         const sel = window.getSelection();
         if (
           sel.anchorNode.textContent.length < 1
-          && this.firstDiv === sel.anchorNode.parentNode
+          && this.$firstPar === sel.anchorNode.parentNode
         ) {
           e.preventDefault();
         }
@@ -381,12 +396,13 @@ function WriteFree($ctn) {
      * @param {KeyboardEvent} e The KeyboardEvent to test.
      */
     keyupHandler(e) {
+
       if (isDeletionKey(e)) {
         if (
           this.$innerCtn.innerHTML === '' || this.$innerCtn.innerHTML === '<br>'
         ) {
           this.$innerCtn.innerHTML = '';
-          this.createFirstDiv();
+          this.create$firstPar();
         }
       }
     },
