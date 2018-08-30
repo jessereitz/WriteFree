@@ -5,6 +5,7 @@ import {
   generateButton,
   isTarget,
   isDeletionKey,
+  validateURL,
 } from './writeFreeLib.js';
 
 
@@ -42,10 +43,12 @@ function WriteFree($ctn) {
      * @returns {Toolbar} Returns this.
      */
     initToolbar() {
+      this.links = [];
       this.className = 'wf__toolbar';
       this.$ctn = generateElement('div', [this.className, 'hide']);
       this.$ctn.setAttribute('contenteditable', false);
       this.createToolbarBtns();
+      this.generateInput();
       return this;
     },
     /**
@@ -60,24 +63,32 @@ function WriteFree($ctn) {
       this.$headingBtn = generateButton('H', btnClassName);
       this.$linkBtn = generateButton('<a/>', btnClassName);
 
-      this.$inputCtn = generateElement('div', [`${this.className}__input-ctn`, 'tb_hide_down']);
-      this.$input = generateElement('input', [`${this.className}__input`]);
-      this.$input.type = 'text';
-      this.$inputClose = generateButton('<b>&times;</b>', btnClassName, '', true);
-      this.$inputClose.addEventListener('click', this.hideInput.bind(this));
-
       this.$btnCtn.append(this.$boldBtn);
       this.$btnCtn.append(this.$italicBtn);
       this.$btnCtn.append(this.$headingBtn);
       this.$btnCtn.append(this.$linkBtn);
 
-      this.$inputCtn.append(this.$input);
-      this.$inputCtn.append(this.$inputClose);
-
       this.$ctn.append(this.$btnCtn);
-      this.$ctn.append(this.$inputCtn);
 
       this.$ctn.addEventListener('click', this.clickHandler.bind(this));
+    },
+    generateInput() {
+      const btnClassName = `${this.className}__btn`;
+      function defaultEnterHandler(e) {
+        if (e.key === 'Enter') {
+          this.$input.saveHandler.call(this);
+        }
+      }
+
+      this.$inputCtn = generateElement('div', [`${this.className}__input-ctn`, 'tb_hide_down']);
+      this.$input = generateElement('input', [`${this.className}__input`]);
+      this.$input.type = 'text';
+      this.$input.addEventListener('keypress', defaultEnterHandler.bind(this));
+      this.$inputClose = generateButton('<b>&times;</b>', btnClassName, '', true);
+      this.$inputClose.addEventListener('click', this.hideInput.bind(this));
+      this.$inputCtn.append(this.$input);
+      this.$inputCtn.append(this.$inputClose);
+      this.$ctn.append(this.$inputCtn);
     },
 
     /**
@@ -117,6 +128,18 @@ function WriteFree($ctn) {
       if (sel instanceof Selection) {
         if (this.containsSelection(sel)) return;
         const range = sel.getRangeAt(0);
+        const currentLink = this.links.find(link => (
+          link.contains(sel.anchorNode)
+          || link.contains(sel.focusNode)
+          || sel.containsNode(link)
+        ));
+        if (currentLink) {
+          this.$linkBtn.classList.add('wf__toolbar__input-active');
+          this.$linkBtn.currentLink = currentLink;
+        } else {
+          this.$linkBtn.currentLink = null;
+          this.$linkBtn.classList.remove('wf__toolbar__input-active');
+        }
         this.currentRange = range;
         const rect = range.getBoundingClientRect();
         this.$ctn.style.top = `${rect.bottom + toolbarOffset}px`;
@@ -125,19 +148,30 @@ function WriteFree($ctn) {
       }
     },
 
-    displayInput(placeholder) {
+    displayInput(placeholder, saveHandler) {
+      this.$input.saveHandler = saveHandler;
       this.$input.placeholder = placeholder;
+
+      this.$input.saveHandler = saveHandler;
+      // this.$input.addEventListener('keypress', this.$input.defaultEnterHandler.bind(this));
+
       this.$btnCtn.classList.add('tb_hide_up');
       this.$inputCtn.classList.remove('tb_hide_down');
       this.$ctn.classList.add('tb_wide');
     },
+
     hideInput() {
-      const sel = window.getSelection();
-      sel.removeAllRanges();
-      sel.addRange(this.currentRange);
+      if (this.currentRange) {
+        const sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(this.currentRange);
+      }
       this.$btnCtn.classList.remove('tb_hide_up');
       this.$inputCtn.classList.add('tb_hide_down');
       this.$ctn.classList.remove('tb_wide');
+      this.currentRange = null;
+      this.$input.value = '';
+      // this.$input.removeEventListener('keypress', this.$input.defaultEnterHandler);
     },
 
     /**
@@ -155,6 +189,8 @@ function WriteFree($ctn) {
      * @returns {boolean} Returns true if successful else false.
      */
     hide() {
+      this.currentRange = null;
+      this.hideInput();
       this.$ctn.classList.add('hide');
       if (this.$ctn.classList.contains('hide')) {
         return true;
@@ -190,7 +226,6 @@ function WriteFree($ctn) {
     mouseDownHandler(e) {
       if (e.type !== 'mousedown') return false;
       if (e.target === this.$input) {
-        e.preventDefault();
         this.$input.focus();
       }
       return true;
@@ -223,7 +258,29 @@ function WriteFree($ctn) {
      * @returns {boolean} Returns true if successful else false.
      */
     linkBtnHandler() {
-      this.displayInput('http://...');
+      if (this.$linkBtn.currentLink) {
+        const sel = window.getSelection();
+        this.currentRange = sel.getRangeAt(0);
+        const range = document.createRange();
+        range.selectNode(this.$linkBtn.currentLink);
+        const plainText = document.createTextNode(this.$linkBtn.currentLink.textContent);
+        range.deleteContents();
+        range.insertNode(plainText);
+        this.$linkBtn.currentLink = null;
+        return true;
+      }
+
+
+      function saveLink() {
+        const url = validateURL(this.$input.value);
+        if (!url) return false;
+        const link = generateElement('a');
+        link.href = url;
+        this.currentRange.surroundContents(link);
+        this.links.push(link);
+        return link;
+      }
+      this.displayInput('http://...', saveLink);
     },
 
     /**
