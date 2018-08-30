@@ -370,7 +370,11 @@ function WriteFree($ctn) {
 
     /**
      * keydownHandler - Watches for deletion keys on keydown events and stops
-     *  them from deleting the divs inside the main container.
+     *  them from deleting the divs inside the main container. However, this is
+     *  fairly limited in scope: though it catches Backspace, Delete, and ctrl-X
+     *  it's really only meant to stop the Backspace from deleting the first
+     *  paragraph. Events like ctrl-A + Backspace are handled in the
+     *  keyupHandler.
      *
      * @param {KeyboardEvent} e The KeyboardEvent to test.
      */
@@ -379,7 +383,7 @@ function WriteFree($ctn) {
         const sel = window.getSelection();
         if (
           sel.anchorNode.textContent.length < 1
-          && this.$firstPar === sel.anchorNode.parentNode
+          && this.$firstPar === sel.anchorNode
         ) {
           e.preventDefault();
         }
@@ -388,17 +392,16 @@ function WriteFree($ctn) {
 
     /**
      * keyupHandler - Watches for deletion keys and resets the editor container
-     *  if they remove the first inner div.
+     *  if they remove the first inner paragraph.
      *
      * @param {KeyboardEvent} e The KeyboardEvent to test.
      */
     keyupHandler(e) {
-
       if (isDeletionKey(e)) {
         if (
           this.$innerCtn.innerHTML === '' || this.$innerCtn.innerHTML === '<br>'
         ) {
-          this.$innerCtn.innerHTML = '';
+          this.$innerCtn.innerHTML = ''; // Get rid of auto-inserted <br>
           this.createfirstPar();
         }
       }
