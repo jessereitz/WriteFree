@@ -54,15 +54,28 @@ function WriteFree($ctn) {
      */
     createToolbarBtns() {
       const btnClassName = `${this.className}__btn`;
+      this.$btnCtn = generateElement('div', `${this.className}__btn-ctn`);
       this.$boldBtn = generateButton('<b>B</b>', btnClassName, '', true);
       this.$italicBtn = generateButton('<i>i</i>', btnClassName, '', true);
       this.$headingBtn = generateButton('H', btnClassName);
       this.$linkBtn = generateButton('<a/>', btnClassName);
 
-      this.$ctn.append(this.$boldBtn);
-      this.$ctn.append(this.$italicBtn);
-      this.$ctn.append(this.$headingBtn);
-      this.$ctn.append(this.$linkBtn);
+      this.$inputCtn = generateElement('div', [`${this.className}__input-ctn`, 'tb_hide_down']);
+      this.$input = generateElement('input', [`${this.className}__input`]);
+      this.$input.type = 'text';
+      this.$inputClose = generateButton('<b>&times;</b>', btnClassName, '', true);
+      this.$inputClose.addEventListener('click', this.hideInput.bind(this));
+
+      this.$btnCtn.append(this.$boldBtn);
+      this.$btnCtn.append(this.$italicBtn);
+      this.$btnCtn.append(this.$headingBtn);
+      this.$btnCtn.append(this.$linkBtn);
+
+      this.$inputCtn.append(this.$input);
+      this.$inputCtn.append(this.$inputClose);
+
+      this.$ctn.append(this.$btnCtn);
+      this.$ctn.append(this.$inputCtn);
 
       this.$ctn.addEventListener('click', this.clickHandler.bind(this));
     },
@@ -79,18 +92,14 @@ function WriteFree($ctn) {
      */
     clickHandler(e) {
       if (e.type !== 'click') return false;
-      switch (e.target) {
-        case this.$boldBtn:
-          this.boldBtnHandler.call(this);
-          break;
-        case this.$italicBtn:
-          this.italicBtnHandler.call(this);
-          break;
-        case this.$headingBtn:
-          this.headingBtnHandler.call(this);
-          break;
-        default:
-          return false;
+      if (this.$boldBtn.contains(e.target)) {
+        this.boldBtnHandler.call(this);
+      } else if (this.$italicBtn.contains(e.target)) {
+        this.italicBtnHandler.call(this);
+      } else if (this.$headingBtn.contains(e.target)) {
+        this.headingBtnHandler.call(this);
+      } else if (this.$linkBtn.contains(e.target)) {
+        this.linkBtnHandler.call(this);
       }
       return true;
     },
@@ -106,21 +115,37 @@ function WriteFree($ctn) {
      */
     display(sel = null) {
       if (sel instanceof Selection) {
+        if (this.containsSelection(sel)) return;
         const range = sel.getRangeAt(0);
+        this.currentRange = range;
         const rect = range.getBoundingClientRect();
         this.$ctn.style.top = `${rect.bottom + toolbarOffset}px`;
         this.$ctn.style.left = `${rect.left}px`;
         this.$ctn.classList.remove('hide');
       }
-      return this.$ctn;
+    },
+
+    displayInput(placeholder) {
+      this.$input.placeholder = placeholder;
+      this.$btnCtn.classList.add('tb_hide_up');
+      this.$inputCtn.classList.remove('tb_hide_down');
+      this.$ctn.classList.add('tb_wide');
+    },
+    hideInput() {
+      const sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(this.currentRange);
+      this.$btnCtn.classList.remove('tb_hide_up');
+      this.$inputCtn.classList.add('tb_hide_down');
+      this.$ctn.classList.remove('tb_wide');
     },
 
     /**
-     * renderHTML - Render the Toolbar as HTML
+     * getHTML - Render the Toolbar as HTML
      *
      * @returns {Element} The Toolbar as HTML.
      */
-    renderHTML() {
+    getHTML() {
       return this.$ctn;
     },
 
@@ -138,6 +163,20 @@ function WriteFree($ctn) {
     },
 
     /**
+     * containsSelection - Tests whether this Toolbar contains given Selection
+     *  object (sel).
+     *
+     * @param {Selection} sel The Selection to check for in the Toolbar.
+     *
+     * @returns {boolean} Returns true if the given sel object is a Selection
+     *  and it is wholly contained within the Toolbar.
+     */
+    containsSelection(sel) {
+      if (!(sel instanceof Selection)) return false;
+      return this.$ctn.contains(sel.anchorNode) && this.$ctn.contains(sel.focusNode);
+    },
+
+    /**
      * mouseDownHandler - Handles the mousedown event. If the Toolbar, or its
      *  children, are the target of the click, the default behavior is
      *  prevented. This is done so the current Selection won't change or be
@@ -150,8 +189,9 @@ function WriteFree($ctn) {
      */
     mouseDownHandler(e) {
       if (e.type !== 'mousedown') return false;
-      if (this.isTarget(e)) {
+      if (e.target === this.$input) {
         e.preventDefault();
+        this.$input.focus();
       }
       return true;
     },
@@ -183,7 +223,7 @@ function WriteFree($ctn) {
      * @returns {boolean} Returns true if successful else false.
      */
     linkBtnHandler() {
-      return false;
+      this.displayInput('http://...');
     },
 
     /**
@@ -248,7 +288,7 @@ function WriteFree($ctn) {
       this.createfirstPar();
 
       Toolbar.initToolbar();
-      $ctn.append(Toolbar.renderHTML());
+      $ctn.append(Toolbar.getHTML());
       $ctn.addEventListener('paste', this.pasteHandler.bind(this));
       $ctn.addEventListener('keydown', this.keydownHandler.bind(this));
       $ctn.addEventListener('keyup', this.keyupHandler.bind(this));
@@ -309,10 +349,17 @@ function WriteFree($ctn) {
      */
     selectionHandler(sel) {
       if (!(sel instanceof Selection)) return false;
-      if (!this.containsSelection(sel) || sel.isCollapsed) {
-        Toolbar.hide();
-      } else {
+      // if (e.target === Toolbar.$input) {
+      //   Toolbar.display(sel);
+      // }
+
+      if (
+        (this.containsSelection(sel) && !sel.isCollapsed)
+        || Toolbar.containsSelection(sel)
+      ) {
         Toolbar.display(sel);
+      } else {
+        Toolbar.hide();
       }
       return true;
     },
