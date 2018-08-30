@@ -61,7 +61,7 @@ function WriteFree($ctn) {
       this.$boldBtn = generateButton('<b>B</b>', btnClassName, '', true);
       this.$italicBtn = generateButton('<i>i</i>', btnClassName, '', true);
       this.$headingBtn = generateButton('H', btnClassName);
-      this.$linkBtn = generateButton('<a/>', btnClassName);
+      this.$linkBtn = generateButton('&#128279;', btnClassName);
 
       this.$btnCtn.append(this.$boldBtn);
       this.$btnCtn.append(this.$italicBtn);
