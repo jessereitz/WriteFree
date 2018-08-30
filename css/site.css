@@ -71,6 +71,8 @@
     color: white;
     padding-left: 0.1rem;
     font-size: 1em; }
+  .wf__toolbar__input-active {
+    color: #A9D943; }
 
 .wf__editor {
   min-height: 2em;

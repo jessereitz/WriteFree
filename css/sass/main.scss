@@ -91,6 +91,10 @@
     padding-left: 0.1rem;
     font-size: $tb__font-size;
   }
+
+  &__input-active {
+    color: $success-green;
+  }
 }
 
 .#{$editor-prefix} {
