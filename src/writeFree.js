@@ -77,6 +77,7 @@ function WriteFree($ctn) {
       function defaultEnterHandler(e) {
         if (e.key === 'Enter') {
           this.$input.saveHandler.call(this);
+          this.hide();
         }
       }
 
@@ -149,15 +150,27 @@ function WriteFree($ctn) {
     },
 
     displayInput(placeholder, saveHandler) {
+
+
+
+
       this.$input.saveHandler = saveHandler;
       this.$input.placeholder = placeholder;
-
+      this.$input.id="testinput";
       this.$input.saveHandler = saveHandler;
-      // this.$input.addEventListener('keypress', this.$input.defaultEnterHandler.bind(this));
-
       this.$btnCtn.classList.add('tb_hide_up');
       this.$inputCtn.classList.remove('tb_hide_down');
       this.$ctn.classList.add('tb_wide');
+      this.$input.focus();
+      console.log(this.$input.focus);
+      const sel = window.getSelection();
+      this.currentRange = sel.getRangeAt(0);
+      const range = document.createRange();
+      range.selectNode(this.$input);
+      function focusInput() {
+        this.$input.focus();
+      }
+      setTimeout(focusInput.bind(this), 200);
     },
 
     hideInput() {
@@ -251,6 +264,18 @@ function WriteFree($ctn) {
         document.execCommand('italic', false);
       }
     },
+    removeLink() {
+      const sel = window.getSelection();
+      this.currentRange = sel.getRangeAt(0);
+      const range = document.createRange();
+      range.selectNode(this.$linkBtn.currentLink);
+      const plainText = document.createTextNode(this.$linkBtn.currentLink.textContent);
+      range.deleteContents();
+      range.insertNode(plainText);
+      this.$linkBtn.currentLink = null;
+      this.$linkBtn.classList.remove('wf__toolbar__input-active');
+      sel.removeAllRanges();
+    },
 
     /**
      * linkBtnHandler - Handler for when $linkBtn is clicked.
@@ -258,19 +283,6 @@ function WriteFree($ctn) {
      * @returns {boolean} Returns true if successful else false.
      */
     linkBtnHandler() {
-      if (this.$linkBtn.currentLink) {
-        const sel = window.getSelection();
-        this.currentRange = sel.getRangeAt(0);
-        const range = document.createRange();
-        range.selectNode(this.$linkBtn.currentLink);
-        const plainText = document.createTextNode(this.$linkBtn.currentLink.textContent);
-        range.deleteContents();
-        range.insertNode(plainText);
-        this.$linkBtn.currentLink = null;
-        return true;
-      }
-
-
       function saveLink() {
         const url = validateURL(this.$input.value);
         if (!url) return false;
@@ -280,7 +292,9 @@ function WriteFree($ctn) {
         this.links.push(link);
         return link;
       }
-      this.displayInput('http://...', saveLink);
+
+      if (this.$linkBtn.currentLink) this.removeLink();
+      else this.displayInput('http://...', saveLink);
     },
 
     /**
