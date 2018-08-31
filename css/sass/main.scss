@@ -24,7 +24,7 @@
   animation: fade-in 0.15s ease-out;
   transition: width 0.2s;
   overflow: hidden;
-  width: ($tb__font-size * 1.75) * 5;
+  width: ($tb__font-size * 1.75) * 4.6;
 
   &__btn-ctn {
     transition: transform 0.2s;
@@ -94,6 +94,7 @@
 
   &__input-active {
     color: $success-green;
+    border-color: $success-green;
   }
 }
 

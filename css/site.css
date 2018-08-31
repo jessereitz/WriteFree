@@ -20,7 +20,7 @@
   animation: fade-in 0.15s ease-out;
   transition: width 0.2s;
   overflow: hidden;
-  width: 8.75em; }
+  width: 8.05em; }
   .wf__toolbar__btn-ctn {
     transition: transform 0.2s; }
   .wf__toolbar__btn {
@@ -72,7 +72,8 @@
     padding-left: 0.1rem;
     font-size: 1em; }
   .wf__toolbar__input-active {
-    color: #A9D943; }
+    color: #A9D943;
+    border-color: #A9D943; }
 
 .wf__editor {
   min-height: 2em;
