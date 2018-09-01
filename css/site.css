@@ -74,6 +74,14 @@
   .wf__toolbar__input-active {
     color: #A9D943;
     border-color: #A9D943; }
+  .wf__toolbar-hide-up {
+    transform: translateY(-150%);
+    visibility: hidden; }
+  .wf__toolbar-hide-down {
+    transform: translateY(150%);
+    visibility: hidden; }
+  .wf__toolbar-wide {
+    width: 15em; }
 
 .wf__editor {
   min-height: 2em;
@@ -107,17 +115,6 @@
     content: 'Try writing here...';
     color: grey;
     font-style: italic; }
-
-.tb_hide_up {
-  transform: translateY(-150%);
-  visibility: hidden; }
-
-.tb_hide_down {
-  transform: translateY(150%);
-  visibility: hidden; }
-
-.tb_wide {
-  width: 15em; }
 
 .hide {
   display: none !important; }

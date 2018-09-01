@@ -96,6 +96,21 @@
     color: $success-green;
     border-color: $success-green;
   }
+
+
+  &-hide-up {
+    transform: translateY(-150%);
+    visibility: hidden;
+  }
+
+  &-hide-down {
+    transform: translateY(150%);
+    visibility: hidden;
+  }
+
+  &-wide {
+    width: 15em;
+  }
 }
 
 .#{$editor-prefix} {
@@ -145,23 +160,6 @@
   color:grey;
   font-style:italic;
 }
-}
-
-@keyframes hide-up {
-}
-
-.tb_hide_up {
-  transform: translateY(-150%);
-  visibility: hidden;
-}
-
-.tb_hide_down {
-  transform: translateY(150%);
-  visibility: hidden;
-}
-
-.tb_wide {
-  width: 15em;
 }
 
 .hide {
