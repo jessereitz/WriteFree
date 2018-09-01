@@ -21,7 +21,21 @@ import {
 function WriteFree($ctn) {
   const toolbarOffset = 5; // The number of pixels to offset the top of the toolbar.
   const isMac = navigator.platform.indexOf('Mac') > -1;
-  let Editor;
+
+  // Classes for toolbar items.
+  const tbClass = (function tbClass() {
+    let obj = {};
+    obj.main = 'wf__toolbar';
+    obj.btn = `${obj.main}__btn`;
+    obj.btnCtn = `${obj.btn}-ctn`;
+    obj.input = `${obj.main}__input`;
+    obj.inputCtn = `${obj.input}-ctn`;
+    obj.inputActive = `${obj.input}-active`;
+    obj.hideUp = `${obj.main}-hide-up`;
+    obj.hideDown = `${obj.main}-hide-down`
+    obj.wide = `${obj.main}-wide`;
+    return obj;
+  })();
 
   /**
    * Toolbar - The toolbar used for editing text in the WFEditor.
@@ -44,8 +58,7 @@ function WriteFree($ctn) {
      */
     initToolbar() {
       this.links = [];
-      this.className = 'wf__toolbar';
-      this.$ctn = generateElement('div', [this.className, 'hide']);
+      this.$ctn = generateElement('div', [tbClass.main, 'hide']);
       this.$ctn.setAttribute('contenteditable', false);
       this.createToolbarBtns();
       this.generateInput();
@@ -56,12 +69,11 @@ function WriteFree($ctn) {
      *  appropriate event listeners, and attaches them to the $ctn.
      */
     createToolbarBtns() {
-      const btnClassName = `${this.className}__btn`;
-      this.$btnCtn = generateElement('div', `${this.className}__btn-ctn`);
-      this.$boldBtn = generateButton('<b>B</b>', btnClassName, '', true);
-      this.$italicBtn = generateButton('<i>i</i>', btnClassName, '', true);
-      this.$headingBtn = generateButton('H', btnClassName);
-      this.$linkBtn = generateButton('&#128279;', btnClassName, '', true);
+      this.$btnCtn = generateElement('div', tbClass.btnCtn);
+      this.$boldBtn = generateButton('<b>B</b>', tbClass.btn, '', true);
+      this.$italicBtn = generateButton('<i>i</i>', tbClass.btn, '', true);
+      this.$headingBtn = generateButton('H', tbClass.btn);
+      this.$linkBtn = generateButton('&#128279;', tbClass.btn, '', true);
 
       this.$btnCtn.append(this.$boldBtn);
       this.$btnCtn.append(this.$italicBtn);
@@ -72,20 +84,36 @@ function WriteFree($ctn) {
 
       this.$ctn.addEventListener('click', this.clickHandler.bind(this));
     },
+
+    /**
+     * generateInput - Generates the input container, the input element itself,
+     *  and the button used to close out of the input.
+     */
     generateInput() {
-      const btnClassName = `${this.className}__btn`;
+      /**
+       * defaultEnterHandler - Calls the attached saveHandler if present and
+       *  hides the toolbar.
+       *
+       * @param {type} e Description
+       *
+       * @returns {type} Description
+       */
       function defaultEnterHandler(e) {
         if (e.key === 'Enter') {
-          this.$input.saveHandler.call(this);
+          if (
+            this.$input.saveHandler
+            && typeof this.$input.saveHandler === 'function'
+          ) {
+            this.$input.saveHandler.call(this);
+          }
           this.hide();
         }
       }
 
-      this.$inputCtn = generateElement('div', [`${this.className}__input-ctn`, 'tb_hide_down']);
-      this.$input = generateElement('input', [`${this.className}__input`]);
-      this.$input.type = 'text';
+      this.$inputCtn = generateElement('div', [tbClass.inputCtn, tbClass.hideDown]);
+      this.$input = generateElement('input', tbClass.input, {type: 'text'});
       this.$input.addEventListener('keypress', defaultEnterHandler.bind(this));
-      this.$inputClose = generateButton('<b>&times;</b>', btnClassName, '', true);
+      this.$inputClose = generateButton('<b>&times;</b>', tbClass.btn, '', true);
       this.$inputClose.addEventListener('click', this.hideInput.bind(this));
       this.$inputCtn.append(this.$input);
       this.$inputCtn.append(this.$inputClose);
@@ -135,11 +163,11 @@ function WriteFree($ctn) {
           || sel.containsNode(link)
         ));
         if (currentLink) {
-          this.$linkBtn.classList.add('wf__toolbar__input-active');
+          this.$linkBtn.classList.add(tbClass.inputActive);
           this.$linkBtn.currentLink = currentLink;
         } else {
           this.$linkBtn.currentLink = null;
-          this.$linkBtn.classList.remove('wf__toolbar__input-active');
+          this.$linkBtn.classList.remove(tbClass.inputActive);
         }
         this.currentRange = range;
         const rect = range.getBoundingClientRect();
@@ -150,17 +178,13 @@ function WriteFree($ctn) {
     },
 
     displayInput(placeholder, saveHandler) {
-
-
-
-
       this.$input.saveHandler = saveHandler;
       this.$input.placeholder = placeholder;
       this.$input.id="testinput";
       this.$input.saveHandler = saveHandler;
-      this.$btnCtn.classList.add('tb_hide_up');
-      this.$inputCtn.classList.remove('tb_hide_down');
-      this.$ctn.classList.add('tb_wide');
+      this.$btnCtn.classList.add(tbClass.hideUp);
+      this.$inputCtn.classList.remove(tbClass.hideDown);
+      this.$ctn.classList.add(tbClass.wide);
       this.$input.focus();
       console.log(this.$input.focus);
       const sel = window.getSelection();
@@ -179,9 +203,9 @@ function WriteFree($ctn) {
         sel.removeAllRanges();
         sel.addRange(this.currentRange);
       }
-      this.$btnCtn.classList.remove('tb_hide_up');
-      this.$inputCtn.classList.add('tb_hide_down');
-      this.$ctn.classList.remove('tb_wide');
+      this.$btnCtn.classList.remove(tbClass.hideUp);
+      this.$inputCtn.classList.add(tbClass.hideDown);
+      this.$ctn.classList.remove(tbClass.wide);
       this.currentRange = null;
       this.$input.value = '';
       // this.$input.removeEventListener('keypress', this.$input.defaultEnterHandler);
@@ -339,7 +363,7 @@ function WriteFree($ctn) {
    * @property {Element} $innerCtn - The actual contetneditable-div in which the
    *  user can write
    */
-  Editor = {
+  const Editor = {
 
     /**
      * initWFEditor - Initializes the Editor. Creates an inner container div and
@@ -373,10 +397,13 @@ function WriteFree($ctn) {
      */
     createfirstPar() {
       if (!this.$firstPar) {
-        this.$firstPar = generateElement('p', [], 'wf__editor-first');
+        const firstParOptions = {
+          'id':'wf__editor-first',
+          'placeholder': 'Try writing here...',
+        }
+        this.$firstPar = generateElement('p', [], firstParOptions);
       }
       this.$firstPar.textContent = '';
-      this.$firstPar.placeholder = 'Try writing here...';
       const observer = new MutationObserver(() => {
         if (this.$firstPar.textContent === '') this.$firstPar.innerHTML = '';
       });
