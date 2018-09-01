@@ -5,18 +5,25 @@
  * @param {string} [tagName=div] The tag name to use for the element.
  * @param {string|string[]}  [klasses=[]]  A single string or an array of
  *  strings representing the classes to be added to the element.
- * @param {string} [id=''] An optional id to be added to the element.
+ * @param {object} [options={}] An optional object containing attributes to be 
+ *  added to the element. Each key must be a valid HTML attribute and the value
+ *  must be a string.
  *
  * @returns {Element} The newly-created HTML element.
  */
-export function generateElement(tagName = 'div', klasses = [], id = '') {
+export function generateElement(tagName = 'div', klasses = [], options = {}) {
   const $el = document.createElement(tagName);
   if (Array.isArray(klasses)) {
     klasses.forEach(klass => $el.classList.add(klass));
   } else {
     $el.classList.add(klasses);
   }
-  if (id) $el.setAttribute('id', id);
+
+  if (options && typeof options === 'object') {
+    for (const attr of Object.keys(options)) {
+      $el.setAttribute(attr, options[attr]);
+    }
+  }
   return $el;
 }
 
