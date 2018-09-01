@@ -177,16 +177,24 @@ function WriteFree($ctn) {
       }
     },
 
+    /**
+     * displayInput - Display the built-in input element of the ToolBar.
+     *
+     * @param {string} placeholder The placeholder to be put in the input.
+     * @param {function} saveHandler THe function which will be called on save.
+     *
+     */
     displayInput(placeholder, saveHandler) {
       this.$input.saveHandler = saveHandler;
       this.$input.placeholder = placeholder;
-      this.$input.id="testinput";
-      this.$input.saveHandler = saveHandler;
+      if (typeof saveHandler === 'function')
+        this.$input.saveHandler = saveHandler;
+
       this.$btnCtn.classList.add(tbClass.hideUp);
       this.$inputCtn.classList.remove(tbClass.hideDown);
       this.$ctn.classList.add(tbClass.wide);
-      this.$input.focus();
-      console.log(this.$input.focus);
+
+      // put focus in the input. Must timeout due to animations.
       const sel = window.getSelection();
       this.currentRange = sel.getRangeAt(0);
       const range = document.createRange();
@@ -197,6 +205,11 @@ function WriteFree($ctn) {
       setTimeout(focusInput.bind(this), 200);
     },
 
+    /**
+     * hideInput - Hides the input and reselects the text which the user had
+     *  selected.
+     *
+     */
     hideInput() {
       if (this.currentRange) {
         const sel = window.getSelection();
@@ -208,7 +221,7 @@ function WriteFree($ctn) {
       this.$ctn.classList.remove(tbClass.wide);
       this.currentRange = null;
       this.$input.value = '';
-      // this.$input.removeEventListener('keypress', this.$input.defaultEnterHandler);
+      this.$input.saveHandler = null;
     },
 
     /**
@@ -288,6 +301,11 @@ function WriteFree($ctn) {
         document.execCommand('italic', false);
       }
     },
+
+    /**
+     * removeLink - Removes the link which the selection contains.
+     *
+     */
     removeLink() {
       const sel = window.getSelection();
       this.currentRange = sel.getRangeAt(0);
