@@ -36,7 +36,6 @@ export function deleteWord() {
     }
   }
   r.deleteContents();
-
 }
 
 export function dummy() {

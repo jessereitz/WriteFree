@@ -20,11 +20,10 @@ import {
  */
 function WriteFree($ctn) {
   const toolbarOffset = 5; // The number of pixels to offset the top of the toolbar.
-  const isMac = navigator.platform.indexOf('Mac') > -1;
 
   // Classes for toolbar items.
   const tbClass = (function tbClass() {
-    let obj = {};
+    const obj = {};
     obj.main = 'wf__toolbar';
     obj.btn = `${obj.main}__btn`;
     obj.btnCtn = `${obj.btn}-ctn`;
@@ -32,10 +31,10 @@ function WriteFree($ctn) {
     obj.inputCtn = `${obj.input}-ctn`;
     obj.inputActive = `${obj.input}-active`;
     obj.hideUp = `${obj.main}-hide-up`;
-    obj.hideDown = `${obj.main}-hide-down`
+    obj.hideDown = `${obj.main}-hide-down`;
     obj.wide = `${obj.main}-wide`;
     return obj;
-  })();
+  }());
 
   /**
    * Toolbar - The toolbar used for editing text in the WFEditor.
@@ -56,7 +55,8 @@ function WriteFree($ctn) {
      *
      * @returns {Toolbar} Returns this.
      */
-    initToolbar() {
+    initToolbar(editor) {
+      this.editor = editor;
       this.links = [];
       this.$ctn = generateElement('div', [tbClass.main, 'hide']);
       this.$ctn.setAttribute('contenteditable', false);
@@ -111,7 +111,7 @@ function WriteFree($ctn) {
       }
 
       this.$inputCtn = generateElement('div', [tbClass.inputCtn, tbClass.hideDown]);
-      this.$input = generateElement('input', tbClass.input, {type: 'text'});
+      this.$input = generateElement('input', tbClass.input, { type: 'text' });
       this.$input.addEventListener('keypress', defaultEnterHandler.bind(this));
       this.$inputClose = generateButton('<b>&times;</b>', tbClass.btn, '', true);
       this.$inputClose.addEventListener('click', this.hideInput.bind(this));
@@ -187,9 +187,9 @@ function WriteFree($ctn) {
     displayInput(placeholder, saveHandler) {
       this.$input.saveHandler = saveHandler;
       this.$input.placeholder = placeholder;
-      if (typeof saveHandler === 'function')
+      if (typeof saveHandler === 'function') {
         this.$input.saveHandler = saveHandler;
-
+      }
       this.$btnCtn.classList.add(tbClass.hideUp);
       this.$inputCtn.classList.remove(tbClass.hideDown);
       this.$ctn.classList.add(tbClass.wide);
@@ -351,7 +351,7 @@ function WriteFree($ctn) {
       if (sel instanceof Selection) {
         if (parent.tagName === 'H1' || parent.tagName === 'H2') {
           tagName = 'div';
-        } else if (Editor.isFirst(parent)) {
+        } else if (this.editor.isFirst(parent)) {
           tagName = 'h1';
         } else {
           tagName = 'h2';
@@ -400,7 +400,7 @@ function WriteFree($ctn) {
       $ctn.append(this.$innerCtn);
       this.createfirstPar();
 
-      Toolbar.initToolbar();
+      Toolbar.initToolbar(this);
       $ctn.append(Toolbar.getHTML());
       $ctn.addEventListener('paste', this.pasteHandler.bind(this));
       $ctn.addEventListener('keydown', this.keydownHandler.bind(this));
@@ -416,9 +416,9 @@ function WriteFree($ctn) {
     createfirstPar() {
       if (!this.$firstPar) {
         const firstParOptions = {
-          'id':'wf__editor-first',
-          'placeholder': 'Try writing here...',
-        }
+          id: 'wf__editor-first',
+          placeholder: 'Try writing here...',
+        };
         this.$firstPar = generateElement('p', [], firstParOptions);
       }
       this.$firstPar.textContent = '';

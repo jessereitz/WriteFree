@@ -5,7 +5,7 @@
  * @param {string} [tagName=div] The tag name to use for the element.
  * @param {string|string[]}  [klasses=[]]  A single string or an array of
  *  strings representing the classes to be added to the element.
- * @param {object} [options={}] An optional object containing attributes to be 
+ * @param {object} [options={}] An optional object containing attributes to be
  *  added to the element. Each key must be a valid HTML attribute and the value
  *  must be a string.
  *
@@ -20,9 +20,9 @@ export function generateElement(tagName = 'div', klasses = [], options = {}) {
   }
 
   if (options && typeof options === 'object') {
-    for (const attr of Object.keys(options)) {
+    Object.keys(options).forEach((attr) => {
       $el.setAttribute(attr, options[attr]);
-    }
+    });
   }
   return $el;
 }
@@ -96,7 +96,6 @@ export function isDeletionKey(event) {
 *   applicable) if url is valid. Else returns false.
  */
 export function validateURL(url) {
-  console.log(url);
   let returnVal;
   if (!url.includes('.')) return false;
   if (!url.startsWith('http://') || !url.startsWith('https://')) {
