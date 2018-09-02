@@ -21,7 +21,20 @@ export function generateElement(tagName = 'div', klasses = [], options = {}) {
 
   if (options && typeof options === 'object') {
     Object.keys(options).forEach((attr) => {
-      $el.setAttribute(attr, options[attr]);
+      if (attr === 'style') {
+        if (
+          options[attr] === null
+          || options[attr] === undefined
+          || (!(typeof options[attr] === 'object'))
+        ) { return false; }
+        let styleString = '';
+        Object.keys(options[attr]).forEach((prop) => {
+          styleString += `${prop}: ${options[attr][prop]};`;
+        });
+        $el.setAttribute('style', styleString);
+      } else {
+        $el.setAttribute(attr, options[attr]);
+      }
     });
   }
   return $el;
