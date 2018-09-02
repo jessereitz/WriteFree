@@ -36,6 +36,10 @@ function WriteFree($ctn) {
     return obj;
   }());
 
+  // const edClass = (function edClass() {
+  //   return null;
+  // }());
+
   /**
    * Toolbar - The toolbar used for editing text in the WFEditor.
    *
@@ -110,10 +114,18 @@ function WriteFree($ctn) {
         }
       }
 
-      this.$inputCtn = generateElement('div', [tbClass.inputCtn, tbClass.hideDown]);
+      this.$inputCtn = generateElement(
+        'div',
+        [tbClass.inputCtn, tbClass.hideDown],
+      );
       this.$input = generateElement('input', tbClass.input, { type: 'text' });
       this.$input.addEventListener('keypress', defaultEnterHandler.bind(this));
-      this.$inputClose = generateButton('<b>&times;</b>', tbClass.btn, '', true);
+
+      this.$inputClose = generateButton(
+        '<b>&times;</b>',
+        tbClass.btn,
+        true,
+      );
       this.$inputClose.addEventListener('click', this.hideInput.bind(this));
       this.$inputCtn.append(this.$input);
       this.$inputCtn.append(this.$inputClose);
@@ -137,44 +149,11 @@ function WriteFree($ctn) {
       } else if (this.$italicBtn.contains(e.target)) {
         this.italicBtnHandler.call(this);
       } else if (this.$headingBtn.contains(e.target)) {
-        this.headingBtnHandler.call(this);
+        this.wrapHeading.call(this);
       } else if (this.$linkBtn.contains(e.target)) {
         this.linkBtnHandler.call(this);
       }
       return true;
-    },
-
-    /**
-     * display - Optionally display the Toolbar next to the given selection.
-     *  The Toolbar is always returned as an HTML element.
-     *
-     * @param {Selection} [sel=null] The Selection next to which the Toolbar should be
-     *  displayed.
-     *
-     * @returns {Element} Returns the toolbar as an HTML element.
-     */
-    display(sel = null) {
-      if (sel instanceof Selection) {
-        if (this.containsSelection(sel)) return;
-        const range = sel.getRangeAt(0);
-        const currentLink = this.links.find(link => (
-          link.contains(sel.anchorNode)
-          || link.contains(sel.focusNode)
-          || sel.containsNode(link)
-        ));
-        if (currentLink) {
-          this.$linkBtn.classList.add(tbClass.inputActive);
-          this.$linkBtn.currentLink = currentLink;
-        } else {
-          this.$linkBtn.currentLink = null;
-          this.$linkBtn.classList.remove(tbClass.inputActive);
-        }
-        this.currentRange = range;
-        const rect = range.getBoundingClientRect();
-        this.$ctn.style.top = `${rect.bottom + toolbarOffset}px`;
-        this.$ctn.style.left = `${rect.left}px`;
-        this.$ctn.classList.remove('hide');
-      }
     },
 
     /**
@@ -185,7 +164,6 @@ function WriteFree($ctn) {
      *
      */
     displayInput(placeholder, saveHandler) {
-      this.$input.saveHandler = saveHandler;
       this.$input.placeholder = placeholder;
       if (typeof saveHandler === 'function') {
         this.$input.saveHandler = saveHandler;
@@ -207,7 +185,7 @@ function WriteFree($ctn) {
 
     /**
      * hideInput - Hides the input and reselects the text which the user had
-     *  selected.
+     *  selected. Also resets the input element and removes its saveHandler.
      *
      */
     hideInput() {
@@ -231,6 +209,39 @@ function WriteFree($ctn) {
      */
     getHTML() {
       return this.$ctn;
+    },
+
+    /**
+     * display - Optionally display the Toolbar next to the given selection.
+     *  The Toolbar is always returned as an HTML element.
+     *
+     * @param {Selection} [sel=null] The Selection next to which the Toolbar should be
+     *  displayed.
+     *
+     * @returns {boolean} Returns true if the Toolbar is displayed. Else false.
+     */
+    display(sel = null) {
+      if (!(sel instanceof Selection)) return false;
+      if (this.containsSelection(sel)) return false;
+      const range = sel.getRangeAt(0);
+      const currentLink = this.links.find(link => (
+        link.contains(sel.anchorNode)
+        || link.contains(sel.focusNode)
+        || sel.containsNode(link)
+      ));
+      if (currentLink) {
+        this.$linkBtn.classList.add(tbClass.inputActive);
+        this.$linkBtn.currentLink = currentLink;
+      } else {
+        this.$linkBtn.currentLink = null;
+        this.$linkBtn.classList.remove(tbClass.inputActive);
+      }
+      this.currentRange = range;
+      const rect = range.getBoundingClientRect();
+      this.$ctn.style.top = `${rect.bottom + toolbarOffset}px`;
+      this.$ctn.style.left = `${rect.left}px`;
+      this.$ctn.classList.remove('hide');
+      return true;
     },
 
     /**
@@ -303,23 +314,6 @@ function WriteFree($ctn) {
     },
 
     /**
-     * removeLink - Removes the link which the selection contains.
-     *
-     */
-    removeLink() {
-      const sel = window.getSelection();
-      this.currentRange = sel.getRangeAt(0);
-      const range = document.createRange();
-      range.selectNode(this.$linkBtn.currentLink);
-      const plainText = document.createTextNode(this.$linkBtn.currentLink.textContent);
-      range.deleteContents();
-      range.insertNode(plainText);
-      this.$linkBtn.currentLink = null;
-      this.$linkBtn.classList.remove('wf__toolbar__input-active');
-      sel.removeAllRanges();
-    },
-
-    /**
      * linkBtnHandler - Handler for when $linkBtn is clicked.
      *
      * @returns {boolean} Returns true if successful else false.
@@ -340,18 +334,19 @@ function WriteFree($ctn) {
     },
 
     /**
-     * headingBtnHandler - Handler for when $headingBtn is clicked.
+     * wrapHeading - Wrap the current selection in a heading element. Wraps in
+     *  H1 if the current selection is the first element in the Editor.
      *
      * @returns {boolean} Returns true if successful else false.
      */
-    headingBtnHandler() {
+    wrapHeading() {
       const sel = window.getSelection();
-      const parent = sel.anchorNode.parentNode;
+      const parentnode = sel.anchorNode.parentNode;
       let tagName;
       if (sel instanceof Selection) {
-        if (parent.tagName === 'H1' || parent.tagName === 'H2') {
+        if (parentnode.tagName === 'H1' || parentnode.tagName === 'H2') {
           tagName = 'div';
-        } else if (this.editor.isFirst(parent)) {
+        } else if (this.editor.isFirst(parentnode)) {
           tagName = 'h1';
         } else {
           tagName = 'h2';
@@ -370,6 +365,23 @@ function WriteFree($ctn) {
      */
     isTarget(e) {
       return isTarget(this.$ctn, e);
+    },
+
+    /**
+     * removeLink - Removes the link which the selection contains.
+     *
+     */
+    removeLink() {
+      const sel = window.getSelection();
+      this.currentRange = sel.getRangeAt(0);
+      const range = document.createRange();
+      range.selectNode(this.$linkBtn.currentLink);
+      const plainText = document.createTextNode(this.$linkBtn.currentLink.textContent);
+      range.deleteContents();
+      range.insertNode(plainText);
+      this.$linkBtn.currentLink = null;
+      this.$linkBtn.classList.remove('wf__toolbar__input-active');
+      sel.removeAllRanges();
     },
   };
 
@@ -504,6 +516,11 @@ function WriteFree($ctn) {
       return $ctn.contains($node);
     },
 
+    /**
+     * getToolbar - Returns the Toolbar associated with this Editor.
+     *
+     * @returns {Toolbar} The Toolbar associated with this Editor.
+     */
     getToolbar() { return Toolbar; },
     /**
      * pasteHandler - Handles the paste event in the editor. We intercept the
