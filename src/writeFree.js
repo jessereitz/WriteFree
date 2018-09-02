@@ -18,7 +18,7 @@ import {
  *
  * @returns {Editor} The WriteFree editor.
  */
-function WriteFree($ctn) {
+function WriteFree($ctn, userOptions = {}) {
   const toolbarOffset = 5; // The number of pixels to offset the top of the toolbar.
 
   // Classes for toolbar items.
@@ -36,9 +36,32 @@ function WriteFree($ctn) {
     return obj;
   }());
 
-  // const edClass = (function edClass() {
-  //   return null;
-  // }());
+  // Classes for editor items.
+  const edClass = (function edClass() {
+    const obj = {};
+    obj.main = 'wf__editor';
+    return obj;
+  }());
+
+  const defaultOptions = Object.freeze({
+    divOrPar: 'p',
+    sectionClass: null,
+    sectionStyle: null,
+    containerClass: 'wf__editor',
+    containerStyle: null,
+    includeContainer: true,
+  });
+
+  const options = (function setOptions() {
+    const globalOptions = Object.assign({}, defaultOptions);
+    if (userOptions && typeof userOptions === 'object') {
+      Object.keys(userOptions).forEach((option) => {
+        globalOptions[option] = userOptions[option];
+      });
+    }
+    return globalOptions;
+  }());
+
 
   /**
    * Toolbar - The toolbar used for editing text in the WFEditor.
@@ -404,8 +427,13 @@ function WriteFree($ctn) {
      */
     initWFEditor() {
       document.execCommand('defaultParagraphSeparator', false, 'p');
-      this.$innerCtn = generateElement('div', 'wf__editor');
+      this.$innerCtn = generateElement('div', edClass.main, { style: options.containerStyle });
       this.$innerCtn.setAttribute('contenteditable', true);
+      // const style = {
+      //   color: 'orange',
+      //   background: 'blue',
+      // };
+      // this.$innerCtn.style = style;
       $ctn.append(this.$innerCtn);
       this.createfirstPar();
 
@@ -434,7 +462,10 @@ function WriteFree($ctn) {
       const observer = new MutationObserver(() => {
         if (this.$firstPar.textContent === '') this.$firstPar.innerHTML = '';
       });
-      observer.observe(this.$firstPar, { attributes: true, childList: true, subtree: true });
+      observer.observe(
+        this.$firstPar,
+        { attributes: true, childList: true, subtree: true },
+      );
 
       this.$innerCtn.append(this.$firstPar);
       const sel = window.getSelection();
@@ -589,6 +620,9 @@ function WriteFree($ctn) {
         }
       }
     },
+    getHTML() {
+      return this.$innerCtn;
+    },
   };
 
   /**
@@ -624,7 +658,9 @@ function WriteFree($ctn) {
   document.addEventListener('mousedown', mouseDownHandler);
   document.addEventListener('selectionchange', selectionHandler);
   Editor.initWFEditor();
-  return Editor;
+  return {
+    getHTML: Editor.getHTML.bind(Editor),
+  };
 }
 
-window.wf = WriteFree(document.getElementById('WriteFreeCtn'));
+window.wf = WriteFree(document.getElementById('WriteFreeCtn'), {containerStyle: {color: 'blue', background: 'orange'}});
