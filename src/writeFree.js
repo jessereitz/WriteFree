@@ -74,10 +74,10 @@ function WriteFree($ctn) {
      */
     createToolbarBtns() {
       this.$btnCtn = generateElement('div', tbClass.btnCtn);
-      this.$boldBtn = generateButton('<b>B</b>', tbClass.btn, '', true);
-      this.$italicBtn = generateButton('<i>i</i>', tbClass.btn, '', true);
+      this.$boldBtn = generateButton('<b>B</b>', tbClass.btn, true);
+      this.$italicBtn = generateButton('<i>i</i>', tbClass.btn, true);
       this.$headingBtn = generateButton('H', tbClass.btn);
-      this.$linkBtn = generateButton('&#128279;', tbClass.btn, '', true);
+      this.$linkBtn = generateButton('&#128279;', tbClass.btn, true);
 
       this.$btnCtn.append(this.$boldBtn);
       this.$btnCtn.append(this.$italicBtn);
