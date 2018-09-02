@@ -406,9 +406,6 @@ function WriteFree($ctn) {
       document.execCommand('defaultParagraphSeparator', false, 'p');
       this.$innerCtn = generateElement('div', 'wf__editor');
       this.$innerCtn.setAttribute('contenteditable', true);
-      this.$buffer = generateElement('div', 'wf__buffer');
-      this.$buffer.setAttribute('contenteditable', false);
-      // this.$innerCtn.append(this.$buffer);
       $ctn.append(this.$innerCtn);
       this.createfirstPar();
 
