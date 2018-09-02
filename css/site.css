@@ -102,15 +102,6 @@
     font-size: 2rem; }
   .wf__editor h2 {
     font-size: 1.5rem; }
-  .wf__editor .wf__buffer {
-    width: 100%;
-    height: 1px;
-    background: none;
-    margin: 0;
-    padding: 0;
-    border: none; }
-  .wf__editor .wf__editor-placeholder {
-    color: #888; }
   .wf__editor #wf__editor-first:empty:not(:focus):before {
     content: 'Try writing here...';
     color: grey;
