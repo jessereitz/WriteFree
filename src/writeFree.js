@@ -474,10 +474,6 @@ function WriteFree($ctn) {
      */
     selectionHandler(sel) {
       if (!(sel instanceof Selection)) return false;
-      // if (e.target === Toolbar.$input) {
-      //   Toolbar.display(sel);
-      // }
-
       if (
         (this.containsSelection(sel) && !sel.isCollapsed)
         || Toolbar.containsSelection(sel)
@@ -538,6 +534,16 @@ function WriteFree($ctn) {
       document.execCommand('insertHTML', false, text);
       return true;
     },
+
+    /**
+     * isFirst - Determines if given HTML Element is the first element of the
+     *  Editor.
+     *
+     * @param {Element} $node The HTML Element to test.
+     *
+     * @returns {boolean} True if the given Element is the first in the Editor,
+     *  else returns false.
+     */
     isFirst($node) {
       if (this.$innerCtn.children[0] === $node) {
         return true;
