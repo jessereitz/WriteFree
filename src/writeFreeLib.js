@@ -36,8 +36,13 @@ export function generateElement(tagName = 'div', klasses = [], options = {}) {
  *
  * @returns {type} Description
  */
-export function generateButton(value = 'Button', klasses = [], id = '', innerHTML = false) {
-  const $btn = generateElement('button', klasses, id);
+export function generateButton(
+  value = 'Button',
+  klasses = [],
+  innerHTML = false,
+  options = {},
+) {
+  const $btn = generateElement('button', klasses, options);
   if (innerHTML) $btn.innerHTML = value;
   else $btn.textContent = value;
   return $btn;
