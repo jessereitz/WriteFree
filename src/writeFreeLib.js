@@ -41,16 +41,20 @@ export function addStyleFromObj($el, styleObj) {
  */
 export function generateElement(tagName = 'div', klasses = [], options = {}) {
   const $el = document.createElement(tagName);
-  if (Array.isArray(klasses)) {
-    klasses.forEach(klass => $el.classList.add(klass));
-  } else {
-    $el.classList.add(klasses);
+  function addClasses(classes) {
+    if (Array.isArray(classes)) {
+      classes.forEach(klass => $el.classList.add(klass));
+    } else {
+      $el.classList.add(classes);
+    }
   }
-
+  addClasses(klasses);
   if (options && typeof options === 'object') {
     Object.keys(options).forEach((attr) => {
       if (attr === 'style') {
         addStyleFromObj($el, options[attr]);
+      } else if (attr === 'klasses') {
+        addClasses(options[attr]);
       } else {
         $el.setAttribute(attr, options[attr]);
       }
