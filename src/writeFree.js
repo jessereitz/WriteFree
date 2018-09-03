@@ -365,18 +365,24 @@ function WriteFree($ctn, userOptions = {}) {
      */
     wrapHeading() {
       const sel = window.getSelection();
-      const parentnode = sel.anchorNode.parentNode;
+      const parentTags = ['DIV', 'P', 'H1', 'H2'];
+      let parentnode = sel.anchorNode;
+      while (!parentTags.includes(parentnode.tagName)) {
+        parentnode = parentnode.parentNode;
+      }
+      parentnode.innerHTML = parentnode.innerHTML.replace(/<[^>]+>/g, '');
       let tagName;
       if (sel instanceof Selection) {
         if (parentnode.tagName === 'H1' || parentnode.tagName === 'H2') {
-          tagName = 'div';
+          tagName = options.divOrPar;
         } else if (this.editor.isFirst(parentnode)) {
           tagName = 'h1';
         } else {
           tagName = 'h2';
         }
-        document.execCommand('formatBlock', false, tagName);
+        return document.execCommand('formatBlock', false, tagName);
       }
+      return false;
     },
 
     /**
@@ -664,7 +670,7 @@ const options = {
   divOrPar: 'p',
   sectionClass: 'testSection',
   sectionStyle: {
-    color: 'orange',
+    color: '#fff',
   },
   containerClass: 'testContainer',
   containerStyle: {
