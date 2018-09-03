@@ -150,9 +150,9 @@ export function validateURL(url) {
 
 export function findParentBlock($el) {
   const parentTags = ['DIV', 'P', 'H1', 'H2'];
-  let $retunEl = $el;
-  while (!parentTags.includes($el.tagName)) {
-    $retunEl = $el.parentNode;
+  let $returnEl = $el;
+  while (!parentTags.includes($returnEl.tagName)) {
+    $returnEl = $returnEl.parentNode;
   }
-  return $retunEl;
+  return $returnEl;
 }
