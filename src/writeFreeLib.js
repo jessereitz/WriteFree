@@ -1,4 +1,32 @@
 /**
+ * addStyleFromObj - Adds inline-style to a given HTML Element from the given
+ *  style Object.
+ *
+ * @param {Element} $el   The HTML Element to which the styles will be added.
+ * @param {object} styleObj The object which contains the styles. Must be
+ *  formatted in the format { 'property' : 'value' } where 'property' is the
+ *  CSS property and 'value' is the value to which it should be set.
+ *  E.g. { color : 'purple' } will set $el's color to purple.
+ *
+ * @returns {Element} If the given styleObj is not an object or is null or
+ *  undefined, will return false. If styles are successfully added, returns the
+ *  HTML Element.
+ */
+export function addStyleFromObj($el, styleObj) {
+  if (
+    styleObj === null
+    || styleObj === undefined
+    || (!(typeof styleObj === 'object'))
+  ) { return false; }
+  let styleString = '';
+  Object.keys(styleObj).forEach((prop) => {
+    styleString += `${prop}: ${styleObj[prop]};`;
+  });
+  $el.setAttribute('style', styleString);
+  return $el;
+}
+
+/**
  * generateElement - Quickly generates an HTML element with given tagName,
  *  classes, and id.
  *
@@ -22,19 +50,11 @@ export function generateElement(tagName = 'div', klasses = [], options = {}) {
   if (options && typeof options === 'object') {
     Object.keys(options).forEach((attr) => {
       if (attr === 'style') {
-        if (
-          options[attr] === null
-          || options[attr] === undefined
-          || (!(typeof options[attr] === 'object'))
-        ) { return false; }
-        let styleString = '';
-        Object.keys(options[attr]).forEach((prop) => {
-          styleString += `${prop}: ${options[attr][prop]};`;
-        });
-        $el.setAttribute('style', styleString);
+        addStyleFromObj($el, options[attr]);
       } else {
         $el.setAttribute(attr, options[attr]);
       }
+      return null;
     });
   }
   return $el;
