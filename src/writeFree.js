@@ -6,6 +6,7 @@ import {
   isTarget,
   isDeletionKey,
   validateURL,
+  findParentBlock,
 } from './writeFreeLib.js';
 
 
@@ -26,6 +27,7 @@ function WriteFree($ctn, userOptions = {}) {
     const obj = {};
     obj.main = 'wf__toolbar';
     obj.btn = `${obj.main}__btn`;
+    obj.btnDisabled = `${obj.btn}-disabled`;
     obj.btnCtn = `${obj.btn}-ctn`;
     obj.input = `${obj.main}__input`;
     obj.inputCtn = `${obj.input}-ctn`;
@@ -168,13 +170,13 @@ function WriteFree($ctn, userOptions = {}) {
      */
     clickHandler(e) {
       if (e.type !== 'click') return false;
-      if (this.$boldBtn.contains(e.target)) {
+      if (this.$boldBtn.contains(e.target) && !this.$boldBtn.disabled) {
         this.boldBtnHandler.call(this);
-      } else if (this.$italicBtn.contains(e.target)) {
+      } else if (this.$italicBtn.contains(e.target) && !this.$italicBtn.disabled) {
         this.italicBtnHandler.call(this);
-      } else if (this.$headingBtn.contains(e.target)) {
+      } else if (this.$headingBtn.contains(e.target) && !this.$headingBtn.disabled) {
         this.wrapHeading.call(this);
-      } else if (this.$linkBtn.contains(e.target)) {
+      } else if (this.$linkBtn.contains(e.target) && !this.$linkBtn.disabled) {
         this.linkBtnHandler.call(this);
       }
       return true;
@@ -259,6 +261,22 @@ function WriteFree($ctn, userOptions = {}) {
       } else {
         this.$linkBtn.currentLink = null;
         this.$linkBtn.classList.remove(tbClass.inputActive);
+      }
+      const parentnode = findParentBlock(sel.anchorNode);
+      if (parentnode.tagName === 'H1' || parentnode.tagName === 'H2') {
+        this.$linkBtn.classList.add(tbClass.btnDisabled);
+        this.$boldBtn.classList.add(tbClass.btnDisabled);
+        this.$italicBtn.classList.add(tbClass.btnDisabled);
+        this.$linkBtn.disabled = true;
+        this.$boldBtn.disabled = true;
+        this.$italicBtn.disabled = true;
+      } else {
+        this.$linkBtn.classList.remove(tbClass.btnDisabled);
+        this.$boldBtn.classList.remove(tbClass.btnDisabled);
+        this.$italicBtn.classList.remove(tbClass.btnDisabled);
+        this.$linkBtn.disabled = false;
+        this.$boldBtn.disabled = false;
+        this.$italicBtn.disabled = false;
       }
       this.currentRange = range;
       const rect = range.getBoundingClientRect();
@@ -352,24 +370,21 @@ function WriteFree($ctn, userOptions = {}) {
         this.links.push(link);
         return link;
       }
-
       if (this.$linkBtn.currentLink) this.removeLink();
       else this.displayInput('http://...', saveLink);
     },
 
     /**
-     * wrapHeading - Wrap the current selection in a heading element. Wraps in
-     *  H1 if the current selection is the first element in the Editor.
+     * wrapHeading - Wrap the current selection in a heading element or removes
+     *  current heading element. Wraps non-headings in H1 if the current
+     *  selection is the first element in the Editor otherwise uses H2. Removes
+     *  all children HTML elements, leavining only text.
      *
      * @returns {boolean} Returns true if successful else false.
      */
     wrapHeading() {
       const sel = window.getSelection();
-      const parentTags = ['DIV', 'P', 'H1', 'H2'];
-      let parentnode = sel.anchorNode;
-      while (!parentTags.includes(parentnode.tagName)) {
-        parentnode = parentnode.parentNode;
-      }
+      const parentnode = findParentBlock(sel.anchorNode);
       parentnode.innerHTML = parentnode.innerHTML.replace(/<[^>]+>/g, '');
       let tagName;
       if (sel instanceof Selection) {
