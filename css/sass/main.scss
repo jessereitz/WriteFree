@@ -109,6 +109,10 @@
   &-wide {
     width: 15em;
   }
+
+  &.hide {
+    display: none !important;
+  }
 }
 
 .#{$editor-prefix} {
@@ -139,13 +143,10 @@
     font-size: $editor__h2-size;
   }
 
-  #wf__editor-first:empty:not(:focus):before{
+  p:first-child:empty:not(:focus)::before,
+  div:first-child:empty:not(:focus)::before {
   content:'Try writing here...';
   color:grey;
   font-style:italic;
   }
-}
-
-.hide {
-  display: none !important;
 }

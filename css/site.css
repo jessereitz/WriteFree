@@ -82,6 +82,8 @@
     visibility: hidden; }
   .wf__toolbar-wide {
     width: 15em; }
+  .wf__toolbar.hide {
+    display: none !important; }
 
 .wf__editor {
   min-height: 2em;
@@ -102,12 +104,10 @@
     font-size: 2rem; }
   .wf__editor h2 {
     font-size: 1.5rem; }
-  .wf__editor #wf__editor-first:empty:not(:focus):before {
+  .wf__editor p:first-child:empty:not(:focus)::before,
+  .wf__editor div:first-child:empty:not(:focus)::before {
     content: 'Try writing here...';
     color: grey;
     font-style: italic; }
-
-.hide {
-  display: none !important; }
 
 /*# sourceMappingURL=site.css.map */
