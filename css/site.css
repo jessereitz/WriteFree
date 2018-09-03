@@ -43,6 +43,11 @@
   .wf__toolbar__btn:active {
     border-color: #bbb;
     background: rgba(0, 0, 0, 0.2); }
+  .wf__toolbar__btn-disabled {
+    color: #666; }
+  .wf__toolbar__btn-disabled:hover {
+    border-color: transparent;
+    background: none; }
   .wf__toolbar__input-ctn {
     box-sizing: border-box;
     position: absolute;

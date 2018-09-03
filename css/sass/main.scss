@@ -56,6 +56,15 @@
     background: rgba(0,0,0,0.2);
   }
 
+  &__btn-disabled {
+    color: $tb__disabled-color;
+  }
+
+  &__btn-disabled:hover {
+    border-color: rgba(0,0,0,0);
+    background: none;
+  }
+
   &__input-ctn {
     box-sizing: border-box;
     position: absolute;
