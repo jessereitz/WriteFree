@@ -36,24 +36,16 @@ function WriteFree($ctn, userOptions = {}) {
     return obj;
   }());
 
-  // Classes for editor items.
-  const edClass = (function edClass() {
-    const obj = {};
-    obj.main = 'wf__editor';
-    return obj;
-  }());
-
-  const defaultOptions = Object.freeze({
+  const defaultOptions = {
     divOrPar: 'p',
     sectionClass: null,
     sectionStyle: null,
     containerClass: 'wf__editor',
     containerStyle: null,
-    includeContainer: true,
-  });
+  };
 
   const options = (function setOptions() {
-    const globalOptions = Object.assign({}, defaultOptions);
+    const globalOptions = Object.create(defaultOptions);
     if (userOptions && typeof userOptions === 'object') {
       Object.keys(userOptions).forEach((option) => {
         globalOptions[option] = userOptions[option];
@@ -61,8 +53,17 @@ function WriteFree($ctn, userOptions = {}) {
     }
     return globalOptions;
   }());
+  window.options = options;
 
 
+  // Classes for editor items.
+  const edClass = (function edClass() {
+    const obj = {};
+    obj.main = ['wf__editor'];
+    if (options.containerClass !== 'wf__edtior') obj.main.push(options.containerClass);
+    obj.main = ['wf__editor', options.containerClass];
+    return obj;
+  }());
   /**
    * Toolbar - The toolbar used for editing text in the WFEditor.
    *
@@ -429,11 +430,6 @@ function WriteFree($ctn, userOptions = {}) {
       document.execCommand('defaultParagraphSeparator', false, 'p');
       this.$innerCtn = generateElement('div', edClass.main, { style: options.containerStyle });
       this.$innerCtn.setAttribute('contenteditable', true);
-      // const style = {
-      //   color: 'orange',
-      //   background: 'blue',
-      // };
-      // this.$innerCtn.style = style;
       $ctn.append(this.$innerCtn);
       this.createfirstPar();
 
@@ -453,10 +449,11 @@ function WriteFree($ctn, userOptions = {}) {
     createfirstPar() {
       if (!this.$firstPar) {
         const firstParOptions = {
-          id: 'wf__editor-first',
-          placeholder: 'Try writing here...',
+          style: options.sectionStyle,
+          klasses: Array.isArray(options.sectionClass)
+            ? options.sectionClass : Array(options.sectionClass),
         };
-        this.$firstPar = generateElement('p', [], firstParOptions);
+        this.$firstPar = generateElement(options.divOrPar, [], firstParOptions);
       }
       this.$firstPar.textContent = '';
       const observer = new MutationObserver(() => {
@@ -663,4 +660,16 @@ function WriteFree($ctn, userOptions = {}) {
   };
 }
 
-window.wf = WriteFree(document.getElementById('WriteFreeCtn'), {containerStyle: {color: 'blue', background: 'orange'}});
+const options = {
+  divOrPar: 'p',
+  sectionClass: 'testSection',
+  sectionStyle: {
+    color: 'orange',
+  },
+  containerClass: 'testContainer',
+  containerStyle: {
+    background: '#333',
+  },
+};
+
+window.wf = WriteFree(document.getElementById('WriteFreeCtn'), options);
