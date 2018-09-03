@@ -147,3 +147,12 @@ export function validateURL(url) {
   }
   return returnVal;
 }
+
+export function findParentBlock($el) {
+  const parentTags = ['DIV', 'P', 'H1', 'H2'];
+  let $retunEl = $el;
+  while (!parentTags.includes($el.tagName)) {
+    $retunEl = $el.parentNode;
+  }
+  return $retunEl;
+}
