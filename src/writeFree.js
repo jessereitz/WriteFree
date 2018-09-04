@@ -468,7 +468,7 @@ function WriteFree($ctn, userOptions = {}) {
      * @returns {Editor} Returns this.
      */
     initWFEditor() {
-      document.execCommand('defaultParagraphSeparator', false, 'p');
+      document.execCommand('defaultParagraphSeparator', false, options.divOrPar);
       this.$innerCtn = generateElement('div', edClass.main, { style: options.containerStyle });
       this.$innerCtn.setAttribute('contenteditable', true);
       $ctn.append(this.$innerCtn);
@@ -489,12 +489,7 @@ function WriteFree($ctn, userOptions = {}) {
      */
     createfirstPar() {
       if (!this.$firstPar) {
-        const firstParOptions = {
-          style: options.sectionStyle,
-          klasses: Array.isArray(options.sectionClass)
-            ? options.sectionClass : Array(options.sectionClass),
-        };
-        this.$firstPar = generateElement(options.divOrPar, [], firstParOptions);
+        this.$firstPar = this.createPar();
       }
       this.$firstPar.textContent = '';
       const observer = new MutationObserver(() => {
@@ -512,6 +507,15 @@ function WriteFree($ctn, userOptions = {}) {
       range.setEnd(this.$firstPar, 0);
       sel.removeAllRanges();
       sel.addRange(range);
+      window.firstpar = this.$firstPar;
+    },
+
+    createPar() {
+      const parOptions = {
+        style: options.sectionStyle,
+        klasses: options.sectionClass,
+      };
+      return generateElement(options.divOrPar, [], parOptions);
     },
 
     /**
@@ -621,6 +625,56 @@ function WriteFree($ctn, userOptions = {}) {
     },
 
     /**
+     * newLineHandler - Handle's the creation of a new section when the user
+     *  creates a newline (aka presses 'Enter'). We hijack this event because
+     *  the implementation of creating new sections in contenteditable elements
+     *  can be pretty different between browsers (especially Firefox).
+     *
+     * @returns {Element} Returns the newly created paragraph.
+     */
+    newLineHandler() {
+      const sel = window.getSelection();
+      const parentBlock = findParentBlock(sel.focusNode);
+      const newPar = this.createPar();
+      parentBlock.parentNode.insertBefore(newPar, parentBlock.nextSibling);
+      const currentRange = sel.getRangeAt(0);
+      if (currentRange.collapsed) {
+        try {
+          // const tmpRange = document.createRange();
+          // tmpRange.setStart(parentBlock, );
+          const endContainer = currentRange.commonAncestorContainer;
+          let endOffset = parentBlock.textContent.length;
+
+          if (endOffset > endContainer.textContent.length) {
+            endOffset = endContainer.textContent.length;
+          }
+          currentRange.setEnd(endContainer, endOffset);
+          newPar.append(currentRange.cloneContents());
+        } catch (exception) {
+          // console.log(sel.focusNode);
+          // console.log(currentRange.endContainer);
+          // console.log(parentBlock);
+          // console.log(exception);
+          // debugger;
+          newPar.textContent = '';
+        }
+      }
+      if (newPar.textContent.length === 0) {
+        newPar.append(document.createTextNode(''));
+        newPar.append(document.createElement('br'));
+      }
+      currentRange.deleteContents();
+      if (parentBlock.textContent.length === 0) {
+        parentBlock.append(document.createElement('br'));
+      }
+      sel.removeRange(currentRange);
+      const newRange = document.createRange();
+      newRange.setStart(newPar, 0);
+      sel.addRange(newRange);
+      return newPar;
+    },
+
+    /**
      * keydownHandler - Watches for deletion keys on keydown events and stops
      *  them from deleting the divs inside the main container. However, this is
      *  fairly limited in scope: though it catches Backspace, Delete, and ctrl-X
@@ -639,6 +693,10 @@ function WriteFree($ctn, userOptions = {}) {
         ) {
           e.preventDefault();
         }
+      }
+      if (e.key === 'Enter' && this.$innerCtn.contains(e.target)) {
+        e.preventDefault();
+        this.newLineHandler();
       }
     },
 
@@ -705,11 +763,11 @@ const options = {
   divOrPar: 'p',
   sectionClass: 'testSection',
   sectionStyle: {
-    color: '#fff',
+    // color: '#fff',
   },
   containerClass: 'testContainer',
   containerStyle: {
-    background: '#333',
+    // background: '#333',
   },
 };
 
