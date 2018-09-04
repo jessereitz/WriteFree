@@ -27,6 +27,25 @@ export function addStyleFromObj($el, styleObj) {
 }
 
 /**
+ * addClasses - Add classes to an HTML Element.
+ *
+ * @param {Element} $el  The HTML Element to which the classes will be added.
+ * @param {string || Array} klasses A single string or an array of strings
+ *  representing the classes to be added to $el.
+ *
+ * @returns {Element} The original $el with classes attached.
+ */
+export function addClasses($el, klasses) {
+  if (!klasses) return $el;
+  if (Array.isArray(klasses)) {
+    klasses.forEach(klass => $el.classList.add(klass));
+  } else {
+    $el.classList.add(klasses);
+  }
+  return $el;
+}
+
+/**
  * generateElement - Quickly generates an HTML element with given tagName,
  *  classes, and id.
  *
@@ -41,20 +60,13 @@ export function addStyleFromObj($el, styleObj) {
  */
 export function generateElement(tagName = 'div', klasses = [], options = {}) {
   const $el = document.createElement(tagName);
-  function addClasses(classes) {
-    if (Array.isArray(classes)) {
-      classes.forEach(klass => $el.classList.add(klass));
-    } else {
-      $el.classList.add(classes);
-    }
-  }
-  addClasses(klasses);
+  addClasses($el, klasses);
   if (options && typeof options === 'object') {
     Object.keys(options).forEach((attr) => {
       if (attr === 'style') {
         addStyleFromObj($el, options[attr]);
       } else if (attr === 'klasses') {
-        addClasses(options[attr]);
+        addClasses($el, options[attr]);
       } else {
         $el.setAttribute(attr, options[attr]);
       }
