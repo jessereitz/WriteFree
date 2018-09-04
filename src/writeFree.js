@@ -630,6 +630,8 @@ function WriteFree($ctn, userOptions = {}) {
      *  the implementation of creating new sections in contenteditable elements
      *  can be pretty different between browsers (especially Firefox).
      *
+     *  TODO: Clean this up.
+     *
      * @returns {Element} Returns the newly created paragraph.
      */
     newLineHandler() {
@@ -637,25 +639,15 @@ function WriteFree($ctn, userOptions = {}) {
       const parentBlock = findParentBlock(sel.focusNode);
       const newPar = this.createPar();
       parentBlock.parentNode.insertBefore(newPar, parentBlock.nextSibling);
+
       const currentRange = sel.getRangeAt(0);
       if (currentRange.collapsed) {
         try {
-          // const tmpRange = document.createRange();
-          // tmpRange.setStart(parentBlock, );
-          const endContainer = currentRange.commonAncestorContainer;
-          let endOffset = parentBlock.textContent.length;
-
-          if (endOffset > endContainer.textContent.length) {
-            endOffset = endContainer.textContent.length;
+          currentRange.setEndBefore(parentBlock.nextSibling);
+          if (currentRange.toString().length !== 0) {
+            newPar.append(currentRange.cloneContents());
           }
-          currentRange.setEnd(endContainer, endOffset);
-          newPar.append(currentRange.cloneContents());
         } catch (exception) {
-          // console.log(sel.focusNode);
-          // console.log(currentRange.endContainer);
-          // console.log(parentBlock);
-          // console.log(exception);
-          // debugger;
           newPar.textContent = '';
         }
       }
@@ -669,8 +661,9 @@ function WriteFree($ctn, userOptions = {}) {
       }
       sel.removeRange(currentRange);
       const newRange = document.createRange();
-      newRange.setStart(newPar, 0);
+      newRange.setStart(newPar.firstChild, 0);
       sel.addRange(newRange);
+      newPar.normalize();
       return newPar;
     },
 
@@ -702,7 +695,9 @@ function WriteFree($ctn, userOptions = {}) {
 
     /**
      * keyupHandler - Watches for deletion keys and resets the editor container
-     *  if they remove the first inner paragraph.
+     *  if they remove the first inner paragraph. Also normalizes the current
+     *  section so that all text nodes are merged together (this helps with
+     *  newline generation).
      *
      * @param {KeyboardEvent} e The KeyboardEvent to test.
      */
@@ -715,6 +710,12 @@ function WriteFree($ctn, userOptions = {}) {
           this.createfirstPar();
         }
       }
+      // Normalize section
+      const sel = window.getSelection();
+      const startParent = findParentBlock(sel.anchorNode);
+      const endParent = findParentBlock(sel.focusNode);
+      startParent.normalize();
+      endParent.normalize();
     },
     getHTML() {
       return this.$innerCtn;
