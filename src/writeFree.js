@@ -1,6 +1,8 @@
 // writeFree.js
 
 import {
+  addStyleFromObj,
+  addClasses,
   generateElement,
   generateButton,
   isTarget,
@@ -44,6 +46,10 @@ function WriteFree($ctn, userOptions = {}) {
     sectionStyle: null,
     containerClass: 'wf__editor',
     containerStyle: null,
+    largeHeadingClass: null,
+    largeHeadingStyle: null,
+    smallHeadingClass: null,
+    smallHeadingStyle: null,
   };
 
   const options = (function setOptions() {
@@ -384,18 +390,32 @@ function WriteFree($ctn, userOptions = {}) {
      */
     wrapHeading() {
       const sel = window.getSelection();
-      const parentnode = findParentBlock(sel.anchorNode);
+      let parentnode = findParentBlock(sel.anchorNode);
       parentnode.innerHTML = parentnode.innerHTML.replace(/<[^>]+>/g, '');
       let tagName;
+      let klass;
+      let style;
       if (sel instanceof Selection) {
         if (parentnode.tagName === 'H1' || parentnode.tagName === 'H2') {
           tagName = options.divOrPar;
+          klass = options.sectionClass;
+          style = options.sectionStyle;
         } else if (this.editor.isFirst(parentnode)) {
           tagName = 'h1';
+          klass = options.largeHeadingClass;
+          style = options.largeHeadingStyle;
         } else {
           tagName = 'h2';
+          klass = options.smallHeadingClass;
+          style = options.smallHeadingClass;
         }
-        return document.execCommand('formatBlock', false, tagName);
+        const successful = document.execCommand('formatBlock', false, tagName);
+        if (successful) {
+          parentnode = findParentBlock(sel.anchorNode);
+          addStyleFromObj(parentnode, style);
+          addClasses(parentnode, klass);
+        }
+        return successful;
       }
       return false;
     },
