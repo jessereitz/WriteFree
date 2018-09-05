@@ -389,7 +389,7 @@ function WriteFree($ctn, userOptions = {}) {
      * @returns {boolean} Returns true if successful else false.
      */
     wrapHeading() {
-      const sel = window.getSelection();
+      let sel = window.getSelection();
       let parentnode = findParentBlock(sel.anchorNode);
       parentnode.innerHTML = parentnode.innerHTML.replace(/<[^>]+>/g, '');
       let tagName;
@@ -414,6 +414,7 @@ function WriteFree($ctn, userOptions = {}) {
           parentnode = findParentBlock(sel.anchorNode);
           addStyleFromObj(parentnode, style);
           addClasses(parentnode, klass);
+          sel.collapse(sel.focusNode, sel.focusNode.textContent.length);
         }
         return successful;
       }
@@ -761,7 +762,7 @@ function WriteFree($ctn, userOptions = {}) {
 }
 
 const options = {
-  divOrPar: 'p',
+  divOrPar: 'div',
   sectionClass: 'testSection',
   sectionStyle: {
     // color: '#fff',
