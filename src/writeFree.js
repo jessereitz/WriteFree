@@ -292,6 +292,10 @@ function WriteFree($ctn, userOptions = {}) {
       return true;
     },
 
+    displayInsertOptions() {
+      this.display(window.getSelection());
+    },
+
     /**
      * hide - Hides the Toolbar.
      *
@@ -322,10 +326,11 @@ function WriteFree($ctn, userOptions = {}) {
     },
 
     /**
-     * mouseDownHandler - Handles the mousedown event. If the Toolbar, or its
-     *  children, are the target of the click, the default behavior is
-     *  prevented. This is done so the current Selection won't change or be
-     *  emptied when applying formatting to the selected text.
+     * mouseDownHandler - Handles the mousedown event on the document.
+     *  - If the Toolbar, or its children, are the target of the click, the
+     *  default behavior is prevented. This is done so the current Selection
+     *  won't change or be emptied when applying formatting to the selected
+     *  text.
      *
      * @param {Event} e The mousedown event.
      *
@@ -389,7 +394,7 @@ function WriteFree($ctn, userOptions = {}) {
      * @returns {boolean} Returns true if successful else false.
      */
     wrapHeading() {
-      let sel = window.getSelection();
+      const sel = window.getSelection();
       let parentnode = findParentBlock(sel.anchorNode);
       parentnode.innerHTML = parentnode.innerHTML.replace(/<[^>]+>/g, '');
       let tagName;
@@ -480,6 +485,7 @@ function WriteFree($ctn, userOptions = {}) {
       $ctn.addEventListener('paste', this.pasteHandler.bind(this));
       $ctn.addEventListener('keydown', this.keydownHandler.bind(this));
       $ctn.addEventListener('keyup', this.keyupHandler.bind(this));
+      $ctn.addEventListener('click', this.clickHandler.bind(this));
       return this;
     },
 
@@ -717,6 +723,14 @@ function WriteFree($ctn, userOptions = {}) {
       const endParent = findParentBlock(sel.focusNode);
       startParent.normalize();
       endParent.normalize();
+    },
+
+    clickHandler(e) {
+      if (this.isTarget(e)) {
+        if (e.target.textContent === '') {
+          Toolbar.displayInsertOptions();
+        }
+      }
     },
     getHTML() {
       return this.$innerCtn;
