@@ -168,3 +168,27 @@ export function findParentBlock($el) {
   }
   return $returnEl;
 }
+
+// export function findNodeType(node, targetType) {
+//   if (node.nodeName === targetType) {
+//     debugger;
+//     return node;
+//   }
+//   if (node.parentNode.nodeName === targetType) {
+//     return node.parentNode;
+//   }
+//   let returnNode = false;
+//   if (node.children) {
+//     returnNode = Array.from(node.children).find((child) => {
+//       const foundNode = findNodeType(child, targetType);
+//       if (foundNode) {
+//         returnNode = foundNode;
+//         return returnNode;
+//       }
+//       return false;
+//     });
+//   }
+//   return returnNode;
+// }
+//
+// window.findNodeType = findNodeType;
