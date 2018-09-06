@@ -33,19 +33,11 @@ function WriteFree($ctn, userOptions = {}) {
     }
     return globalOptions;
   }());
-  window.options = options;
 
-  /**
-   * Editor - The main object representing the WriteFree editor.
-   *
-   * @property {Element} $ctn - The outermost container of the WriteFree editor.
-   *  $ctn is passed in to the WriteFree instantiation function.
-   * @property {Element} $innerCtn - The actual contetneditable-div in which the
-   *  user can write
-   */
+  // Create and initialize the editor.
   const Editor = Object.create(editorBase);
-
   Editor.initWFEditor($ctn, options);
+
   return {
     getHTML: Editor.getHTML.bind(Editor),
   };
