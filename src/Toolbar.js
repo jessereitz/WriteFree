@@ -201,10 +201,6 @@ export default {
     return this.$ctn;
   },
 
-  // findLink(selection) {
-  //   if
-  // },
-
   /**
    * display - Optionally display the Toolbar next to the given selection.
    *  The Toolbar is always returned as an HTML element.
@@ -217,6 +213,34 @@ export default {
   display(sel = null) {
     if (!(sel instanceof Selection)) return false;
     if (this.containsSelection(sel)) return false;
+    this.currentRange = sel.getRangeAt(0);
+    this.toggleActiveLink(sel);
+    this.toggleDisabledButtons();
+    this.positionToolbar();
+    return true;
+  },
+
+  /**
+   * positionToolbar - Positions the Toolbar at the appropriate place based on
+   *  the current range.
+   *
+   */
+  positionToolbar() {
+    const rect = this.currentRange.getBoundingClientRect();
+    this.$ctn.style.top = `${rect.bottom + toolbarOffset}px`;
+    this.$ctn.style.left = `${rect.left}px`;
+    this.$ctn.classList.remove('hide');
+  },
+
+  /**
+   * toggleActiveLink - If ads the active class to the link button if the
+   *  current selection contains a link. It also attaches a currentLink
+   *  attribute to the link button so the link can be removed.
+   *
+   * @param {Selection} sel The current selection.
+   *
+   */
+  toggleActiveLink(sel) {
     const range = sel.getRangeAt(0);
     const currentLink = findNodeType(range.commonAncestorContainer, 'A');
     if (currentLink && sel.containsNode(currentLink, true)) {
@@ -226,8 +250,21 @@ export default {
       this.$linkBtn.currentLink = null;
       this.$linkBtn.classList.remove(tbClass.inputActive);
     }
-    const parentnode = findParentBlock(sel.anchorNode);
-    if (parentnode.tagName === 'H1' || parentnode.tagName === 'H2') {
+  },
+
+  /**
+   * toggleDisabledButtons - Disables buttons as necessary. As of now, if a the
+   *  current selection contains a heading, all buttons other than the heading
+   *  button are disabled.
+   *
+   * @param {Range} range The current range.
+   *
+   */
+  toggleDisabledButtons() {
+    if (
+      findNodeType(this.currentRange.commonAncestorContainer, 'H1')
+      || findNodeType(this.currentRange.commonAncestorContainer, 'H2')
+    ) {
       this.$linkBtn.classList.add(tbClass.btnDisabled);
       this.$boldBtn.classList.add(tbClass.btnDisabled);
       this.$italicBtn.classList.add(tbClass.btnDisabled);
@@ -242,12 +279,6 @@ export default {
       this.$boldBtn.disabled = false;
       this.$italicBtn.disabled = false;
     }
-    this.currentRange = range;
-    const rect = range.getBoundingClientRect();
-    this.$ctn.style.top = `${rect.bottom + toolbarOffset}px`;
-    this.$ctn.style.left = `${rect.left}px`;
-    this.$ctn.classList.remove('hide');
-    return true;
   },
 
   displayInsertOptions() {
