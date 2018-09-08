@@ -6,7 +6,7 @@ import {
   isTarget,
   validateURL,
   findParentBlock,
-  // findNodeType,
+  findNodeType,
 } from './writeFreeLib.js';
 
 const toolbarOffset = 5; // The number of pixels to offset the top of the toolbar.
@@ -218,19 +218,8 @@ export default {
     if (!(sel instanceof Selection)) return false;
     if (this.containsSelection(sel)) return false;
     const range = sel.getRangeAt(0);
-    window.sel = sel;
-    // console.log(sel);
-    // console.log(sel.anchorNode.nodeName);
-
-    // const currentLink = findNodeType(range.commonAncestorContainer, 'A');
-    // console.log(currentLink);
-
-    const currentLink = this.links.find(link => (
-      link.contains(sel.anchorNode)
-      || link.contains(sel.focusNode)
-      || sel.containsNode(link)
-    ));
-    if (currentLink) {
+    const currentLink = findNodeType(range.commonAncestorContainer, 'A');
+    if (currentLink && sel.containsNode(currentLink, true)) {
       this.$linkBtn.classList.add(tbClass.inputActive);
       this.$linkBtn.currentLink = currentLink;
     } else {
