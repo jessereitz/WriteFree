@@ -469,15 +469,6 @@ export default {
     this.display(window.getSelection());
   },
 
-  /**
-   * getHTML - Render the Toolbar as HTML
-   *
-   * @returns {Element} The Toolbar as HTML.
-   */
-  getHTML() {
-    return this.$ctn;
-  },
-
   /*
   ########  ####  ######  ########  ##          ###    ##    ##  ######  ######## ########  ##
   ##     ##  ##  ##    ## ##     ## ##         ## ##    ##  ##  ##    ##    ##    ##     ## ##
@@ -553,6 +544,15 @@ export default {
       return true;
     }
     return false;
+  },
+
+  /**
+   * html - Render the Toolbar as HTML
+   *
+   * @returns {Element} The Toolbar as HTML.
+   */
+  html() {
+    return this.$ctn;
   },
 
   /**
