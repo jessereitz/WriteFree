@@ -1,12 +1,26 @@
 import {
+  addStyleFromObj,
+  addClasses,
   generateElement,
   isTarget,
   isDeletionKey,
   findParentBlock,
   containsSelection,
+  validateURL,
 } from './writeFreeLib.js';
 
 import toolbarBase from './Toolbar.js';
+
+/*
+########  ######## ########    ###    ##     ## ##       ########
+##     ## ##       ##         ## ##   ##     ## ##          ##
+##     ## ##       ##        ##   ##  ##     ## ##          ##
+##     ## ######   ######   ##     ## ##     ## ##          ##
+##     ## ##       ##       ######### ##     ## ##          ##
+##     ## ##       ##       ##     ## ##     ## ##          ##
+########  ######## ##       ##     ##  #######  ########    ##
+*/
+
 
 /**
 * Editor - The main object representing the WriteFree editor.
@@ -44,7 +58,7 @@ export default {
     this.$ctn.addEventListener('keydown', this.keydownHandler.bind(this));
     this.$ctn.addEventListener('keyup', this.keyupHandler.bind(this));
     this.$ctn.addEventListener('click', this.clickHandler.bind(this));
-    // must be added to document.
+    // must be added to document because of browsers.
     document.addEventListener('selectionchange', this.selectionHandler.bind(this));
     return this;
   },
@@ -57,6 +71,16 @@ export default {
     }
     return this.classes;
   },
+
+  /*
+  ########     ###    ########     ###     ######   ########     ###    ########  ##     ##  ######
+  ##     ##   ## ##   ##     ##   ## ##   ##    ##  ##     ##   ## ##   ##     ## ##     ## ##    ##
+  ##     ##  ##   ##  ##     ##  ##   ##  ##        ##     ##  ##   ##  ##     ## ##     ## ##
+  ########  ##     ## ########  ##     ## ##   #### ########  ##     ## ########  #########  ######
+  ##        ######### ##   ##   ######### ##    ##  ##   ##   ######### ##        ##     ##       ##
+  ##        ##     ## ##    ##  ##     ## ##    ##  ##    ##  ##     ## ##        ##     ## ##    ##
+  ##        ##     ## ##     ## ##     ##  ######   ##     ## ##     ## ##        ##     ##  ######
+  */
 
   /**
    * createfirstPar - The editor must have the a first div in order to ensure
@@ -94,19 +118,129 @@ export default {
     return generateElement(this.options.divOrPar, [], parOptions);
   },
 
+  /*
+  ######## ########  #### ######## #### ##    ##  ######
+  ##       ##     ##  ##     ##     ##  ###   ## ##    ##
+  ##       ##     ##  ##     ##     ##  ####  ## ##
+  ######   ##     ##  ##     ##     ##  ## ## ## ##   ####
+  ##       ##     ##  ##     ##     ##  ##  #### ##    ##
+  ##       ##     ##  ##     ##     ##  ##   ### ##    ##
+  ######## ########  ####    ##    #### ##    ##  ######
+  */
+
   /**
-   * containsSelection - Tests whether this Editor contains given Selection
-   *  object (sel).
+   * boldSelection - Bolds the current selection.
    *
-   * @param {Selection} sel The Selection to check for in the Editor.
-   *
-   * @returns {boolean} Returns true if the given sel object is a Selection
-   *  and it is wholly contained within the Editor.
    */
-  containsSelection(sel) {
-    if (!(sel instanceof Selection)) return false;
-    return this.containsNode(sel.anchorNode) && this.containsNode(sel.focusNode);
+  boldSelection() {
+    const sel = window.getSelection();
+    if (sel instanceof Selection) {
+      document.execCommand('bold', false);
+    }
   },
+
+  /**
+   * linkBtnHandler - Italicizes the current selection.
+   *
+   */
+  italicizeSelection() {
+    const sel = window.getSelection();
+    if (sel instanceof Selection) {
+      document.execCommand('italic', false);
+    }
+  },
+
+  /**
+   * wrapHeading - Wrap the current selection in a heading element or removes
+   *  current heading element. Wraps non-headings in H1 if the current
+   *  selection is the first element in the Editor otherwise uses H2. Removes
+   *  all children HTML elements, leavining only text.
+   *
+   * @returns {boolean} Returns true if successful else false.
+   */
+  wrapHeading() {
+    const sel = window.getSelection();
+    let parentnode = findParentBlock(sel.anchorNode);
+    parentnode.innerHTML = parentnode.innerHTML.replace(/<[^>]+>/g, '');
+    let tagName;
+    let klass;
+    let style;
+    if (sel instanceof Selection) {
+      if (parentnode.tagName === 'H1' || parentnode.tagName === 'H2') {
+        tagName = this.options.divOrPar;
+        klass = this.options.sectionClass;
+        style = this.options.sectionStyle;
+      } else if (this.isFirst(parentnode)) {
+        tagName = 'h1';
+        klass = this.options.largeHeadingClass;
+        style = this.options.largeHeadingStyle;
+      } else {
+        tagName = 'h2';
+        klass = this.options.smallHeadingClass;
+        style = this.options.smallHeadingClass;
+      }
+      const successful = document.execCommand('formatBlock', false, tagName);
+      if (successful) {
+        parentnode = findParentBlock(sel.anchorNode);
+        addStyleFromObj(parentnode, style);
+        addClasses(parentnode, klass);
+        sel.collapse(sel.focusNode, sel.focusNode.textContent.length);
+      }
+      return successful;
+    }
+    return false;
+  },
+
+  /**
+   * wrapLink - wraps the given range (currentRange) with a link node pointing
+   *  to the given URL (rawURL). This method first validates the URL, throwing
+   *  it out if it isn't properly formatting. It will insert the http protocol
+   *  if at the beginning of the string if it doesn't contain it.
+   *
+   * @param {string} rawURL      A string containing the URL to which the link
+   *  will point.
+   * @param {Range} currentRange The Range around which the link will be
+   *  wrapped.
+   *
+   * @returns {Element || boolean} Will return the new link if successful, else
+   *  returns false.
+   */
+  wrapLink(rawURL, currentRange) {
+    const url = validateURL(rawURL);
+    if (!url) return false;
+    const link = generateElement('a');
+    link.href = url;
+    currentRange.surroundContents(link);
+    return link;
+  },
+
+  /**
+   * removeLink - Replaces the given link node with a text node containing the
+   *  link's text content.
+   *
+   * @param {Element} $link The linnk to remove.
+   *
+   */
+  removeLink($link) {
+    const sel = window.getSelection();
+    this.currentRange = sel.getRangeAt(0);
+    const range = document.createRange();
+    range.selectNode($link);
+    const plainText = document.createTextNode($link.textContent);
+    range.deleteContents();
+    range.insertNode(plainText);
+    sel.removeAllRanges();
+  },
+
+  /*
+  ##     ##    ###    ##    ## ########  ##       ######## ########   ######
+  ##     ##   ## ##   ###   ## ##     ## ##       ##       ##     ## ##    ##
+  ##     ##  ##   ##  ####  ## ##     ## ##       ##       ##     ## ##
+  ######### ##     ## ## ## ## ##     ## ##       ######   ########   ######
+  ##     ## ######### ##  #### ##     ## ##       ##       ##   ##         ##
+  ##     ## ##     ## ##   ### ##     ## ##       ##       ##    ##  ##    ##
+  ##     ## ##     ## ##    ## ########  ######## ######## ##     ##  ######
+  */
 
   /**
    * selectionHandler - Handles the given Selection (sel) event. If the given
@@ -136,36 +270,6 @@ export default {
   },
 
   /**
-   * isTarget - Wrapper around isTarget library function. Returns true if the
-   *  editor was clicked else false.
-   *
-   * @param {Event} e The JavaScript event to use for detection.
-   *
-   * @returns {boolean} True if editor was clicked, else false.
-   */
-  isTarget(e) {
-    return isTarget(this.$ctn, e);
-  },
-
-  /**
-   * containsNode - Tests whether the given node is contained within the
-   *  Editor's HTML.
-   *
-   * @param {Element} $node The HTML element to test for.
-   *
-   * @returns {boolean} Returns true if the Editor contains $node, else false.
-   */
-  containsNode($node) {
-    return this.$ctn.contains($node);
-  },
-
-  /**
-   * getToolbar - Returns the Toolbar associated with this Editor.
-   *
-   * @returns {Toolbar} The Toolbar associated with this Editor.
-   */
-  getToolbar() { return this.toolbar; },
-  /**
    * pasteHandler - Handles the paste event in the editor. We intercept the
    *  normal paste event and strip all HTML from the copied text and then
    *  insert it as HTML. This is done to ensure that each paste is essentially
@@ -183,22 +287,6 @@ export default {
     const text = e.clipboardData.getData('text/plain');
     document.execCommand('insertHTML', false, text);
     return true;
-  },
-
-  /**
-   * isFirst - Determines if given HTML Element is the first element of the
-   *  Editor.
-   *
-   * @param {Element} $node The HTML Element to test.
-   *
-   * @returns {boolean} True if the given Element is the first in the Editor,
-   *  else returns false.
-   */
-  isFirst($node) {
-    if (this.$innerCtn.children[0] === $node) {
-      return true;
-    }
-    return false;
   },
 
   /**
@@ -289,22 +377,66 @@ export default {
     }
     // Normalize section
     const sel = window.getSelection();
-    const range = sel.getRangeAt(0);
-    const startParent = findParentBlock(sel.anchorNode);
-    const endParent = findParentBlock(sel.focusNode);
-    if (startParent) startParent.normalize();
-    if (endParent) endParent.normalize();
-    if (range.commonAncestorContainer) range.commonAncestorContainer.normalize();
+    try {
+      const range = sel.getRangeAt(0);
+      const startParent = findParentBlock(sel.anchorNode);
+      const endParent = findParentBlock(sel.focusNode);
+      if (startParent) startParent.normalize();
+      if (endParent) endParent.normalize();
+      if (range.commonAncestorContainer) range.commonAncestorContainer.normalize();
+    } catch (exception) {
+      return null;
+    }
+    return null;
   },
 
   clickHandler(e) {
-    if (this.isTarget(e)) {
+    if (isTarget(this.$ctn, e)) {
       if (e.target.textContent === '') {
         this.toolbar.displayInsertOptions();
       }
     }
   },
-  getHTML() {
+
+  /*
+  ##     ## ######## #### ##        ######
+  ##     ##    ##     ##  ##       ##    ##
+  ##     ##    ##     ##  ##       ##
+  ##     ##    ##     ##  ##        ######
+  ##     ##    ##     ##  ##             ##
+  ##     ##    ##     ##  ##       ##    ##
+   #######     ##    #### ########  ######
+  */
+
+  /**
+   * html - Returns the Editor in HTML form.
+   *
+   * @returns {Element} The Editor in HTML form.
+   */
+  html() {
     return this.$innerCtn;
+  },
+
+  /**
+   * getToolbar - Returns the Toolbar associated with this Editor.
+   *
+   * @returns {Toolbar} The Toolbar associated with this Editor.
+   */
+  getToolbar() { return this.toolbar; },
+
+  /**
+   * isFirst - Determines if given HTML Element is the first element of the
+   *  Editor.
+   *
+   * @param {Element} $node The HTML Element to test.
+   *
+   * @returns {boolean} True if the given Element is the first in the Editor,
+   *  else returns false.
+   */
+  isFirst($node) {
+    if (this.$innerCtn.children[0] === $node) {
+      return true;
+    }
+    return false;
   },
 };

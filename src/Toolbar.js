@@ -1,10 +1,6 @@
 import {
-  addStyleFromObj,
-  addClasses,
   generateElement,
   generateButton,
-  validateURL,
-  findParentBlock,
   findNodeType,
   containsSelection,
 } from './writeFreeLib.js';
@@ -71,20 +67,20 @@ const ToolbarButton = {
    */
   init(content, handler, $ctn) {
     this.$html = generateButton(content, tbClass.btn, true);
-    this.setHandler(handler);
+    this.setSaveHandler(handler);
     this.appendTo($ctn);
     return this;
   },
 
   /**
-   * setHandler - Sets the clickHandler to the given function.
+   * setSaveHandler - Sets the clickHandler to the given function.
    *
    * @param {Function} saveHandler The function to call on each click.
    *
    * @returns {Function || null} Returns null if the given saveHandler is not a
    *  Function. Otherwise it returns the Function.
    */
-  setHandler(saveHandler) {
+  setSaveHandler(saveHandler) {
     if (typeof saveHandler !== 'function') {
       return null;
     }
@@ -243,7 +239,12 @@ const ToolbarInput = {
 
   /**
    * defaultEnterHandler - The function to be called when the user presses enter
-   *  while typing in the input. Calls the saveHandler and hides the input.
+   *  while typing in the input. When the user presses 'Enter' in the input
+   *  field, this function will call the current saveHandler, always passing in
+   *  the value of the input and the value assigned to this.currentRange. It is
+   *  assumed that the value will always be required by the saveHandler and
+   *  that, since it is hidden while the input is focused, so will the current
+   *  range.
    *
    * @param {Event} e The Event to listen for.
    *
@@ -254,7 +255,7 @@ const ToolbarInput = {
         this.saveHandler
         && typeof this.saveHandler === 'function'
       ) {
-        this.saveHandler.call();
+        this.saveHandler.call(this, this.$input.value, this.currentRange);
       }
       this.hide();
     }
@@ -401,11 +402,11 @@ export default {
   createToolbarBtns() {
     const $btnCtn = generateElement('div', tbClass.btnCtn);
     this.boldBtn = Object.create(ToolbarButton);
-    this.boldBtn.init('<b>B</b>', this.boldBtnHandler.bind(this), $btnCtn);
+    this.boldBtn.init('<b>B</b>', this.editor.boldSelection.bind(this.editor), $btnCtn);
     this.italicBtn = Object.create(ToolbarButton);
-    this.italicBtn.init('<i>i</i>', this.italicBtnHandler.bind(this), $btnCtn);
+    this.italicBtn.init('<i>i</i>', this.editor.italicizeSelection.bind(this.editor), $btnCtn);
     this.headingBtn = Object.create(ToolbarButton);
-    this.headingBtn.init('H', this.wrapHeading.bind(this), $btnCtn);
+    this.headingBtn.init('H', this.editor.wrapHeading.bind(this.editor), $btnCtn);
     this.linkBtn = Object.create(ToolbarButton);
     this.linkBtn.init('&#128279;', this.linkBtnHandler.bind(this), $btnCtn);
 
@@ -556,105 +557,19 @@ export default {
   },
 
   /**
-   * boldBtnHandler - Bolds current selection when $boldBtn is clicked.
-   */
-  boldBtnHandler() {
-    const sel = window.getSelection();
-    if (sel instanceof Selection) {
-      document.execCommand('bold', false);
-    }
-  },
-
-  /**
-   * italicBtnHandler - Italicizes current selection when $italicBtn is
-   * clicked.
-   */
-  italicBtnHandler() {
-    const sel = window.getSelection();
-    if (sel instanceof Selection) {
-      document.execCommand('italic', false);
-    }
-  },
-
-  /**
    * linkBtnHandler - Handler for when $linkBtn is clicked.
    *
    * @returns {boolean} Returns true if successful else false.
    */
   linkBtnHandler() {
-    function saveLink() {
-      const url = validateURL(this.input.getValue());
-      if (!url) return false;
-      const link = generateElement('a');
-      link.href = url;
-      this.currentRange.surroundContents(link);
-      this.links.push(link);
-      return link;
-    }
-    if (this.linkBtn.currentLink) this.removeLink();
-    else {
-      this.input.setSaveHandler(saveLink.bind(this));
+    if (this.linkBtn.currentLink) {
+      this.editor.removeLink(this.linkBtn.currentLink);
+      this.linkBtn.currentLink = null;
+      this.linkBtn.markInactive();
+    } else {
+      this.input.setSaveHandler(this.editor.wrapLink);
       this.hideButtons();
       this.input.display('Type a link...');
-      // this.displayInput('http://...', saveLink);
     }
-  },
-
-  /**
-   * wrapHeading - Wrap the current selection in a heading element or removes
-   *  current heading element. Wraps non-headings in H1 if the current
-   *  selection is the first element in the Editor otherwise uses H2. Removes
-   *  all children HTML elements, leavining only text.
-   *
-   * @returns {boolean} Returns true if successful else false.
-   */
-  wrapHeading() {
-    const sel = window.getSelection();
-    let parentnode = findParentBlock(sel.anchorNode);
-    parentnode.innerHTML = parentnode.innerHTML.replace(/<[^>]+>/g, '');
-    let tagName;
-    let klass;
-    let style;
-    if (sel instanceof Selection) {
-      if (parentnode.tagName === 'H1' || parentnode.tagName === 'H2') {
-        tagName = this.options.divOrPar;
-        klass = this.options.sectionClass;
-        style = this.options.sectionStyle;
-      } else if (this.editor.isFirst(parentnode)) {
-        tagName = 'h1';
-        klass = this.options.largeHeadingClass;
-        style = this.options.largeHeadingStyle;
-      } else {
-        tagName = 'h2';
-        klass = this.options.smallHeadingClass;
-        style = this.options.smallHeadingClass;
-      }
-      const successful = document.execCommand('formatBlock', false, tagName);
-      if (successful) {
-        parentnode = findParentBlock(sel.anchorNode);
-        addStyleFromObj(parentnode, style);
-        addClasses(parentnode, klass);
-        sel.collapse(sel.focusNode, sel.focusNode.textContent.length);
-      }
-      return successful;
-    }
-    return false;
-  },
-
-  /**
-   * removeLink - Removes the link which the selection contains.
-   *
-   */
-  removeLink() {
-    const sel = window.getSelection();
-    this.currentRange = sel.getRangeAt(0);
-    const range = document.createRange();
-    range.selectNode(this.linkBtn.currentLink);
-    const plainText = document.createTextNode(this.linkBtn.currentLink.textContent);
-    range.deleteContents();
-    range.insertNode(plainText);
-    this.linkBtn.currentLink = null;
-    this.linkBtn.markInactive();
-    sel.removeAllRanges();
   },
 };
