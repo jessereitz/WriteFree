@@ -319,11 +319,15 @@ const ToolbarInput = {
    * hide - Hides the input container and calls the saved hideCallback function.
    *
    */
-  hide() {
+  hide(useCallback = true) {
     this.$ctn.classList.add(tbClass.hideDown);
     this.$input.value = '';
     this.clearSaveHandler();
-    if (this.hideCallback && typeof this.hideCallback === 'function') {
+    if (
+      useCallback
+      && this.hideCallback
+      && typeof this.hideCallback === 'function'
+    ) {
       this.hideCallback();
     }
   },
@@ -390,7 +394,7 @@ export default {
     );
     this.createToolbarBtns();
     this.input = Object.create(ToolbarInput);
-    this.input.init(this.hide.bind(this), this.$ctn);
+    this.input.init(this.displayButtons.bind(this), this.$ctn);
     this.editor.$ctn.appendChild(this.$ctn);
     return this;
   },
@@ -489,7 +493,6 @@ export default {
     const rect = this.currentRange.getBoundingClientRect();
     this.$ctn.style.top = `${rect.bottom + toolbarOffset}px`;
     this.$ctn.style.left = `${rect.left}px`;
-    this.$ctn.classList.remove('hide');
   },
 
   /**
@@ -528,6 +531,7 @@ export default {
     this.toggleActiveLink(sel);
     this.toggleDisabledButtons();
     this.positionToolbar();
+    this.$ctn.classList.remove('hide');
     return true;
   },
 
@@ -540,6 +544,7 @@ export default {
   hide() {
     this.currentRange = null;
     this.displayButtons();
+    this.input.hide(false);
     this.$ctn.classList.add('hide');
     if (this.$ctn.classList.contains('hide')) {
       return true;
