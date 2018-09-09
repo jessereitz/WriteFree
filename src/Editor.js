@@ -3,6 +3,7 @@ import {
   isTarget,
   isDeletionKey,
   findParentBlock,
+  containsSelection,
 } from './writeFreeLib.js';
 
 import toolbarBase from './Toolbar.js';
@@ -124,8 +125,8 @@ export default {
     if (e.type !== 'selectionchange') return false;
     const sel = window.getSelection();
     if (
-      (this.containsSelection(sel) && !sel.isCollapsed)
-      || this.toolbar.containsSelection(sel)
+      (containsSelection(sel, this.$ctn) && !sel.isCollapsed)
+      || containsSelection(sel, this.toolbar.html())
     ) {
       this.toolbar.display(sel);
     } else {
