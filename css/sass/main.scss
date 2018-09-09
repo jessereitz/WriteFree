@@ -56,6 +56,11 @@
     background: rgba(0,0,0,0.2);
   }
 
+  &__btn-active {
+    color: $success-green;
+    border-color: $success-green;
+  }
+
   &__btn-disabled {
     color: $tb__disabled-color;
   }
@@ -99,10 +104,6 @@
     font-size: $tb__font-size;
   }
 
-  &__input-active {
-    color: $success-green;
-    border-color: $success-green;
-  }
 
 
   &-hide-up {

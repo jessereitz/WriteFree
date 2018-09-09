@@ -43,6 +43,9 @@
   .wf__toolbar__btn:active {
     border-color: #bbb;
     background: rgba(0, 0, 0, 0.2); }
+  .wf__toolbar__btn-active {
+    color: #A9D943;
+    border-color: #A9D943; }
   .wf__toolbar__btn-disabled {
     color: #666; }
   .wf__toolbar__btn-disabled:hover {
@@ -76,9 +79,6 @@
     color: white;
     padding-left: 0.1rem;
     font-size: 1em; }
-  .wf__toolbar__input-active {
-    color: #A9D943;
-    border-color: #A9D943; }
   .wf__toolbar-hide-up {
     transform: translateY(-150%);
     visibility: hidden; }
