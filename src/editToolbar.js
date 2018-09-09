@@ -1,13 +1,10 @@
 import {
-  // generateElement,
   findNodeType,
   containsSelection,
 } from './writeFreeLib.js';
 
 import BaseToolbar from './tb_components/base.js';
-// import tbClass from './tb_components/tbClasses.js';
 import ToolbarButton from './tb_components/tbButton.js';
-// import ToolbarInput from './tb_components/tbInput.js';
 
 const editToolbar = Object.create(BaseToolbar);
 
@@ -24,13 +21,13 @@ editToolbar.init = function init(editor, options) {
  */
 editToolbar.createToolbarBtns = function createToolbarBtns() {
   this.boldBtn = Object.create(ToolbarButton);
-  this.boldBtn.init('<b>B</b>', this.editor.boldSelection.bind(this.editor), this.$btnCtn);
+  this.boldBtn.init('<b>B</b>', 'Bold Selection', this.editor.boldSelection.bind(this.editor), this.$btnCtn);
   this.italicBtn = Object.create(ToolbarButton);
-  this.italicBtn.init('<i>i</i>', this.editor.italicizeSelection.bind(this.editor), this.$btnCtn);
+  this.italicBtn.init('<i>i</i>', 'Italicize Selection', this.editor.italicizeSelection.bind(this.editor), this.$btnCtn);
   this.headingBtn = Object.create(ToolbarButton);
-  this.headingBtn.init('H', this.editor.wrapHeading.bind(this.editor), this.$btnCtn);
+  this.headingBtn.init('H', 'Wrap Selection with Heading', this.editor.wrapHeading.bind(this.editor), this.$btnCtn);
   this.linkBtn = Object.create(ToolbarButton);
-  this.linkBtn.init('&#128279;', this.linkBtnHandler.bind(this), this.$btnCtn);
+  this.linkBtn.init('&#128279;', 'Wrap Selection with Link', this.linkBtnHandler.bind(this), this.$btnCtn);
 };
 
 /**
