@@ -39,7 +39,7 @@ function WriteFree($ctn, userOptions = {}) {
   Editor.initWFEditor($ctn, options);
 
   return {
-    getHTML: Editor.getHTML.bind(Editor),
+    html: Editor.html.bind(Editor),
   };
 }
 
