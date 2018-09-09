@@ -11,6 +11,7 @@ import {
 } from './writeFreeLib.js';
 
 import editToolbar from './editToolbar.js';
+import insertToolbar from './insertToolbar.js';
 
 /*
 ########  ######## ########    ###    ##     ## ##       ########
@@ -53,6 +54,8 @@ export default {
     this.createfirstPar();
 
     this.editToolbar = editToolbar.init(this, this.options);
+    this.insertToolbar = insertToolbar.init(this, this.options);
+
     this.$ctn.addEventListener('paste', this.pasteHandler.bind(this));
     this.$ctn.addEventListener('keydown', this.keydownHandler.bind(this));
     this.$ctn.addEventListener('keyup', this.keyupHandler.bind(this));
@@ -395,7 +398,7 @@ export default {
   clickHandler(e) {
     if (isTarget(this.$ctn, e)) {
       if (e.target.textContent === '') {
-        // this.editToolbar.displayInsertOptions();
+        this.insertToolbar.display();
       }
     }
   },
