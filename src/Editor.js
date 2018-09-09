@@ -10,7 +10,6 @@ import {
   collapseSelectionToRange,
 } from './writeFreeLib.js';
 
-// import Toolbar from './Toolbar.js';
 import InputToolbar from './inputToolbar.js';
 
 /*
