@@ -161,6 +161,7 @@ export function validateURL(url) {
 }
 
 export function findParentBlock($el) {
+  if (!($el instanceof HTMLElement)) return false;
   const parentTags = ['DIV', 'P', 'H1', 'H2'];
   let $returnEl = $el;
   while (!parentTags.includes($returnEl.tagName)) {
