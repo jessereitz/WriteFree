@@ -10,7 +10,7 @@ import {
   collapseSelectionToRange,
 } from './writeFreeLib.js';
 
-import InputToolbar from './inputToolbar.js';
+import editToolbar from './editToolbar.js';
 
 /*
 ########  ######## ########    ###    ##     ## ##       ########
@@ -21,7 +21,6 @@ import InputToolbar from './inputToolbar.js';
 ##     ## ##       ##       ##     ## ##     ## ##          ##
 ########  ######## ##       ##     ##  #######  ########    ##
 */
-
 
 /**
 * Editor - The main object representing the WriteFree editor.
@@ -53,7 +52,7 @@ export default {
     this.$ctn.append(this.$innerCtn);
     this.createfirstPar();
 
-    this.toolbar = InputToolbar.init(this, this.options);
+    this.editToolbar = editToolbar.init(this, this.options);
     this.$ctn.addEventListener('paste', this.pasteHandler.bind(this));
     this.$ctn.addEventListener('keydown', this.keydownHandler.bind(this));
     this.$ctn.addEventListener('keyup', this.keyupHandler.bind(this));
@@ -263,11 +262,11 @@ export default {
     const sel = window.getSelection();
     if (
       (containsSelection(sel, this.$ctn) && !sel.isCollapsed)
-      || containsSelection(sel, this.toolbar.html())
+      || containsSelection(sel, this.editToolbar.html())
     ) {
-      this.toolbar.display(sel);
+      this.editToolbar.display(sel);
     } else {
-      this.toolbar.hide();
+      this.editToolbar.hide();
     }
     return true;
   },
@@ -396,7 +395,7 @@ export default {
   clickHandler(e) {
     if (isTarget(this.$ctn, e)) {
       if (e.target.textContent === '') {
-        // this.toolbar.displayInsertOptions();
+        // this.editToolbar.displayInsertOptions();
       }
     }
   },
@@ -425,7 +424,7 @@ export default {
    *
    * @returns {Toolbar} The Toolbar associated with this Editor.
    */
-  getToolbar() { return this.toolbar; },
+  getToolbar() { return this.editToolbar; },
 
   /**
    * isFirst - Determines if given HTML Element is the first element of the

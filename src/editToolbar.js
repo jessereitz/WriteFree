@@ -9,9 +9,9 @@ import BaseToolbar from './tb_components/base.js';
 import ToolbarButton from './tb_components/tbButton.js';
 // import ToolbarInput from './tb_components/tbInput.js';
 
-const inputToolbar = Object.create(BaseToolbar);
+const editToolbar = Object.create(BaseToolbar);
 
-inputToolbar.init = function init(editor, options) {
+editToolbar.init = function init(editor, options) {
   this.initToolbar(editor, options);
   this.input.init(this.displayButtons.bind(this), this.$ctn);
   this.createToolbarBtns();
@@ -22,7 +22,7 @@ inputToolbar.init = function init(editor, options) {
  * createToolbarBtns - Create the buttons to be included on the toolbar, add
  *  appropriate event listeners, and attaches them to the $ctn.
  */
-inputToolbar.createToolbarBtns = function createToolbarBtns() {
+editToolbar.createToolbarBtns = function createToolbarBtns() {
   this.boldBtn = Object.create(ToolbarButton);
   this.boldBtn.init('<b>B</b>', this.editor.boldSelection.bind(this.editor), this.$btnCtn);
   this.italicBtn = Object.create(ToolbarButton);
@@ -41,7 +41,7 @@ inputToolbar.createToolbarBtns = function createToolbarBtns() {
  * @param {Range} range The current range.
  *
  */
-inputToolbar.toggleDisabledButtons = function toggleDisabledButtons() {
+editToolbar.toggleDisabledButtons = function toggleDisabledButtons() {
   if (
     findNodeType(this.currentRange.commonAncestorContainer, 'H1')
     || findNodeType(this.currentRange.commonAncestorContainer, 'H2')
@@ -64,7 +64,7 @@ inputToolbar.toggleDisabledButtons = function toggleDisabledButtons() {
  * @param {Selection} sel The current selection.
  *
  */
-inputToolbar.toggleActiveLink = function toggleActiveLink(sel) {
+editToolbar.toggleActiveLink = function toggleActiveLink(sel) {
   const range = sel.getRangeAt(0);
   const currentLink = findNodeType(range.commonAncestorContainer, 'A');
   if (currentLink && sel.containsNode(currentLink, true)) {
@@ -81,7 +81,7 @@ inputToolbar.toggleActiveLink = function toggleActiveLink(sel) {
  *
  * @returns {boolean} Returns true if successful else false.
  */
-inputToolbar.linkBtnHandler = function linkBtnHandler() {
+editToolbar.linkBtnHandler = function linkBtnHandler() {
   if (this.linkBtn.currentLink) {
     this.editor.removeLink(this.linkBtn.currentLink);
     this.linkBtn.currentLink = null;
@@ -93,7 +93,7 @@ inputToolbar.linkBtnHandler = function linkBtnHandler() {
   }
 };
 
-inputToolbar.display = function display(sel = null) {
+editToolbar.display = function display(sel = null) {
   if (!(sel instanceof Selection)) return false;
   if (containsSelection(sel, this.$ctn)) return false;
   this.currentRange = sel.getRangeAt(0);
@@ -102,4 +102,4 @@ inputToolbar.display = function display(sel = null) {
   return this.baseDisplay();
 };
 
-export default inputToolbar;
+export default editToolbar;
