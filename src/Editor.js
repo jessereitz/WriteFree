@@ -10,7 +10,8 @@ import {
   collapseSelectionToRange,
 } from './writeFreeLib.js';
 
-import toolbarBase from './Toolbar.js';
+// import Toolbar from './Toolbar.js';
+import InputToolbar from './inputToolbar.js';
 
 /*
 ########  ######## ########    ###    ##     ## ##       ########
@@ -53,8 +54,7 @@ export default {
     this.$ctn.append(this.$innerCtn);
     this.createfirstPar();
 
-    this.toolbar = Object.create(toolbarBase);
-    this.toolbar.initToolbar(this, this.options);
+    this.toolbar = InputToolbar.init(this, this.options);
     this.$ctn.addEventListener('paste', this.pasteHandler.bind(this));
     this.$ctn.addEventListener('keydown', this.keydownHandler.bind(this));
     this.$ctn.addEventListener('keyup', this.keyupHandler.bind(this));
