@@ -171,7 +171,6 @@ export function validateURL(url) {
  *  returns the found HTML Element.
  */
 export function findParentBlock($el) {
-  if (!($el instanceof HTMLElement)) return false;
   const blockTags = ['DIV', 'P', 'H1', 'H2'];
   let $returnEl = $el;
   while (!blockTags.includes($returnEl.tagName)) {
@@ -192,11 +191,11 @@ export function findParentBlock($el) {
  * @returns {Element || boolean} The found HTML Element or false.
  */
 export function findNodeType(node, targetType) {
-  if (node.parentNode.nodeName === targetType) {
-    return node.parentNode;
-  }
   if (node.nodeName === targetType) {
     return node;
+  }
+  if (node.parentNode.nodeName === targetType) {
+    return node.parentNode;
   }
   let returnNode = false;
   if (node.children) {
