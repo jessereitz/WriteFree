@@ -35,8 +35,8 @@ export default {
    *
    * @returns {ToolbarButton} Returns this ToolbarButton.
    */
-  init(content, handler, $ctn) {
-    this.$html = generateButton(content, tbClass.btn, true);
+  init(content, title, handler, $ctn) {
+    this.$html = generateButton(content, tbClass.btn, true, { title });
     this.setSaveHandler(handler);
     this.appendTo($ctn);
     return this;
