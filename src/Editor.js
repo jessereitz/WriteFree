@@ -288,10 +288,12 @@ export default {
     }
     // Normalize section
     const sel = window.getSelection();
+    const range = sel.getRangeAt(0);
     const startParent = findParentBlock(sel.anchorNode);
     const endParent = findParentBlock(sel.focusNode);
-    startParent.normalize();
-    endParent.normalize();
+    if (startParent) startParent.normalize();
+    if (endParent) endParent.normalize();
+    if (range.commonAncestorContainer) range.commonAncestorContainer.normalize();
   },
 
   clickHandler(e) {
