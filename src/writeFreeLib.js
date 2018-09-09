@@ -229,3 +229,17 @@ export function containsSelection(sel, node) {
     || sel.containsNode(node, true)
   );
 }
+
+/**
+ * collapseSelectionToRange - Collapses the given Selection (sel) to the end of
+ *  the given Range (range).
+ *
+ * @param {Selection} sel  The Selection to collapse.
+ * @param {Range} range    The Range to use to collapse the selection.
+ *
+ */
+export function collapseSelectionToRange(sel, range) {
+  range.collapse();
+  sel.removeAllRanges();
+  sel.addRange(range);
+}
