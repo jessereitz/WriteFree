@@ -160,22 +160,43 @@ export function validateURL(url) {
   return returnVal;
 }
 
+/**
+ * findParentBlock - Finds the nearest ancestor of the given element which is
+ *  of the types listed in parentTags.
+ *
+ * @param {Element} $el The Element of which to find an acceptable parent element.
+ *
+ * @returns {Element || boolean} If no Element of an acceptable type is found,
+ *  or if the given $el isn't an HTML Element, will return false. Else it
+ *  returns the found HTML Element.
+ */
 export function findParentBlock($el) {
   if (!($el instanceof HTMLElement)) return false;
-  const parentTags = ['DIV', 'P', 'H1', 'H2'];
+  const blockTags = ['DIV', 'P', 'H1', 'H2'];
   let $returnEl = $el;
-  while (!parentTags.includes($returnEl.tagName)) {
+  while (!blockTags.includes($returnEl.tagName)) {
     $returnEl = $returnEl.parentNode;
   }
   return $returnEl;
 }
 
+/**
+ * findNodeType - Finds a node of the given targetType. This function will
+ *  first check the given node's parent, then itself, then its children. If no
+ *  Element is found, the function will return false. Otherwise it will return
+ *  the found Element.
+ *
+ * @param {Element} node    The Element to search.
+ * @param {string} targetType The tagName of the target Element type.
+ *
+ * @returns {Element || boolean} The found HTML Element or false.
+ */
 export function findNodeType(node, targetType) {
-  if (node.nodeName === targetType) {
-    return node;
-  }
   if (node.parentNode.nodeName === targetType) {
     return node.parentNode;
+  }
+  if (node.nodeName === targetType) {
+    return node;
   }
   let returnNode = false;
   if (node.children) {
