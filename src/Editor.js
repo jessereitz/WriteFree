@@ -7,6 +7,7 @@ import {
   findParentBlock,
   containsSelection,
   validateURL,
+  collapseSelectionToRange,
 } from './writeFreeLib.js';
 
 import toolbarBase from './Toolbar.js';
@@ -184,7 +185,9 @@ export default {
         parentnode = findParentBlock(sel.anchorNode);
         addStyleFromObj(parentnode, style);
         addClasses(parentnode, klass);
-        sel.collapse(sel.focusNode, sel.focusNode.textContent.length);
+        const range = sel.getRangeAt(0);
+        range.selectNode(sel.focusNode);
+        range.collapse();
       }
       return successful;
     }
@@ -211,6 +214,7 @@ export default {
     const link = generateElement('a');
     link.href = url;
     currentRange.surroundContents(link);
+    collapseSelectionToRange(window.getSelection(), currentRange);
     return link;
   },
 
@@ -229,7 +233,7 @@ export default {
     const plainText = document.createTextNode($link.textContent);
     range.deleteContents();
     range.insertNode(plainText);
-    sel.removeAllRanges();
+    collapseSelectionToRange(sel, range);
   },
 
   /*
@@ -393,7 +397,7 @@ export default {
   clickHandler(e) {
     if (isTarget(this.$ctn, e)) {
       if (e.target.textContent === '') {
-        this.toolbar.displayInsertOptions();
+        // this.toolbar.displayInsertOptions();
       }
     }
   },
