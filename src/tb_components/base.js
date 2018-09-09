@@ -70,7 +70,14 @@ const BaseToolbar = {
   *
   */
   positionToolbar() {
-    const rect = this.currentRange.getBoundingClientRect();
+    const sel = window.getSelection();
+    this.currentRange = sel.getRangeAt(0);
+    let rect = null;
+    if (this.currentRange.collapsed) {
+      rect = this.currentRange.startContainer.getBoundingClientRect();
+    } else {
+      rect = this.currentRange.getBoundingClientRect();
+    }
     this.$ctn.style.top = `${rect.bottom + toolbarOffset}px`;
     this.$ctn.style.left = `${rect.left}px`;
   },
