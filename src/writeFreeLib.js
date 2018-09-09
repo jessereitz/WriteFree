@@ -210,3 +210,22 @@ export function findNodeType(node, targetType) {
   }
   return returnNode;
 }
+
+/**
+ * containsSelection - Check if a given selection contains a given node. Will
+ *  return true even if given node is only partially contained within the
+ *  selection.
+ *
+ * @param {Selection} sel  The selection to test.
+ * @param {Element} node   The node to check for.
+ *
+ * @returns {boolean} Returns true if the given node is contained, at least in
+ *  part, within the given selection. Otherwise, returns false.
+ */
+export function containsSelection(sel, node) {
+  if (!(sel instanceof Selection)) return false;
+  return (
+    (node.contains(sel.anchorNode) && node.contains(sel.focusNode))
+    || sel.containsNode(node, true)
+  );
+}
