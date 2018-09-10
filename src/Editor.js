@@ -258,6 +258,20 @@ export default {
     collapseSelectionToRange(sel, range);
   },
 
+  insertImage(src, alt, nextSibling) {
+    const sel = window.getSelection();
+    const img = generateElement('img', [], { src, alt });
+    const section = this.createPar();
+    section.appendChild(img);
+    nextSibling.parentNode.insertBefore(section, nextSibling);
+    sel.removeAllRanges();
+    const range = document.createRange();
+    range.selectNode(nextSibling);
+    range.setStart(nextSibling, 0);
+    sel.addRange(range);
+    this.insertToolbar.hide();
+  },
+
   insertLine() {
     const sel = window.getSelection();
     const line = document.createElement('hr');
@@ -416,7 +430,7 @@ export default {
       }
     }
     this.normalizeSection();
-    this.checkForInsert();
+    this.checkForInsert(e);
   },
 
   /**
@@ -430,9 +444,8 @@ export default {
   checkForInsert(e) {
     if (e && this.insertToolbar.$ctn.contains(e.target)) return false;
     const sel = window.getSelection();
-    // console.log(containsSelection(sel, this.insertToolbar.$ctn));
     if (sel.isCollapsed
-      && sel.anchorNode.textContent === ''
+      && (sel.anchorNode && sel.anchorNode.textContent === '')
       && !containsSelection(sel, this.insertToolbar.$ctn)
     ) {
       this.insertToolbar.display();

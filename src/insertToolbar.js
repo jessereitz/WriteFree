@@ -17,6 +17,7 @@ insertToolbar.init = function init(editor, options) {
   this.initToolbar(editor, options);
   this.createToolbarBtns();
   this.input.init(this.displayButtons.bind(this), this.$ctn);
+  this.input.$input.id = 'input';
   return this;
 };
 
@@ -28,14 +29,28 @@ insertToolbar.init = function init(editor, options) {
  */
 insertToolbar.createToolbarBtns = function createToolbarBtns() {
   this.imgBtn = Object.create(ToolbarButton);
-  this.imgBtn.init('&#128444;', 'Insert an Image', this.insertImage.bind(this), this.$btnCtn);
+  this.imgBtn.init('&#128444;', 'Insert an Image', this.displayImgInput.bind(this), this.$btnCtn);
   this.lineBtn = Object.create(ToolbarButton);
   this.lineBtn.init('--', 'Insert a Horizontal Rule', this.editor.insertLine.bind(this.editor), this.$btnCtn);
 };
 
-insertToolbar.insertImage = function insertImage() {
+insertToolbar.displayImgInput = function displayImgInput() {
+  const sel = window.getSelection();
+  this.currentRange = sel.getRangeAt(0);
+  this.input.setSaveHandler(this.insertImage.bind(this));
   this.hideButtons();
   this.input.display('Type an image URL...');
+};
+
+insertToolbar.insertImage = function insertImage() {
+  if (!this.imgURL) {
+    this.imgURL = this.input.getValue();
+    this.input.clear('Enter alt text...');
+  } else {
+    this.editor.insertImage(this.imgURL, this.input.getValue(), this.currentRange.startContainer);
+    this.input.hide();
+    this.displayButtons();
+  }
 };
 
 /**
