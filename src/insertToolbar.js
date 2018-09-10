@@ -6,6 +6,7 @@ const insertToolbar = Object.create(BaseToolbar);
 insertToolbar.init = function init(editor, options) {
   this.initToolbar(editor, options);
   this.createToolbarBtns();
+  this.input.init(this.displayButtons.bind(this), this.$ctn);
   return this;
 };
 
