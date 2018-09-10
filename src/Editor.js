@@ -415,9 +415,14 @@ export default {
    * @returns {boolean} Returns true if the insertToolbar is displayed else
    *  false.
    */
-  checkForInsert() {
+  checkForInsert(e) {
+    if (e && this.insertToolbar.$ctn.contains(e.target)) return false;
     const sel = window.getSelection();
-    if (sel.isCollapsed && sel.anchorNode.textContent === '') {
+    // console.log(containsSelection(sel, this.insertToolbar.$ctn));
+    if (sel.isCollapsed
+      && sel.anchorNode.textContent === ''
+      && !containsSelection(sel, this.insertToolbar.$ctn)
+    ) {
       this.insertToolbar.display();
       return true;
     }
