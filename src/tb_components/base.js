@@ -46,13 +46,35 @@ const BaseToolbar = {
   },
 
   /**
+   * getButtonsWidth - Returns the width of the button container.
+   *
+   * @returns {number} The width of the button container.
+   */
+  getButtonsWidth() {
+    const childNodes = this.$btnCtn.children;
+    const boundingRect = childNodes[0].getBoundingClientRect();
+    return boundingRect.width * (childNodes.length * 1.15);
+  },
+
+  /**
+   * getButtonsWidth - Returns the height of the button container.
+   *
+   * @returns {number} The height of the button container.
+   */
+  getButtonsHeight() {
+    const boundingRect = this.$btnCtn.firstChild.getBoundingClientRect();
+    return boundingRect.height * 1.25;
+  },
+
+  /**
    * hideButtons - Hides the buttons contained within the Toolbar so the input
    *  can be displayed.
    *
    */
   hideButtons() {
+    this.$ctn.style.width = `${this.input.getWidth()}px`;
+    this.$ctn.style.height = `${this.input.getHeight()}px`;
     this.$btnCtn.classList.add(tbClass.hideUp);
-    this.$ctn.classList.add(tbClass.wide);
   },
 
   /**
@@ -61,7 +83,8 @@ const BaseToolbar = {
    */
   displayButtons() {
     this.$btnCtn.classList.remove(tbClass.hideUp);
-    this.$ctn.classList.remove(tbClass.wide);
+    this.$ctn.style.width = `${this.getButtonsWidth()}px`;
+    this.$ctn.style.height = `${this.getButtonsHeight()}px`;
   },
 
   /**
@@ -94,6 +117,9 @@ const BaseToolbar = {
   baseDisplay() {
     this.positionToolbar();
     this.$ctn.classList.remove('hide');
+    this.displayButtons();
+    // const boundingRect = this.$btnCtn.getBoundingClientRect();
+    // this.$ctn.style.width = `${boundingRect.width}px`;
     return true;
   },
 

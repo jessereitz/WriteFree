@@ -24,7 +24,8 @@
   animation: fade-in 0.15s ease-out;
   transition: width 0.2s;
   overflow: hidden;
-  width: ($tb__font-size * 1.75) * 4.6;
+  min-width: 1em;
+  max-height: $tb__font-size * 1.9;
 
   &__btn-ctn {
     transition: transform 0.2s;
@@ -40,6 +41,7 @@
     transition: all 0.2s;
     font-size: $tb__font-size;
     min-width: $tb__font-size * 1.75;
+    height: $tb__font-size * 1.75;
     text-align: center;
     padding: $tb__padding;
     outline: none;

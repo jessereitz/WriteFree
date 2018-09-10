@@ -20,7 +20,8 @@
   animation: fade-in 0.15s ease-out;
   transition: width 0.2s;
   overflow: hidden;
-  width: 8.05em; }
+  min-width: 1em;
+  max-height: 1.9em; }
   .wf__toolbar__btn-ctn {
     transition: transform 0.2s; }
   .wf__toolbar__btn {
@@ -33,6 +34,7 @@
     transition: all 0.2s;
     font-size: 1em;
     min-width: 1.75em;
+    height: 1.75em;
     text-align: center;
     padding: 0.25em 0.25rem;
     outline: none;

@@ -159,6 +159,25 @@ export default {
   },
 
   /**
+   * getWidth - Returns the width of the input container.
+   *
+   * @returns {number} The width of the input container.
+   */
+  getWidth() {
+    const boundingRect = this.$ctn.getBoundingClientRect();
+    return boundingRect.width;
+  },
+
+  /**
+   * getWidth - Returns the height of the input container.
+   *
+   * @returns {number} The height of the input container.
+   */
+  getHeight() {
+    const boundingRect = this.$ctn.getBoundingClientRect();
+    return boundingRect.height;
+  },
+  /**
    * appendTo - Appends the input to the given HTML Element.
    *
    * @param {Element} $where The HTML Element to which the input will be

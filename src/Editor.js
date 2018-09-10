@@ -2,7 +2,6 @@ import {
   addStyleFromObj,
   addClasses,
   generateElement,
-  isTarget,
   isDeletionKey,
   findParentBlock,
   containsSelection,
