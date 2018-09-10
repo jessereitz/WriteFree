@@ -6,8 +6,18 @@ import {
 import BaseToolbar from './tb_components/base.js';
 import ToolbarButton from './tb_components/tbButton.js';
 
+// Create the EditToolbar from the BaseToolbar.
 const editToolbar = Object.create(BaseToolbar);
 
+/**
+ * init - Initialize the EditToolbar. Callse the BaseToolbar's initialization
+ *  method then sets up the requisite buttons and input.
+ *
+ * @param {Editor} editor The Editor which owns this Toolbar.
+ * @param {Object} options The initialization options provided by the user.
+ *
+ * @returns {EditToolbar} Returns this.
+ */
 editToolbar.init = function init(editor, options) {
   this.initToolbar(editor, options);
   this.input.init(this.displayButtons.bind(this), this.$ctn);
@@ -90,6 +100,14 @@ editToolbar.linkBtnHandler = function linkBtnHandler() {
   }
 };
 
+/**
+ * display - Displays the EditToolbar.
+ *
+ * @param {Selection} [sel=null] The selection next to which the toolbar should
+ *  be displayed.
+ *
+ * @returns {boolean} Returns true if the EditToolbar is displayed. Else false.
+ */
 editToolbar.display = function display(sel = null) {
   if (!(sel instanceof Selection)) return false;
   if (containsSelection(sel, this.$ctn)) return false;
@@ -99,4 +117,5 @@ editToolbar.display = function display(sel = null) {
   return this.baseDisplay();
 };
 
+// Export the EditToolbar for use elsewhere.
 export default editToolbar;

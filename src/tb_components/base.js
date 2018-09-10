@@ -26,6 +26,9 @@ const BaseToolbar = {
   /**
    * initToolbar - Initializes the Toolbar.
    *
+   * @param {Editor} editor The Editor which owns this Toolbar.
+   * @param {Object} options The initialization options provided by the user.
+   *
    * @returns {Toolbar} Returns this.
    */
   initToolbar(editor, options) {

@@ -1,10 +1,18 @@
 import BaseToolbar from './tb_components/base.js';
 import ToolbarButton from './tb_components/tbButton.js';
-// import tbClass from './tb_components/tbClasses.js';
 
-
+// Create the InsertToolbar from the BaseToolbar.
 const insertToolbar = Object.create(BaseToolbar);
 
+/**
+ * init - Initialize the insertToolbar. Callse the BaseToolbar's initialization
+ *  method then sets up the requisite buttons and input.
+ *
+ * @param {Editor} editor The Editor which owns this Toolbar.
+ * @param {Object} options The initialization options provided by the user.
+ *
+ * @returns {InsertToolbar} Returns this.
+ */
 insertToolbar.init = function init(editor, options) {
   this.initToolbar(editor, options);
   this.createToolbarBtns();
@@ -12,6 +20,12 @@ insertToolbar.init = function init(editor, options) {
   return this;
 };
 
+/**
+ * createToolbarBtns - Creates the requisite buttons for this toolbar. The
+ *  insertToolbar allows users to insert images and horizontal rules so this
+ *  method creates buttons to allow the user to do these things.
+ *
+ */
 insertToolbar.createToolbarBtns = function createToolbarBtns() {
   this.imgBtn = Object.create(ToolbarButton);
   this.imgBtn.init('&#128444;', 'Insert an Image', this.insertImage.bind(this), this.$btnCtn);
@@ -24,8 +38,15 @@ insertToolbar.insertImage = function insertImage() {
   this.input.display('Type an image URL...');
 };
 
+/**
+ * display - Displays the InsertToolbar.
+ *
+ * @returns {boolean} Returns true if the InsertToolbar was successfully
+ *  displayed. Else returns false.
+ */
 insertToolbar.display = function display() {
   return this.baseDisplay();
 };
 
+// Export the InsertToolbar for use elsewhere.
 export default insertToolbar;
