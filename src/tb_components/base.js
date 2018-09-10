@@ -74,7 +74,7 @@ const BaseToolbar = {
     this.currentRange = sel.getRangeAt(0);
     let rect = null;
     if (this.currentRange.collapsed) {
-      rect = this.currentRange.startContainer.getBoundingClientRect();
+      rect = this.currentRange.commonAncestorContainer.getBoundingClientRect();
     } else {
       rect = this.currentRange.getBoundingClientRect();
     }
