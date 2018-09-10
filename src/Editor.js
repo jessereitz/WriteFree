@@ -258,6 +258,18 @@ export default {
     collapseSelectionToRange(sel, range);
   },
 
+  insertLine() {
+    const sel = window.getSelection();
+    const line = document.createElement('hr');
+    const section = this.createPar();
+    section.appendChild(line);
+    sel.anchorNode.parentNode.insertBefore(section, sel.anchorNode);
+    const range = sel.getRangeAt(0);
+    range.selectNode(sel.focusNode);
+    sel.focusNode.focus();
+    this.insertToolbar.hide();
+  },
+
   /*
   ##     ##    ###    ##    ## ########  ##       ######## ########   ######
   ##     ##   ## ##   ###   ## ##     ## ##       ##       ##     ## ##    ##
