@@ -75,7 +75,9 @@ export default {
       ) {
         this.saveHandler.call(this, this.$input.value, this.currentRange);
       }
-      this.hide();
+      if (!this.preventHideOnEnter) {
+        this.hide();
+      }
     }
   },
 
@@ -131,6 +133,21 @@ export default {
       this.$input.focus();
     }
     setTimeout(focusInput.bind(this), 200);
+  },
+
+  /**
+   * clear - Clears the input.If a new placeholder is provided, will set the
+   *  input's placeholder to that.
+   *
+   * @param {string} [newPlaceholder] The new placeholder to be put on the
+   *  input.
+   *
+   */
+  clear(newPlaceholder) {
+    this.$input.value = '';
+    if (newPlaceholder) {
+      this.$input.placeholder = newPlaceholder;
+    }
   },
 
   /**
