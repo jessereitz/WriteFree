@@ -59,7 +59,7 @@ export default {
     this.$ctn.addEventListener('paste', this.pasteHandler.bind(this));
     this.$ctn.addEventListener('keydown', this.keydownHandler.bind(this));
     this.$ctn.addEventListener('keyup', this.keyupHandler.bind(this));
-    this.$ctn.addEventListener('click', this.clickHandler.bind(this));
+    this.$ctn.addEventListener('click', this.checkForInsert.bind(this));
     // must be added to document because of browsers.
     document.addEventListener('selectionchange', this.selectionHandler.bind(this));
     return this;
@@ -118,6 +118,28 @@ export default {
       klasses: this.options.sectionClass,
     };
     return generateElement(this.options.divOrPar, [], parOptions);
+  },
+
+  /**
+   * normalizeSection - Normalizes the current section (div or p) in order to
+   *  join all separate text nodes. Text nodes end up split when starting
+   *  newlines and trying to rejoin sections and so must be normalized.
+   *
+   * @returns {null} Returns null.
+   */
+  normalizeSection() {
+    const sel = window.getSelection();
+    try {
+      const range = sel.getRangeAt(0);
+      const startParent = findParentBlock(sel.anchorNode);
+      const endParent = findParentBlock(sel.focusNode);
+      if (startParent) startParent.normalize();
+      if (endParent) endParent.normalize();
+      if (range.commonAncestorContainer) range.commonAncestorContainer.normalize();
+    } catch (exception) {
+      return null;
+    }
+    return null;
   },
 
   /*
@@ -268,6 +290,7 @@ export default {
       || containsSelection(sel, this.editToolbar.html())
     ) {
       this.editToolbar.display(sel);
+      this.insertToolbar.hide();
     } else {
       this.editToolbar.hide();
     }
@@ -367,7 +390,8 @@ export default {
    * keyupHandler - Watches for deletion keys and resets the editor container
    *  if they remove the first inner paragraph. Also normalizes the current
    *  section so that all text nodes are merged together (this helps with
-   *  newline generation).
+   *  newline generation). Also checks to see if the insertToolbar should be
+   *  displayed.
    *
    * @param {KeyboardEvent} e The KeyboardEvent to test.
    */
@@ -380,27 +404,26 @@ export default {
         this.createfirstPar();
       }
     }
-    // Normalize section
-    const sel = window.getSelection();
-    try {
-      const range = sel.getRangeAt(0);
-      const startParent = findParentBlock(sel.anchorNode);
-      const endParent = findParentBlock(sel.focusNode);
-      if (startParent) startParent.normalize();
-      if (endParent) endParent.normalize();
-      if (range.commonAncestorContainer) range.commonAncestorContainer.normalize();
-    } catch (exception) {
-      return null;
-    }
-    return null;
+    this.normalizeSection();
+    this.checkForInsert();
   },
 
-  clickHandler(e) {
-    if (isTarget(this.$ctn, e)) {
-      if (e.target.textContent === '') {
-        this.insertToolbar.display();
-      }
+  /**
+   * checkForInsert - Determines if the insertToolbar should be displayed. If
+   *  the user is in an empty section, the insertToolbar should be displayed.
+   *
+   *
+   * @returns {boolean} Returns true if the insertToolbar is displayed else
+   *  false.
+   */
+  checkForInsert() {
+    const sel = window.getSelection();
+    if (sel.isCollapsed && sel.anchorNode.textContent === '') {
+      this.insertToolbar.display();
+      return true;
     }
+    this.insertToolbar.hide();
+    return false;
   },
 
   /*
