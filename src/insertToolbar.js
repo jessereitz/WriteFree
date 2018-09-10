@@ -1,5 +1,7 @@
 import BaseToolbar from './tb_components/base.js';
 import ToolbarButton from './tb_components/tbButton.js';
+// import tbClass from './tb_components/tbClasses.js';
+
 
 const insertToolbar = Object.create(BaseToolbar);
 
@@ -14,15 +16,12 @@ insertToolbar.createToolbarBtns = function createToolbarBtns() {
   this.imgBtn = Object.create(ToolbarButton);
   this.imgBtn.init('&#128444;', 'Insert an Image', this.insertImage.bind(this), this.$btnCtn);
   this.lineBtn = Object.create(ToolbarButton);
-  this.lineBtn.init('--', 'Insert a Horizontal Rule', this.insertLine.bind(this), this.$btnCtn);
+  this.lineBtn.init('--', 'Insert a Horizontal Rule', this.editor.insertLine.bind(this.editor), this.$btnCtn);
 };
 
 insertToolbar.insertImage = function insertImage() {
-  console.log('image');
-};
-
-insertToolbar.insertLine = function insertLine() {
-  console.log('line');
+  this.hideButtons();
+  this.input.display('Type an image URL...');
 };
 
 insertToolbar.display = function display() {
