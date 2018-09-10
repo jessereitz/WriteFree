@@ -16,7 +16,7 @@ const insertToolbar = Object.create(BaseToolbar);
 insertToolbar.init = function init(editor, options) {
   this.initToolbar(editor, options);
   this.createToolbarBtns();
-  this.input.init(this.displayButtons.bind(this), this.$ctn);
+  this.input.init(this.hideImageInput.bind(this), this.$ctn);
   this.input.$input.id = 'input';
   return this;
 };
@@ -43,6 +43,11 @@ insertToolbar.displayImgInput = function displayImgInput() {
   this.input.display('Type an image URL...');
 };
 
+insertToolbar.hideImageInput = function hideImageInput() {
+  this.imgURL = null;
+  this.displayButtons();
+};
+
 insertToolbar.insertImage = function insertImage() {
   if (!this.imgURL) {
     this.imgURL = this.input.getValue();
@@ -51,6 +56,7 @@ insertToolbar.insertImage = function insertImage() {
     this.editor.insertImage(this.imgURL, this.input.getValue(), this.currentRange.startContainer);
     this.input.hide();
     this.displayButtons();
+    this.hide();
   }
 };
 
