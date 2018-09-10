@@ -131,18 +131,17 @@
 
 .#{$editor-prefix} {
   min-height: $editor__min-height;
-  max-height: 100vh;
   max-width: $editor__max-width;
   margin: $editor__margin;
   padding: $editor__padding;
   font-size: $editor__font-size;
   font-family: $editor__font-stack;
   outline: none;
-  overflow: auto;
   color: $editor__primary-color;
 
   & * {
     font-size: $editor__font-size;
+    max-width: $editor__section__max-width;
   }
 
   & div {

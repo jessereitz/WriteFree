@@ -96,17 +96,16 @@
 
 .wf__editor {
   min-height: 2em;
-  max-height: 100vh;
-  max-width: 35em;
+  max-width: 100%;
   margin: 1em auto;
   padding: 0em 1.5rem;
   font-size: 1.25rem;
   font-family: "Crimson Text", serif;
   outline: none;
-  overflow: auto;
   color: #333; }
   .wf__editor * {
-    font-size: 1.25rem; }
+    font-size: 1.25rem;
+    max-width: 35em; }
   .wf__editor div {
     min-height: 1.25rem;
     margin: 1em auto; }
