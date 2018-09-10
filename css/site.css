@@ -33,12 +33,14 @@
     border-radius: 0.25em;
     transition: all 0.2s;
     font-size: 1em;
-    min-width: 1.75em;
+    width: 2em;
     height: 1.75em;
+    line-height: 1.25em;
     text-align: center;
     padding: 0.25em 0.25rem;
     outline: none;
-    z-index: 0; }
+    z-index: 0;
+    vertical-align: baseline; }
   .wf__toolbar__btn:hover {
     border-color: #fff;
     background: rgba(255, 255, 255, 0.075); }

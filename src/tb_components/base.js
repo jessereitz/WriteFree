@@ -56,7 +56,7 @@ const BaseToolbar = {
   getButtonsWidth() {
     const childNodes = this.$btnCtn.children;
     const boundingRect = childNodes[0].getBoundingClientRect();
-    return boundingRect.width * (childNodes.length * 1.15);
+    return boundingRect.width * (childNodes.length * 1.1);
   },
 
   /**

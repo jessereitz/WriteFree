@@ -40,12 +40,14 @@
     border-radius: $tb__border-radius;
     transition: all 0.2s;
     font-size: $tb__font-size;
-    min-width: $tb__font-size * 1.75;
+    width: $tb__font-size * 2;
     height: $tb__font-size * 1.75;
+    line-height: $tb__font-size * 1.25;
     text-align: center;
     padding: $tb__padding;
     outline: none;
     z-index: 0;
+    vertical-align: baseline;
   }
 
   &__btn:hover {
