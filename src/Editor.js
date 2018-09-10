@@ -50,7 +50,7 @@ export default {
     );
     this.$innerCtn.setAttribute('contenteditable', true);
     this.$ctn.append(this.$innerCtn);
-    this.createfirstPar();
+    this.createFirstTextSection();
 
     this.editToolbar = editToolbar.init(this, this.options);
     this.insertToolbar = insertToolbar.init(this, this.options);
@@ -70,53 +70,82 @@ export default {
     if (this.options.containerClass !== 'wf__edtior') {
       this.classes.main.push(this.options.containerClass);
     }
+    this.classes.textSection = 'wf__text-section';
+    this.classes.containerSection = 'wf__container-section';
     return this.classes;
   },
 
   /*
-  ########     ###    ########     ###     ######   ########     ###    ########  ##     ##  ######
-  ##     ##   ## ##   ##     ##   ## ##   ##    ##  ##     ##   ## ##   ##     ## ##     ## ##    ##
-  ##     ##  ##   ##  ##     ##  ##   ##  ##        ##     ##  ##   ##  ##     ## ##     ## ##
-  ########  ##     ## ########  ##     ## ##   #### ########  ##     ## ########  #########  ######
-  ##        ######### ##   ##   ######### ##    ##  ##   ##   ######### ##        ##     ##       ##
-  ##        ##     ## ##    ##  ##     ## ##    ##  ##    ##  ##     ## ##        ##     ## ##    ##
-  ##        ##     ## ##     ## ##     ##  ######   ##     ## ##     ## ##        ##     ##  ######
+   ######  ########  ######  ######## ####  #######  ##    ##  ######
+  ##    ## ##       ##    ##    ##     ##  ##     ## ###   ## ##    ##
+  ##       ##       ##          ##     ##  ##     ## ####  ## ##
+   ######  ######   ##          ##     ##  ##     ## ## ## ##  ######
+        ## ##       ##          ##     ##  ##     ## ##  ####       ##
+  ##    ## ##       ##    ##    ##     ##  ##     ## ##   ### ##    ##
+   ######  ########  ######     ##    ####  #######  ##    ##  ######
   */
 
   /**
-   * createfirstPar - The editor must have the a first div in order to ensure
+   * createFirstTextSection - The editor must have the a first div in order to ensure
    *  proper formatting. This method creates the first div and appends it to
    *  the inner container.
    */
-  createfirstPar() {
-    if (!this.$firstPar) {
-      this.$firstPar = this.createPar();
+  createFirstTextSection() {
+    if (!this.$firstTextSection) {
+      this.$firstTextSection = this.createTextSection();
     }
-    this.$firstPar.textContent = '';
+    this.$firstTextSection.textContent = '';
     const observer = new MutationObserver(() => {
-      if (this.$firstPar.textContent === '') this.$firstPar.innerHTML = '';
+      if (this.$firstTextSection.textContent === '') this.$firstTextSection.innerHTML = '';
     });
     observer.observe(
-      this.$firstPar,
+      this.$firstTextSection,
       { attributes: true, childList: true, subtree: true },
     );
 
-    this.$innerCtn.append(this.$firstPar);
+    this.$innerCtn.append(this.$firstTextSection);
     const sel = window.getSelection();
     const range = document.createRange();
-    range.setStart(this.$firstPar, 0);
-    range.setEnd(this.$firstPar, 0);
+    range.setStart(this.$firstTextSection, 0);
+    range.setEnd(this.$firstTextSection, 0);
     sel.removeAllRanges();
     sel.addRange(range);
-    window.firstpar = this.$firstPar;
+    return this.$firstTextSection;
   },
 
-  createPar() {
+  /**
+   * createTextSection - Creates a standard text section.
+   *
+   * @returns {Element} The newly-created text section.
+   */
+  createTextSection() {
+    if (!Array.isArray(this.options.sectionClass)) {
+      this.options.sectionClass = Array(this.options.sectionClass);
+    }
+    this.options.sectionClass.push(this.classes.textSection);
     const parOptions = {
       style: this.options.sectionStyle,
       klasses: this.options.sectionClass,
     };
     return generateElement(this.options.divOrPar, [], parOptions);
+  },
+
+  /**
+   * createContainerSection - Creates a container div to house any inline objects the
+   *  user inserts (img, hr). These are used in order to separate sections in which the
+   *  user can type and those in which they cannot.
+   *
+   * @param {Element} [childNode] If provided, childNode will be attached to the newly-
+   *  created container.
+   *
+   * @returns {Element} Returns the newly-created container.
+   */
+  createContainerSection(childNode) {
+    const container = generateElement('div', this.classes.containerSection);
+    if (childNode && childNode instanceof Element) {
+      container.appendChild(childNode);
+    }
+    return container;
   },
 
   /**
@@ -261,7 +290,7 @@ export default {
   insertImage(src, alt, nextSibling) {
     const sel = window.getSelection();
     const img = generateElement('img', [], { src, alt });
-    const section = this.createPar();
+    const section = this.createContainerSection();
     section.appendChild(img);
     nextSibling.parentNode.insertBefore(section, nextSibling);
     sel.removeAllRanges();
@@ -275,7 +304,7 @@ export default {
   insertLine() {
     const sel = window.getSelection();
     const line = document.createElement('hr');
-    const section = this.createPar();
+    const section = this.createContainerSection();
     section.appendChild(line);
     sel.anchorNode.parentNode.insertBefore(section, sel.anchorNode);
     const range = sel.getRangeAt(0);
@@ -355,7 +384,7 @@ export default {
   newLineHandler() {
     const sel = window.getSelection();
     const parentBlock = findParentBlock(sel.focusNode);
-    const newPar = this.createPar();
+    const newPar = this.createTextSection();
     parentBlock.parentNode.insertBefore(newPar, parentBlock.nextSibling);
 
     const currentRange = sel.getRangeAt(0);
@@ -400,7 +429,7 @@ export default {
       const sel = window.getSelection();
       if (
         sel.anchorNode.textContent.length < 1
-        && this.$firstPar === sel.anchorNode
+        && this.$firstTextSection === sel.anchorNode
       ) {
         e.preventDefault();
       }
@@ -426,7 +455,7 @@ export default {
         this.$innerCtn.innerHTML === '' || this.$innerCtn.innerHTML === '<br>'
       ) {
         this.$innerCtn.innerHTML = ''; // Get rid of auto-inserted <br>
-        this.createfirstPar();
+        this.createFirstTextSection();
       }
     }
     this.normalizeSection();
