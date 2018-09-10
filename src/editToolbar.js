@@ -37,7 +37,7 @@ editToolbar.createToolbarBtns = function createToolbarBtns() {
   this.headingBtn = Object.create(ToolbarButton);
   this.headingBtn.init('H', 'Wrap Selection with Heading', this.editor.wrapHeading.bind(this.editor), this.$btnCtn);
   this.linkBtn = Object.create(ToolbarButton);
-  this.linkBtn.init('&#128279;', 'Wrap Selection with Link', this.linkBtnHandler.bind(this), this.$btnCtn);
+  this.linkBtn.init('🔗', 'Wrap Selection with Link', this.linkBtnHandler.bind(this), this.$btnCtn);
 };
 
 /**
