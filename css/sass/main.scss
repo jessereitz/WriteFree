@@ -129,6 +129,7 @@
 
 .#{$editor-prefix} {
   min-height: $editor__min-height;
+  max-height: 100vh;
   max-width: $editor__max-width;
   margin: $editor__margin;
   padding: $editor__padding;
@@ -160,5 +161,9 @@
   content:'Try writing here...';
   color:grey;
   font-style:italic;
+  }
+
+  & img {
+    max-width: 100%;
   }
 }

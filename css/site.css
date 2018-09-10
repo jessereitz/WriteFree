@@ -94,6 +94,7 @@
 
 .wf__editor {
   min-height: 2em;
+  max-height: 100vh;
   max-width: 35em;
   margin: 1em auto;
   padding: 0em 1.5rem;
@@ -116,5 +117,7 @@
     content: 'Try writing here...';
     color: grey;
     font-style: italic; }
+  .wf__editor img {
+    max-width: 100%; }
 
 /*# sourceMappingURL=site.css.map */
