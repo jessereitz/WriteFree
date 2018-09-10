@@ -29,7 +29,7 @@ insertToolbar.init = function init(editor, options) {
  */
 insertToolbar.createToolbarBtns = function createToolbarBtns() {
   this.imgBtn = Object.create(ToolbarButton);
-  this.imgBtn.init('&#128444;', 'Insert an Image', this.displayImgInput.bind(this), this.$btnCtn);
+  this.imgBtn.init('🖼️', 'Insert an Image', this.displayImgInput.bind(this), this.$btnCtn);
   this.lineBtn = Object.create(ToolbarButton);
   this.lineBtn.init('--', 'Insert a Horizontal Rule', this.editor.insertLine.bind(this.editor), this.$btnCtn);
 };
