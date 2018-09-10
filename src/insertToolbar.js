@@ -38,6 +38,7 @@ insertToolbar.displayImgInput = function displayImgInput() {
   const sel = window.getSelection();
   this.currentRange = sel.getRangeAt(0);
   this.input.setSaveHandler(this.insertImage.bind(this));
+  this.input.preventHideOnEnter = true;
   this.hideButtons();
   this.input.display('Type an image URL...');
 };
