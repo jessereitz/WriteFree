@@ -170,18 +170,36 @@ export default {
     return null;
   },
 
+  /**
+   * deleteContainerSection - Deletes an entire container section. Used when the
+   *  user is at the beginning or end of a text section and press backspace or
+   *  the delete key (passed in as 'key'). Prevents user from entering the
+   *  container section unwittingly.
+   *
+   * @param {KeybaordEvent} e The Event to use to determine which key was
+   *  pressed. e.key must be 'Backspace' or 'Delete'. If 'Backspace', this
+   *  method will delete the previous section. If 'Delete', this method will
+   *  delete the next container section.
+   *
+   * @returns {boolean} Returns true if the
+   */
   deleteContainerSection(e) {
-    console.log('hello?');
     const sel = window.getSelection();
     const section = findParentBlock(sel.anchorNode);
-    if (
-      section !== this.$firstSection
-      && section.previousSibling
-      && section.previousSibling.classList.contains(this.classes.containerSection)
-    ) {
-      section.previousSibling.parentNode.removeChild(section.previousSibling);
-      e.preventDefault();
+    let nextSection = null;
+    if (e.key === 'Backspace') {
+      nextSection = section.previousSibling;
+    } else if (e.key === 'Delete') {
+      nextSection = section.nextSibling;
     }
+    if (
+      nextSection
+      && nextSection.classList.contains(this.classes.containerSection)
+    ) {
+      e.preventDefault();
+      section.parentNode.removeChild(nextSection);
+    }
+    return false;
   },
 
   preventTextInContainer() {
@@ -202,6 +220,10 @@ export default {
       }
       sel.collapse(newSection, 0);
     }
+  },
+
+  containerBlock(e) {
+    e.preventDefault();
   },
 
   /*
@@ -321,8 +343,7 @@ export default {
     collapseSelectionToRange(sel, range);
   },
 
-// TODO: Docs for inserImage & insertLine
-// TODO: Image insert first thing, change first paragraph to not first paragraph.
+  // TODO: Docs for inserImage & insertLine
 
   insertImage(src, alt, nextSibling) {
     const sel = window.getSelection();
@@ -465,7 +486,19 @@ export default {
   keydownHandler(e) {
     const sel = window.getSelection();
     if (isDeletionKey(e)) {
-      if (sel.anchorOffset === 0 && sel.focusOffset === sel.focusNode.textContent.length) {
+      if (
+        e.key === 'Backspace'
+        && sel.anchorOffset === 0
+        && sel.focusOffset === sel.focusNode.textContent.length
+        && sel.anchorNode === sel.focusNode
+      ) {
+        this.deleteContainerSection(e);
+      } else if (
+        e.key === 'Delete'
+        && sel.anchorOffset === sel.anchorNode.textContent.length
+        && sel.focusOffset === sel.focusNode.textContent.length
+        && sel.anchorNode === sel.focusNode
+      ) {
         this.deleteContainerSection(e);
       }
     }
