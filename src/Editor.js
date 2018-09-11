@@ -202,12 +202,26 @@ export default {
     return false;
   },
 
-  preventTextInContainer() {
+
+  /**
+   * preventTextInContainer - Prevents the user from typing in container
+   *  sections. If a user tries to type in a container section, the next text
+   *  section is automatically selected or, if none is present, a new one is
+   *  created immediately after the container section. Up and left arrow keys
+   *  move the cursor to the previous section and right and down arrow keys move
+   *  the cursor to the next section.
+   *
+   */
+  preventTextInContainer(e) {
     const sel = window.getSelection();
     const section = findParentBlock(sel.anchorNode);
     if (section.classList.contains(this.classes.containerSection)) {
       let newSection = section.nextSibling;
-      if (
+      if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+        newSection = section.previousSibling;
+      } else if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+        newSection = section.nextSibling;
+      } else if (
         !newSection
         || newSection.classList.contains(this.classes.containerSection)
         || (
@@ -220,10 +234,6 @@ export default {
       }
       sel.collapse(newSection, 0);
     }
-  },
-
-  containerBlock(e) {
-    e.preventDefault();
   },
 
   /*
@@ -507,7 +517,7 @@ export default {
     }
 
     if (sel.isCollapsed && !isDeletionKey(e)) {
-      this.preventTextInContainer();
+      this.preventTextInContainer(e);
     }
   },
 
