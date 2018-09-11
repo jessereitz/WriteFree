@@ -91,26 +91,26 @@ export default {
    *  the inner container.
    */
   createFirstTextSection() {
-    if (!this.$firstTextSection) {
-      this.$firstTextSection = this.createTextSection();
+    if (!this.$firstSection) {
+      this.$firstSection = this.createTextSection();
     }
-    this.$firstTextSection.textContent = '';
+    this.$firstSection.textContent = '';
     const observer = new MutationObserver(() => {
-      if (this.$firstTextSection.textContent === '') this.$firstTextSection.innerHTML = '';
+      if (this.$firstSection.textContent === '') this.$firstSection.innerHTML = '';
     });
     observer.observe(
-      this.$firstTextSection,
+      this.$firstSection,
       { attributes: true, childList: true, subtree: true },
     );
 
-    this.$innerCtn.append(this.$firstTextSection);
+    this.$innerCtn.append(this.$firstSection);
     const sel = window.getSelection();
     const range = document.createRange();
-    range.setStart(this.$firstTextSection, 0);
-    range.setEnd(this.$firstTextSection, 0);
+    range.setStart(this.$firstSection, 0);
+    range.setEnd(this.$firstSection, 0);
     sel.removeAllRanges();
     sel.addRange(range);
-    return this.$firstTextSection;
+    return this.$firstSection;
   },
 
   /**
@@ -168,6 +168,10 @@ export default {
       return null;
     }
     return null;
+  },
+
+  preventTextInContainer() {
+
   },
 
   /*
@@ -287,12 +291,18 @@ export default {
     collapseSelectionToRange(sel, range);
   },
 
+// TODO: Docs for inserImage & insertLine
+// TODO: Image insert first thing, change first paragraph to not first paragraph.
+
   insertImage(src, alt, nextSibling) {
     const sel = window.getSelection();
     const img = generateElement('img', [], { src, alt });
     const section = this.createContainerSection();
     section.appendChild(img);
     nextSibling.parentNode.insertBefore(section, nextSibling);
+    if (nextSibling === this.$firstSection) {
+      this.$firstSection = section;
+    }
     sel.removeAllRanges();
     const range = document.createRange();
     range.selectNode(nextSibling);
@@ -406,10 +416,7 @@ export default {
     if (parentBlock.textContent.length === 0) {
       parentBlock.append(document.createElement('br'));
     }
-    sel.removeRange(currentRange);
-    const newRange = document.createRange();
-    newRange.setStart(newPar.firstChild, 0);
-    sel.addRange(newRange);
+    sel.collapse(newPar, 0);
     newPar.normalize();
     return newPar;
   },
@@ -425,18 +432,41 @@ export default {
    * @param {KeyboardEvent} e The KeyboardEvent to test.
    */
   keydownHandler(e) {
+    const sel = window.getSelection();
     if (isDeletionKey(e)) {
-      const sel = window.getSelection();
       if (
-        sel.anchorNode.textContent.length < 1
-        && this.$firstTextSection === sel.anchorNode
+        sel.anchorNode.innerHTML.length < 1
+        && this.$firstSection === sel.anchorNode
       ) {
         e.preventDefault();
       }
+      // TODO remove whole container section on delete
+      // if (sel.anchorNode.previousSibling.classList.contains(this.classes.containerSection)) {
+      // document.remove
+      // }
     }
     if (e.key === 'Enter' && this.$innerCtn.contains(e.target)) {
       e.preventDefault();
       this.newLineHandler();
+    }
+
+    if (sel.isCollapsed && !isDeletionKey(e)) {
+      const section = findParentBlock(sel.anchorNode);
+      if (section.classList.contains(this.classes.containerSection)) {
+        let newSection = section.nextSibling;
+        if (
+          !newSection
+          || newSection.classList.contains(this.classes.containerSection)
+          || (
+            newSection.classList.contains(this.classes.textSection)
+            && newSection.textContent.length > 0
+          )
+        ) {
+          newSection = this.createTextSection();
+          this.$innerCtn.insertBefore(newSection, section.nextSibling);
+        }
+        sel.collapse(newSection, 0);
+      }
     }
   },
 
