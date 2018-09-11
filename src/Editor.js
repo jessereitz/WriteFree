@@ -353,32 +353,49 @@ export default {
     collapseSelectionToRange(sel, range);
   },
 
-  // TODO: Docs for inserImage & insertLine
-
+  /**
+   * insertImage - Inserts an image into the editor. Must be provided src, alt
+   *  and nextSibling in order to properly render.
+   *
+   * @param {string} src          The string to use for the img's src attribute.
+   * @param {string} alt          The string to use for the img's alt attribute.
+   * @param {Element} nextSibling The HTML Element before which the image will
+   *  be inserted.
+   *
+   */
   insertImage(src, alt, nextSibling) {
     const sel = window.getSelection();
     const img = generateElement('img', [], { src, alt });
     const section = this.createContainerSection();
-    section.appendChild(img);
-    nextSibling.parentNode.insertBefore(section, nextSibling);
     if (nextSibling === this.$firstSection) {
       this.$firstSection = section;
     }
-    sel.collapse(nextSibling, 0);
-    this.insertToolbar.hide();
+    section.appendChild(img);
+    nextSibling.parentNode.insertBefore(section, nextSibling);
+    try {
+      sel.collapse(nextSibling, 0);
+    } catch (e) {
+      const range = document.createRange();
+      range.selectNodeContents(nextSibling);
+      range.collapse(true);
+      sel.removeAllRanges();
+      sel.addRange(range);
+    }
   },
 
+  /**
+   * insertImage - Inserts a line in the editor directly before the current
+   *  position of the selection cursor.
+   * 
+   */
   insertLine() {
     const sel = window.getSelection();
-    const range = sel.getRangeAt(0);
     const nextSibling = findParentBlock(range.startContainer);
     if (nextSibling === this.$firstSection) return false;
     const line = document.createElement('hr');
     const section = this.createContainerSection();
     section.appendChild(line);
     nextSibling.parentNode.insertBefore(section, nextSibling);
-    // range.selectNode(sel.focusNode);
-    // sel.focusNode.focus();
     sel.collapse(nextSibling, 0);
     this.insertToolbar.hide();
     return true;
