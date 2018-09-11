@@ -170,8 +170,38 @@ export default {
     return null;
   },
 
-  preventTextInContainer() {
+  deleteContainerSection(e) {
+    console.log('hello?');
+    const sel = window.getSelection();
+    const section = findParentBlock(sel.anchorNode);
+    if (
+      section !== this.$firstSection
+      && section.previousSibling
+      && section.previousSibling.classList.contains(this.classes.containerSection)
+    ) {
+      section.previousSibling.parentNode.removeChild(section.previousSibling);
+      e.preventDefault();
+    }
+  },
 
+  preventTextInContainer() {
+    const sel = window.getSelection();
+    const section = findParentBlock(sel.anchorNode);
+    if (section.classList.contains(this.classes.containerSection)) {
+      let newSection = section.nextSibling;
+      if (
+        !newSection
+        || newSection.classList.contains(this.classes.containerSection)
+        || (
+          newSection.classList.contains(this.classes.textSection)
+          && newSection.textContent.length > 0
+        )
+      ) {
+        newSection = this.createTextSection();
+        this.$innerCtn.insertBefore(newSection, section.nextSibling);
+      }
+      sel.collapse(newSection, 0);
+    }
   },
 
   /*
@@ -303,24 +333,24 @@ export default {
     if (nextSibling === this.$firstSection) {
       this.$firstSection = section;
     }
-    sel.removeAllRanges();
-    const range = document.createRange();
-    range.selectNode(nextSibling);
-    range.setStart(nextSibling, 0);
-    sel.addRange(range);
+    sel.collapse(nextSibling, 0);
     this.insertToolbar.hide();
   },
 
   insertLine() {
     const sel = window.getSelection();
+    const range = sel.getRangeAt(0);
+    const nextSibling = findParentBlock(range.startContainer);
+    if (nextSibling === this.$firstSection) return false;
     const line = document.createElement('hr');
     const section = this.createContainerSection();
     section.appendChild(line);
-    sel.anchorNode.parentNode.insertBefore(section, sel.anchorNode);
-    const range = sel.getRangeAt(0);
-    range.selectNode(sel.focusNode);
-    sel.focusNode.focus();
+    nextSibling.parentNode.insertBefore(section, nextSibling);
+    // range.selectNode(sel.focusNode);
+    // sel.focusNode.focus();
+    sel.collapse(nextSibling, 0);
     this.insertToolbar.hide();
+    return true;
   },
 
   /*
@@ -391,7 +421,8 @@ export default {
    *
    * @returns {Element} Returns the newly created paragraph.
    */
-  newLineHandler() {
+  newLineHandler(e) {
+    e.preventDefault();
     const sel = window.getSelection();
     const parentBlock = findParentBlock(sel.focusNode);
     const newPar = this.createTextSection();
@@ -410,11 +441,11 @@ export default {
     }
     if (newPar.textContent.length === 0) {
       newPar.append(document.createTextNode(''));
-      newPar.append(document.createElement('br'));
+      // newPar.append(document.createElement('br'));
     }
     currentRange.deleteContents();
     if (parentBlock.textContent.length === 0) {
-      parentBlock.append(document.createElement('br'));
+      // parentBlock.append(document.createElement('br'));
     }
     sel.collapse(newPar, 0);
     newPar.normalize();
@@ -434,39 +465,16 @@ export default {
   keydownHandler(e) {
     const sel = window.getSelection();
     if (isDeletionKey(e)) {
-      if (
-        sel.anchorNode.innerHTML.length < 1
-        && this.$firstSection === sel.anchorNode
-      ) {
-        e.preventDefault();
+      if (sel.anchorOffset === 0 && sel.focusOffset === sel.focusNode.textContent.length) {
+        this.deleteContainerSection(e);
       }
-      // TODO remove whole container section on delete
-      // if (sel.anchorNode.previousSibling.classList.contains(this.classes.containerSection)) {
-      // document.remove
-      // }
     }
     if (e.key === 'Enter' && this.$innerCtn.contains(e.target)) {
-      e.preventDefault();
-      this.newLineHandler();
+      this.newLineHandler(e);
     }
 
     if (sel.isCollapsed && !isDeletionKey(e)) {
-      const section = findParentBlock(sel.anchorNode);
-      if (section.classList.contains(this.classes.containerSection)) {
-        let newSection = section.nextSibling;
-        if (
-          !newSection
-          || newSection.classList.contains(this.classes.containerSection)
-          || (
-            newSection.classList.contains(this.classes.textSection)
-            && newSection.textContent.length > 0
-          )
-        ) {
-          newSection = this.createTextSection();
-          this.$innerCtn.insertBefore(newSection, section.nextSibling);
-        }
-        sel.collapse(newSection, 0);
-      }
+      this.preventTextInContainer();
     }
   },
 
