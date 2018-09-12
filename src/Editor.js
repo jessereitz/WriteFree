@@ -213,6 +213,8 @@ export default {
    *
    */
   preventTextInContainer(e) {
+    e.preventDefault();
+    console.log('prevent');
     const sel = window.getSelection();
     const section = findParentBlock(sel.anchorNode);
     if (section.classList.contains(this.classes.containerSection)) {
@@ -232,6 +234,7 @@ export default {
         newSection = this.createTextSection();
         this.$innerCtn.insertBefore(newSection, section.nextSibling);
       }
+      e.preventDefault();
       sel.collapse(newSection, 0);
     }
   },
@@ -386,10 +389,11 @@ export default {
   /**
    * insertImage - Inserts a line in the editor directly before the current
    *  position of the selection cursor.
-   * 
+   *
    */
   insertLine() {
     const sel = window.getSelection();
+    const range = sel.getRangeAt(0);
     const nextSibling = findParentBlock(range.startContainer);
     if (nextSibling === this.$firstSection) return false;
     const line = document.createElement('hr');
@@ -534,8 +538,9 @@ export default {
     }
 
     if (sel.isCollapsed && !isDeletionKey(e)) {
-      this.preventTextInContainer(e);
+      // this.preventTextInContainer(e);
     }
+    this.positionCursor(e);
   },
 
   /**
@@ -558,6 +563,7 @@ export default {
     }
     this.normalizeSection();
     this.checkForInsert(e);
+    // this.positionCursor();
   },
 
   /**
@@ -581,6 +587,77 @@ export default {
     this.insertToolbar.hide();
     return false;
   },
+
+  positionCursor(e) {
+    const sel = window.getSelection();
+    const section = findParentBlock(sel.anchorNode);
+    const range = sel.getRangeAt(0);
+    const rSection = findParentBlock(range.startContainer);
+    if (section === this.$innerCtn) {
+      console.log('ey');
+      console.log(this.$innerCtn);
+    }
+  },
+
+  /**
+   * positionCursor - Positions the cursor in a textSection if it isn't in one
+   *  already. If the cursor is in one of the editor containers it will simply
+   *  place their cursor at the end of the last text section.
+   *
+   * @returns {type} Description
+   */
+  // positionCursor(e) {
+  //   const sel = window.getSelection();
+  //   const section = findParentBlock(sel.anchorNode);
+  //   console.log(section);
+  //   console.log(sel.anchorNode);
+  //   if (section === this.editToolbar || section === this.insertToolbar) return null;
+  //   if (section.classList.contains(this.classes.containerSection)) {
+  //     this.preventTextInContainer(e);
+  //   } else if (!section.classList.contains(this.classes.textSection)) {
+  //     // debugger;
+  //     let newSection = null;
+  //     let parent = null;
+  //     if (section === this.$innerCtn || section === this.$ctn) {
+  //       newSection = this.$innerCtn.lastChild;
+  //       parent = section;
+  //     } else if (
+  //       section.nextSibling
+  //       && section.nextSibling.classList.contains(this.classes.textSection)
+  //     ) {
+  //       newSection = section.nextSibling;
+  //       parent = newSection.parentNode;
+  //     } else if (
+  //       section.previousSibling
+  //       && section.previousSibling.classList.contains(this.classes.textSection)
+  //     ) {
+  //       newSection = section.previousSibling;
+  //       parent = newSection.parentNode;
+  //     }
+  //     if (
+  //       !newSection
+  //       || (newSection && !newSection.classList.contains(this.classes.textSection))
+  //     ) {
+  //       debugger;
+  //       newSection = this.createTextSection();
+  //       parent = this.$innerCtn;
+  //       if (parent !== this.$innerCtn || parent !== this.$ctn) {
+  //         parent.insertBefore(newSection, section);
+  //       } else {
+  //         parent.appendChild(newSection);
+  //       }
+  //     }
+  //     try {
+  //       sel.collapse(newSection, newSection.textContent.length);
+  //     } catch (e) {
+  //       const range = document.createRange();
+  //       range.selectNodeContents(newSection);
+  //       range.collapse();
+  //       sel.removeAllRanges();
+  //       sel.addRange(range);
+  //     }
+  //   }
+  // },
 
   /*
   ##     ## ######## #### ##        ######
