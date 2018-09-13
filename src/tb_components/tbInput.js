@@ -172,6 +172,7 @@ export default {
     ) {
       this.hideCallback();
     }
+    return true;
   },
 
   /**
