@@ -95,14 +95,6 @@ export default {
       this.$firstSection = this.createTextSection();
     }
     this.$firstSection.textContent = '';
-    const observer = new MutationObserver(() => {
-      if (this.$firstSection.textContent === '') this.$firstSection.innerHTML = '';
-    });
-    observer.observe(
-      this.$firstSection,
-      { attributes: true, childList: true, subtree: true },
-    );
-
     this.$innerCtn.append(this.$firstSection);
     const sel = window.getSelection();
     const range = document.createRange();
@@ -110,7 +102,26 @@ export default {
     range.setEnd(this.$firstSection, 0);
     sel.removeAllRanges();
     sel.addRange(range);
+    window.first = this.$firstSection;
     return this.$firstSection;
+  },
+
+  /**
+   * displayFirstSectionPlaceholder - Checks if current section is the first textSection
+   *  and, if so, ensures the section is completely empty. This ensures that the
+   *  placeholder is properly displayed.
+   *
+   */
+  displayFirstSectionPlaceholder() {
+    const sel = window.getSelection();
+    if (
+      sel.isCollapsed
+      && this.isFirst(sel.anchorNode)
+      && sel.anchorNode.classList.contains(this.classes.textSection)
+      && sel.anchorNode.textContent === ''
+    ) {
+      sel.anchorNode.innerHTML = '';
+    }
   },
 
   /**
@@ -493,12 +504,8 @@ export default {
     }
     if (newPar.textContent.length === 0) {
       newPar.append(document.createTextNode(''));
-      // newPar.append(document.createElement('br'));
     }
     currentRange.deleteContents();
-    if (parentBlock.textContent.length === 0) {
-      // parentBlock.append(document.createElement('br'));
-    }
     sel.collapse(newPar, 0);
     newPar.normalize();
     return newPar;
@@ -559,6 +566,7 @@ export default {
         this.$innerCtn.innerHTML = ''; // Get rid of auto-inserted <br>
         this.createFirstTextSection();
       }
+      this.displayFirstSectionPlaceholder();
     }
     this.normalizeSection();
     this.checkForInsert(e);
