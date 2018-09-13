@@ -150,6 +150,10 @@ const BaseToolbar = {
   html() {
     return this.$ctn;
   },
+
+  contains(node) {
+    return this.$ctn.contains(node);
+  }
 };
 
 export default BaseToolbar;
