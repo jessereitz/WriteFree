@@ -446,7 +446,6 @@ export default {
       || containsSelection(sel, this.editToolbar.html())
     ) {
       this.editToolbar.display(sel);
-      this.insertToolbar.hide();
     } else {
       this.editToolbar.hide();
     }
@@ -584,6 +583,7 @@ export default {
   checkForInsert(e) {
     if (e && this.insertToolbar.$ctn.contains(e.target)) return false;
     const sel = window.getSelection();
+    this.insertToolbar.hide();
     if (sel.isCollapsed
       && (sel.anchorNode && sel.anchorNode.textContent === '')
       && !containsSelection(sel, this.insertToolbar.$ctn)
@@ -591,7 +591,6 @@ export default {
       this.insertToolbar.display();
       return true;
     }
-    this.insertToolbar.hide();
     return false;
   },
 

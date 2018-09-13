@@ -128,6 +128,7 @@ const BaseToolbar = {
    * @returns {boolean} Returns true if the Toolbar is displayed. Else false.
    */
   baseDisplay() {
+    this.input.hide(false);
     this.positionToolbar();
     this.$ctn.classList.remove('hide');
     this.displayButtons();

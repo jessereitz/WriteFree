@@ -155,6 +155,7 @@ export default {
    *
    */
   hide(useCallback = true) {
+    // debugger;
     if (this.$ctn.classList.contains(tbClass.hideDown)) return false;
     this.$ctn.classList.add(tbClass.hideDown);
     this.$input.value = '';
