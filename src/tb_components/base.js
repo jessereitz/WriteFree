@@ -90,6 +90,16 @@ const BaseToolbar = {
     this.$ctn.style.height = `${this.getButtonsHeight()}px`;
   },
 
+  displayInput(placeholder) {
+    const sel = window.getSelection();
+    this.currentRange = sel.getRangeAt(0);
+    this.input.display(placeholder);
+  },
+
+  hideInput() {
+
+  },
+
   /**
   * positionToolbar - Positions the Toolbar at the appropriate place based on
   *  the current range.
@@ -121,8 +131,6 @@ const BaseToolbar = {
     this.positionToolbar();
     this.$ctn.classList.remove('hide');
     this.displayButtons();
-    // const boundingRect = this.$btnCtn.getBoundingClientRect();
-    // this.$ctn.style.width = `${boundingRect.width}px`;
     return true;
   },
 

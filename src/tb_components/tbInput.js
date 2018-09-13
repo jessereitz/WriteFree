@@ -155,9 +155,16 @@ export default {
    *
    */
   hide(useCallback = true) {
+    if (this.$ctn.classList.contains(tbClass.hideDown)) return false;
     this.$ctn.classList.add(tbClass.hideDown);
     this.$input.value = '';
     this.clearSaveHandler();
+    if (this.currentRange) {
+      const sel = window.getSelection();
+      const range = sel.getRangeAt(0);
+      sel.removeRange(range);
+      sel.addRange(this.currentRange);
+    }
     if (
       useCallback
       && this.hideCallback
