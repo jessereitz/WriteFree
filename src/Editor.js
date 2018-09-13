@@ -59,6 +59,7 @@ export default {
     this.$ctn.addEventListener('keydown', this.keydownHandler.bind(this));
     this.$ctn.addEventListener('keyup', this.keyupHandler.bind(this));
     this.$ctn.addEventListener('click', this.checkForInsert.bind(this));
+    this.$ctn.addEventListener('mouseup', this.positionCursor.bind(this));
     // must be added to document because of browsers.
     document.addEventListener('selectionchange', this.selectionHandler.bind(this));
     return this;
@@ -224,8 +225,6 @@ export default {
    *
    */
   preventTextInContainer(e) {
-    e.preventDefault();
-    console.log('prevent');
     const sel = window.getSelection();
     const section = findParentBlock(sel.anchorNode);
     if (section.classList.contains(this.classes.containerSection)) {
@@ -543,6 +542,7 @@ export default {
     if (e.key === 'Enter' && this.$innerCtn.contains(e.target)) {
       this.newLineHandler(e);
     }
+    this.preventTextInContainer(e);
     const range = sel.getRangeAt(0);
     this.prevSection = findParentBlock(range.startContainer);
     this.prevSectionPrevSibling = this.prevSection.previousSibling;
