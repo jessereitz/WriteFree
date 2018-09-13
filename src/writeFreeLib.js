@@ -152,7 +152,7 @@ export function isDeletionKey(event) {
 export function validateURL(url) {
   let returnVal;
   if (!url.includes('.')) return false;
-  if (!url.startsWith('http://') || !url.startsWith('https://')) {
+  if (!url.startsWith('http://') && !url.startsWith('https://')) {
     returnVal = `http://${url}`;
   } else {
     returnVal = url;
