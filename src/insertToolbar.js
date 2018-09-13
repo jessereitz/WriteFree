@@ -1,3 +1,5 @@
+import { validateURL } from './writeFreeLib.js';
+
 import BaseToolbar from './tb_components/base.js';
 import ToolbarButton from './tb_components/tbButton.js';
 
@@ -34,6 +36,24 @@ insertToolbar.createToolbarBtns = function createToolbarBtns() {
   this.lineBtn.init('--', 'Insert a Horizontal Rule', this.editor.insertLine.bind(this.editor), this.$btnCtn);
 };
 
+/**
+ * toggleDisabledButtons - Toggles the disabled buttons. If the user is
+ *  currently in the first section, they cannot add a horizontal rule.
+ *
+ */
+insertToolbar.toggleDisabledButtons = function toggleDisabledButtons() {
+  const sel = window.getSelection();
+  if (this.editor.isFirst(sel.anchorNode)) {
+    this.lineBtn.disable();
+  } else {
+    this.lineBtn.enable();
+  }
+};
+
+/**
+ * displayImgInput - Displays the input for adding an image.
+ *
+ */
 insertToolbar.displayImgInput = function displayImgInput() {
   const sel = window.getSelection();
   this.currentRange = sel.getRangeAt(0);
@@ -43,14 +63,28 @@ insertToolbar.displayImgInput = function displayImgInput() {
   this.input.display('Type an image URL...');
 };
 
+
+/**
+ * hideImageInput - Hides the input for adding an image.
+ *
+ */
 insertToolbar.hideImageInput = function hideImageInput() {
   this.imgURL = null;
   this.displayButtons();
 };
 
+/**
+ * insertImage - This function acts as the saveHandler for the image input. The
+ *  input first prompts the user to provide a url, then alt text. If the user
+ *  has not yet provided the image url, it will take the value from the input
+ *  and store it as the image url, prompting the user for the alt text. Once
+ *  this has been provided, the function passes control to the editor and closes
+ *  itself.
+ *
+ */
 insertToolbar.insertImage = function insertImage() {
   if (!this.imgURL) {
-    this.imgURL = this.input.getValue();
+    this.imgURL = validateURL(this.input.getValue());
     this.input.clear('Enter alt text...');
   } else {
     this.editor.insertImage(this.imgURL, this.input.getValue(), this.currentRange.startContainer);
@@ -67,6 +101,7 @@ insertToolbar.insertImage = function insertImage() {
  *  displayed. Else returns false.
  */
 insertToolbar.display = function display() {
+  this.toggleDisabledButtons();
   return this.baseDisplay();
 };
 
