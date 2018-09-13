@@ -536,11 +536,10 @@ export default {
     if (e.key === 'Enter' && this.$innerCtn.contains(e.target)) {
       this.newLineHandler(e);
     }
-
-    if (sel.isCollapsed && !isDeletionKey(e)) {
-      // this.preventTextInContainer(e);
-    }
-    this.positionCursor(e);
+    const range = sel.getRangeAt(0);
+    this.prevSection = findParentBlock(range.startContainer);
+    this.prevSectionPrevSibling = this.prevSection.previousSibling;
+    this.prevOffset = range.startOffset;
   },
 
   /**
@@ -563,7 +562,7 @@ export default {
     }
     this.normalizeSection();
     this.checkForInsert(e);
-    // this.positionCursor();
+    this.positionCursor();
   },
 
   /**
@@ -588,76 +587,43 @@ export default {
     return false;
   },
 
-  positionCursor(e) {
-    const sel = window.getSelection();
-    const section = findParentBlock(sel.anchorNode);
-    const range = sel.getRangeAt(0);
-    const rSection = findParentBlock(range.startContainer);
-    if (section === this.$innerCtn) {
-      console.log('ey');
-      console.log(this.$innerCtn);
-    }
-  },
-
   /**
    * positionCursor - Positions the cursor in a textSection if it isn't in one
-   *  already. If the cursor is in one of the editor containers it will simply
-   *  place their cursor at the end of the last text section.
+   *  already. This method first looks at the previous section (set in the
+   *  keydownHandler) and tries to position the cursor there. If that fails, it
+   *  will position the cursor in the next adjacent text container, creating one
+   *  if necessary. This method will return false if the cursor is currently in
+   *  one of the toolbars.
    *
-   * @returns {type} Description
    */
-  // positionCursor(e) {
-  //   const sel = window.getSelection();
-  //   const section = findParentBlock(sel.anchorNode);
-  //   console.log(section);
-  //   console.log(sel.anchorNode);
-  //   if (section === this.editToolbar || section === this.insertToolbar) return null;
-  //   if (section.classList.contains(this.classes.containerSection)) {
-  //     this.preventTextInContainer(e);
-  //   } else if (!section.classList.contains(this.classes.textSection)) {
-  //     // debugger;
-  //     let newSection = null;
-  //     let parent = null;
-  //     if (section === this.$innerCtn || section === this.$ctn) {
-  //       newSection = this.$innerCtn.lastChild;
-  //       parent = section;
-  //     } else if (
-  //       section.nextSibling
-  //       && section.nextSibling.classList.contains(this.classes.textSection)
-  //     ) {
-  //       newSection = section.nextSibling;
-  //       parent = newSection.parentNode;
-  //     } else if (
-  //       section.previousSibling
-  //       && section.previousSibling.classList.contains(this.classes.textSection)
-  //     ) {
-  //       newSection = section.previousSibling;
-  //       parent = newSection.parentNode;
-  //     }
-  //     if (
-  //       !newSection
-  //       || (newSection && !newSection.classList.contains(this.classes.textSection))
-  //     ) {
-  //       debugger;
-  //       newSection = this.createTextSection();
-  //       parent = this.$innerCtn;
-  //       if (parent !== this.$innerCtn || parent !== this.$ctn) {
-  //         parent.insertBefore(newSection, section);
-  //       } else {
-  //         parent.appendChild(newSection);
-  //       }
-  //     }
-  //     try {
-  //       sel.collapse(newSection, newSection.textContent.length);
-  //     } catch (e) {
-  //       const range = document.createRange();
-  //       range.selectNodeContents(newSection);
-  //       range.collapse();
-  //       sel.removeAllRanges();
-  //       sel.addRange(range);
-  //     }
-  //   }
-  // },
+  positionCursor() {
+    const sel = window.getSelection();
+    let section = findParentBlock(sel.anchorNode);
+    if (this.editToolbar.contains(section) || this.insertToolbar.contains(section)) {
+      return false;
+    }
+    const range = sel.getRangeAt(0);
+    if (!section.classList.contains(this.classes.textSection)) {
+      if (
+        this.prevSection
+        && this.$innerCtn.contains(this.prevSection)
+        && this.prevSection.classList.contains(this.classes.textSection)
+      ) {
+        sel.collapse(this.prevSection, this.prevOffset);
+      } else {
+        section = this.prevSectionPrevSibling;
+        const newSection = this.createTextSection();
+        if (section.nextSibling) {
+          this.$innerCtn.insertBefore(newSection, section.nextSibling);
+        } else {
+          this.$innerCtn.appendChild(newSection);
+        }
+        range.selectNodeContents(newSection);
+        range.collapse(true);
+      }
+    }
+    return true;
+  },
 
   /*
   ##     ## ######## #### ##        ######
