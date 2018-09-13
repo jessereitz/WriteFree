@@ -96,7 +96,7 @@ export default {
       this.$firstSection = this.createTextSection();
     }
     this.$firstSection.textContent = '';
-    this.$innerCtn.append(this.$firstSection);
+    this.$innerCtn.insertBefore(this.$firstSection, this.$innerCtn.firstChild);
     const sel = window.getSelection();
     const range = document.createRange();
     range.setStart(this.$firstSection, 0);
@@ -559,10 +559,12 @@ export default {
    */
   keyupHandler(e) {
     if (isDeletionKey(e)) {
+      const sel = window.getSelection();
       if (
-        this.$innerCtn.innerHTML === '' || this.$innerCtn.innerHTML === '<br>'
+        this.$innerCtn.innerHTML === ''
+        || this.$innerCtn.innerHTML === '<br>'
+        || sel.anchorNode === this.$innerCtn
       ) {
-        this.$innerCtn.innerHTML = ''; // Get rid of auto-inserted <br>
         this.createFirstTextSection();
       }
       this.displayFirstSectionPlaceholder();
