@@ -141,8 +141,8 @@ const BaseToolbar = {
    */
   hide() {
     this.currentRange = null;
-    this.displayButtons();
     this.input.hide(false);
+    this.displayButtons();
     this.$ctn.classList.add('hide');
     if (this.$ctn.classList.contains('hide')) {
       return true;
@@ -161,7 +161,7 @@ const BaseToolbar = {
 
   contains(node) {
     return this.$ctn.contains(node);
-  }
+  },
 };
 
 export default BaseToolbar;
