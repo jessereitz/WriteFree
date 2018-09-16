@@ -297,18 +297,18 @@ export default {
     let klass;
     let style;
     if (sel instanceof Selection) {
-      if (parentnode.tagName === 'H1' || parentnode.tagName === 'H2') {
+      if (parentnode.tagName === 'H1') {
         tagName = this.options.divOrPar;
         klass = this.options.sectionClass;
         style = this.options.sectionStyle;
-      } else if (this.isFirst(parentnode)) {
-        tagName = 'h1';
-        klass = this.options.largeHeadingClass;
-        style = this.options.largeHeadingStyle;
-      } else {
+      } else if (parentnode.tagName === 'DIV') {
         tagName = 'h2';
         klass = this.options.smallHeadingClass;
         style = this.options.smallHeadingClass;
+      } else {
+        tagName = 'h1';
+        klass = this.options.largeHeadingClass;
+        style = this.options.largeHeadingStyle;
       }
       const successful = document.execCommand('formatBlock', false, tagName);
       if (successful) {
