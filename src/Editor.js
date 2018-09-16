@@ -385,32 +385,28 @@ export default {
     }
     section.appendChild(img);
     nextSibling.parentNode.insertBefore(section, nextSibling);
-    try {
-      sel.collapse(nextSibling, 0);
-    } catch (e) {
-      const range = document.createRange();
-      range.selectNodeContents(nextSibling);
-      range.collapse(true);
-      sel.removeAllRanges();
-      sel.addRange(range);
-    }
+    const range = document.createRange();
+    range.selectNodeContents(nextSibling);
+    collapseSelectionToRange(sel, range, true);
   },
 
   /**
-   * insertImage - Inserts a line in the editor directly before the current
+   * insertLine - Inserts a line in the editor directly before the current
    *  position of the selection cursor.
    *
    */
   insertLine() {
     const sel = window.getSelection();
-    const range = sel.getRangeAt(0);
+    let range = sel.getRangeAt(0);
     const nextSibling = findParentBlock(range.startContainer);
     if (nextSibling === this.$firstSection) return false;
     const line = document.createElement('hr');
     const section = this.createContainerSection();
     section.appendChild(line);
     nextSibling.parentNode.insertBefore(section, nextSibling);
-    sel.collapse(nextSibling, 0);
+    range = document.createRange();
+    range.selectNodeContents(nextSibling);
+    collapseSelectionToRange(sel, range, true);
     this.insertToolbar.hide();
     return true;
   },

@@ -238,8 +238,8 @@ export function containsSelection(sel, node) {
  * @param {Range} range    The Range to use to collapse the selection.
  *
  */
-export function collapseSelectionToRange(sel, range) {
-  range.collapse();
+export function collapseSelectionToRange(sel, range, toStart = false) {
+  range.collapse(toStart);
   sel.removeAllRanges();
   sel.addRange(range);
 }
