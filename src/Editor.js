@@ -574,9 +574,14 @@ export default {
       }
       this.displayFirstSectionPlaceholder();
     }
-    this.normalizeSection();
-    this.checkForInsert(e);
-    this.positionCursor();
+    try {
+      this.normalizeSection();
+      this.checkForInsert(e);
+      this.positionCursor();
+    } catch (exception) {
+      return null;
+    }
+    return true;
   },
 
   /**
@@ -631,6 +636,7 @@ export default {
         sel.collapse(this.prevSection, this.prevOffset);
       } else {
         section = this.prevSectionPrevSibling;
+        if (!section) return false;
         const newSection = this.createTextSection();
         if (section.nextSibling) {
           this.$innerCtn.insertBefore(newSection, section.nextSibling);
