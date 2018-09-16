@@ -105,7 +105,9 @@
   color: #333; }
   .wf__editor * {
     font-size: 1.25rem;
-    max-width: 35em; }
+    max-width: 35rem;
+    margin-left: auto;
+    margin-right: auto; }
   .wf__editor div {
     min-height: 1.25rem;
     margin: 1em auto; }
