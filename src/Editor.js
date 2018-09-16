@@ -375,11 +375,17 @@ export default {
    * @param {Element} nextSibling The HTML Element before which the image will
    *  be inserted.
    *
+   * TODO: Get rid of alert. Build out a simple messaging system for users.
    */
   insertImage(src, alt, nextSibling) {
     const sel = window.getSelection();
     const img = generateElement('img', [], { src, alt });
     const section = this.createContainerSection();
+    img.section = section;
+    img.onerror = function onImageError() {
+      img.section.parentNode.removeChild(img.section);
+      alert('Image failed to load.');
+    };
     if (nextSibling === this.$firstSection) {
       this.$firstSection = section;
     }
@@ -539,9 +545,12 @@ export default {
     }
     this.preventTextInContainer(e);
     const range = sel.getRangeAt(0);
-    this.prevSection = findParentBlock(range.startContainer);
-    this.prevSectionPrevSibling = this.prevSection.previousSibling;
-    this.prevOffset = range.startOffset;
+    const prevSection = findParentBlock(range.startContainer);
+    if (!this.editToolbar.contains(prevSection) && !this.insertToolbar.contains(prevSection)) {
+      this.prevSection = prevSection;
+      this.prevSectionPrevSibling = this.prevSection.previousSibling;
+      this.prevOffset = range.startOffset;
+    }
   },
 
   /**
@@ -603,7 +612,12 @@ export default {
    */
   positionCursor() {
     const sel = window.getSelection();
-    let section = findParentBlock(sel.anchorNode);
+    let section = null;
+    try {
+      section = findParentBlock(sel.anchorNode);
+    } catch (exception) {
+      return false;
+    }
     if (this.editToolbar.contains(section) || this.insertToolbar.contains(section)) {
       return false;
     }
