@@ -134,7 +134,9 @@ export default {
     if (!Array.isArray(this.options.sectionClass)) {
       this.options.sectionClass = Array(this.options.sectionClass);
     }
-    this.options.sectionClass.push(this.classes.textSection);
+    if (!this.options.sectionClass.includes(this.classes.textSection)) {
+      this.options.sectionClass.push(this.classes.textSection);
+    }
     const parOptions = {
       style: this.options.sectionStyle,
       klasses: this.options.sectionClass,
@@ -508,6 +510,13 @@ export default {
     currentRange.deleteContents();
     sel.collapse(newPar, 0);
     newPar.normalize();
+    const rect = newPar.getBoundingClientRect();
+    if (rect.top >= window.innerHeight) {
+      window.scroll({
+        top: rect.top + window.scrollY,
+        behavior: 'instant',
+      });
+    }
     return newPar;
   },
 
