@@ -117,10 +117,6 @@ const BaseToolbar = {
     }
     const toolbarRect = this.$ctn.getBoundingClientRect();
     const bottomPos = rect.bottom + this.toolbarOffset + toolbarRect.height;
-    console.log(window.innerHeight);
-    // console.log(window.scrollY);
-    console.log(bottomPos);
-    console.log(toolbarRect);
     if (bottomPos >= window.innerHeight) {
       this.$ctn.style.top = `${rect.top - (this.toolbarOffset + toolbarRect.height)}px`;
     } else {
