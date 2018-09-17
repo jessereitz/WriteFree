@@ -3,7 +3,7 @@ import {
   containsSelection,
 } from './writeFreeLib.js';
 
-import BaseToolbar from './tb_components/base.js';
+import BaseToolbar from './tb_components/baseToolbar.js';
 import ToolbarButton from './tb_components/tbButton.js';
 
 // Create the EditToolbar from the BaseToolbar.

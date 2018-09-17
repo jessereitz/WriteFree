@@ -34,6 +34,7 @@ const BaseToolbar = {
   initToolbar(editor, options) {
     this.options = options;
     this.editor = editor;
+    this.toolbarOffset = toolbarOffset;
     this.$ctn = generateElement(
       'div',
       [tbClass.main, 'hide'],
@@ -114,7 +115,17 @@ const BaseToolbar = {
     } else {
       rect = this.currentRange.getBoundingClientRect();
     }
-    this.$ctn.style.top = `${rect.bottom + toolbarOffset}px`;
+    const toolbarRect = this.$ctn.getBoundingClientRect();
+    const bottomPos = rect.bottom + this.toolbarOffset + toolbarRect.height;
+    console.log(window.innerHeight);
+    // console.log(window.scrollY);
+    console.log(bottomPos);
+    console.log(toolbarRect);
+    if (bottomPos >= window.innerHeight) {
+      this.$ctn.style.top = `${rect.top - (this.toolbarOffset + toolbarRect.height)}px`;
+    } else {
+      this.$ctn.style.top = `${rect.bottom + this.toolbarOffset}px`;
+    }
     this.$ctn.style.left = `${rect.left}px`;
   },
 
@@ -129,8 +140,8 @@ const BaseToolbar = {
    */
   baseDisplay() {
     this.input.hide(false);
-    this.positionToolbar();
     this.$ctn.classList.remove('hide');
+    this.positionToolbar();
     this.displayButtons();
     return true;
   },

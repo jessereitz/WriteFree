@@ -1,6 +1,6 @@
 import { validateURL } from './writeFreeLib.js';
 
-import BaseToolbar from './tb_components/base.js';
+import BaseToolbar from './tb_components/baseToolbar.js';
 import ToolbarButton from './tb_components/tbButton.js';
 
 // Create the InsertToolbar from the BaseToolbar.
@@ -17,6 +17,7 @@ const insertToolbar = Object.create(BaseToolbar);
  */
 insertToolbar.init = function init(editor, options) {
   this.initToolbar(editor, options);
+  this.toolbarOffset = 15;
   this.createToolbarBtns();
   this.input.init(this.hideImageInput.bind(this), this.$ctn);
   this.input.$input.id = 'input';
