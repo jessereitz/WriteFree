@@ -492,7 +492,6 @@ export default {
     const parentBlock = findParentBlock(sel.focusNode);
     const newPar = this.createTextSection();
     parentBlock.parentNode.insertBefore(newPar, parentBlock.nextSibling);
-
     const currentRange = sel.getRangeAt(0);
     if (currentRange.collapsed) {
       try {
@@ -505,10 +504,19 @@ export default {
       }
     }
     if (newPar.textContent.length === 0) {
+      newPar.append(document.createElement('br'));
       newPar.append(document.createTextNode(''));
     }
     currentRange.deleteContents();
-    sel.collapse(newPar, 0);
+    if (
+      parentBlock.textContent.length === 0
+      && currentRange.commonAncestorContainer === currentRange.startContainer
+    ) {
+      parentBlock.append(document.createElement('br'));
+    }
+    const range = document.createRange();
+    range.selectNodeContents(newPar);
+    collapseSelectionToRange(sel, range, true);
     newPar.normalize();
     const rect = newPar.getBoundingClientRect();
     if (rect.top >= window.innerHeight) {
