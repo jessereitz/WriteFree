@@ -381,7 +381,7 @@ export default {
    */
   insertImage(src, alt, nextSibling) {
     const sel = window.getSelection();
-    const img = generateElement('img', [], { src, alt });
+    const img = generateElement('img', this.options.imgClass, { src, alt, style: this.options.imgStyle });
     const section = this.createContainerSection();
     img.section = section;
     img.onerror = function onImageError() {

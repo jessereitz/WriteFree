@@ -22,6 +22,8 @@ function WriteFree($ctn, userOptions = {}) {
     largeHeadingStyle: null,
     smallHeadingClass: null,
     smallHeadingStyle: null,
+    imgClass: null,
+    imgStyle: null,
   };
 
   const options = (function setOptions() {
@@ -52,6 +54,8 @@ const options = {
   containerClass: 'testContainer',
   containerStyle: {
     // background: '#333',
+  },
+  imgStyle: {
   },
 };
 
