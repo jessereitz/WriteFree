@@ -35,6 +35,7 @@
     "@babel/polyfill": "^7.0.0"
   },
   "scripts": {
-    "build": "./node_modules/.bin/rollup -c"
+    "build": "./node_modules/.bin/rollup -c",
+    "watchBuild": "./node_modules/.bin/rollup -c -w"
   }
 }
