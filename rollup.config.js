@@ -10,10 +10,10 @@ export default {
     file: 'build/js/writefree.min.js',
     format: 'iife',
     name: 'WriteFree',
+    sourceMap: true,
   },
   // dest: 'build/js/writefree.min.js',
   // format: 'iife',
-  sourceMap: 'inline',
   plugins: [
     eslint(),
     babel({
