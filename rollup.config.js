@@ -6,8 +6,13 @@ import { uglify } from 'rollup-plugin-uglify';
 
 export default {
   entry: 'src/main.js',
-  dest: 'build/js/writefree.min.js',
-  format: 'iife',
+  output: {
+    file: 'build/js/writefree.min.js',
+    format: 'iife',
+    name: 'WriteFree',
+  },
+  // dest: 'build/js/writefree.min.js',
+  // format: 'iife',
   sourceMap: 'inline',
   plugins: [
     eslint(),

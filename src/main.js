@@ -44,19 +44,4 @@ function WriteFree($ctn, userOptions = {}) {
     html: Editor.html.bind(Editor),
   };
 }
-
-const options = {
-  divOrPar: 'div',
-  sectionClass: 'testSection',
-  sectionStyle: {
-    // color: '#fff',
-  },
-  containerClass: 'testContainer',
-  containerStyle: {
-    // background: '#333',
-  },
-  imgStyle: {
-  },
-};
-
-window.wf = WriteFree(document.getElementById('WriteFreeCtn'), options);
+export default WriteFree;
