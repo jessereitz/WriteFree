@@ -1,3 +1,4 @@
 #!/usr/bin/env bash
 buildTarget='DEBUG'
+cd ..
 python3 -m http.server | sass --watch ./css/sass/main.scss:./css/site.css | npm run watchBuild
