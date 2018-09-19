@@ -299,11 +299,12 @@ export default {
     let klass;
     let style;
     if (sel instanceof Selection) {
+      // debugger;
       if (parentnode.tagName === 'H1') {
         tagName = this.options.divOrPar;
         klass = this.options.sectionClass;
         style = this.options.sectionStyle;
-      } else if (parentnode.tagName === 'DIV') {
+      } else if (parentnode.tagName === 'DIV' || parentnode.tagName === 'P') {
         tagName = 'h2';
         klass = this.options.smallHeadingClass;
         style = this.options.smallHeadingClass;
