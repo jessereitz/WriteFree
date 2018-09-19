@@ -649,7 +649,11 @@ export default {
       return false;
     }
     const range = sel.getRangeAt(0);
-    if (!section.classList.contains(this.classes.textSection)) {
+    if (
+      !section.classList.contains(this.classes.textSection)
+      && section.tagName !== 'H2'
+      && section.tagName !== 'H1'
+    ) {
       if (
         this.prevSection
         && this.$innerCtn.contains(this.prevSection)
