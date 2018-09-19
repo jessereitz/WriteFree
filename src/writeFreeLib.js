@@ -38,7 +38,9 @@ export function addStyleFromObj($el, styleObj) {
 export function addClasses($el, klasses) {
   if (!klasses) return $el;
   if (Array.isArray(klasses)) {
-    klasses.forEach(klass => $el.classList.add(klass));
+    klasses.forEach((klass) => {
+      if (typeof klass === 'string' && klass.length > 0) $el.classList.add(klass);
+    });
   } else {
     $el.classList.add(klasses);
   }
