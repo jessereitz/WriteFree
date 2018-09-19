@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+buildTarget='PROD'
+npm run build
