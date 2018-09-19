@@ -380,6 +380,9 @@ export default {
    * TODO: Get rid of alert. Build out a simple messaging system for users.
    */
   insertImage(src, alt, nextSibling) {
+    if (nextSibling.innerHTML.length === 0) {
+      nextSibling.append(document.createElement('br'));
+    }
     const sel = window.getSelection();
     const img = generateElement('img', this.options.imgClass, { src, alt, style: this.options.imgStyle });
     const section = this.createContainerSection();
@@ -395,6 +398,7 @@ export default {
     nextSibling.parentNode.insertBefore(section, nextSibling);
     const range = document.createRange();
     range.selectNodeContents(nextSibling);
+    // debugger;
     collapseSelectionToRange(sel, range, true);
   },
 

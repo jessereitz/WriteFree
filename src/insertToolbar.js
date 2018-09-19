@@ -86,7 +86,11 @@ insertToolbar.hideImageInput = function hideImageInput() {
 insertToolbar.insertImage = function insertImage() {
   if (!this.imgURL) {
     this.imgURL = validateURL(this.input.getValue());
-    this.input.clear('Enter alt text...');
+    if (!this.imgURL) {
+      this.input.clear('Type an image URL...');
+    } else {
+      this.input.clear('Enter alt text...');
+    }
   } else {
     this.editor.insertImage(this.imgURL, this.input.getValue(), this.currentRange.startContainer);
     this.input.hide();
