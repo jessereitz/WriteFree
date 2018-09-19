@@ -94,33 +94,10 @@
   .wf__toolbar.hide {
     display: none !important; }
 
-.wf__editor {
-  min-height: 2em;
-  max-width: 100%;
-  margin: 1em auto;
-  padding: 0em 1.5rem;
-  font-size: 1.25rem;
-  font-family: "Crimson Text", serif;
-  outline: none;
-  color: #333; }
-  .wf__editor * {
-    font-size: 1.25rem;
-    max-width: 35rem;
-    margin-left: auto;
-    margin-right: auto; }
-  .wf__editor div {
-    min-height: 1.25rem;
-    margin: 1em auto; }
-  .wf__editor h1 {
-    font-size: 2rem; }
-  .wf__editor h2 {
-    font-size: 1.5rem; }
-  .wf__editor p:first-child:empty:not(:focus)::before,
-  .wf__editor div:first-child:empty:not(:focus)::before {
-    content: 'Try writing here...';
-    color: grey;
-    font-style: italic; }
-  .wf__editor img {
-    max-width: 100%; }
+.wf__editor p:first-child:empty:not(:focus)::before,
+.wf__editor div:first-child:empty:not(:focus)::before {
+  content: 'Try writing here...';
+  color: grey;
+  font-style: italic; }
 
 /*# sourceMappingURL=site.css.map */

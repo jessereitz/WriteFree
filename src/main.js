@@ -2,6 +2,34 @@
 
 import editorBase from './Editor.js';
 
+const defaultContainerStyle = {
+  'min-height': '2em',
+  'max-width': '100%',
+  margin: '1em auto',
+  padding: '0em 1.5rem',
+  'font-size': '1.25rem',
+  'font-family': "'Crimson Text', serif",
+  outline: 'none',
+  color: '#333',
+};
+
+const defaultSectionStyle = {
+  'font-size': '1.25rem',
+  'max-width': '35rem',
+  'margin-left': 'auto',
+  'margin-right': 'auto',
+};
+
+const defaultLargeHeadingStyle = Object.create(defaultSectionStyle);
+defaultLargeHeadingStyle['font-size'] = '2rem';
+
+const defaultSmallHeadingStyle = Object.create(defaultSectionStyle);
+defaultSmallHeadingStyle['font-size'] = '1.5rem';
+
+const defaultImgStyle = Object.create(defaultSectionStyle);
+defaultImgStyle['max-width'] = '100%';
+
+
 /**
  * WriteFree - The initialization function used to create instances of the
  *  WriteFree editor.
@@ -14,16 +42,16 @@ import editorBase from './Editor.js';
 function WriteFree($ctn, userOptions = {}) {
   const defaultOptions = {
     divOrPar: 'p',
-    sectionClass: null,
-    sectionStyle: null,
+    sectionClass: '',
+    sectionStyle: defaultSectionStyle,
     containerClass: 'wf__editor',
-    containerStyle: null,
-    largeHeadingClass: null,
-    largeHeadingStyle: null,
-    smallHeadingClass: null,
-    smallHeadingStyle: null,
-    imgClass: null,
-    imgStyle: null,
+    containerStyle: defaultContainerStyle,
+    largeHeadingClass: '',
+    largeHeadingStyle: defaultLargeHeadingStyle,
+    smallHeadingClass: '',
+    smallHeadingStyle: defaultSmallHeadingStyle,
+    imgClass: '',
+    imgStyle: defaultImgStyle,
   };
 
   const options = (function setOptions() {
