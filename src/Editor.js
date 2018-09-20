@@ -155,7 +155,8 @@ export default {
    * @returns {Element} Returns the newly-created container.
    */
   createContainerSection(childNode) {
-    const container = generateElement('div', this.classes.containerSection);
+    const style = this.options.sectionStyle;
+    const container = generateElement('div', this.classes.containerSection, { style });
     if (childNode && childNode instanceof Element) {
       container.appendChild(childNode);
     }
