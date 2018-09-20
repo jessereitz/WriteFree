@@ -1,8 +1,8 @@
 {
   "name": "writefree",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A simple, clutter-free JavaScript text editor.",
-  "main": "writeFree.js",
+  "main": "build/js/writefree.es6.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/jessereitz/WriteFree.git"

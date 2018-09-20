@@ -40,6 +40,11 @@ defaultImgStyle['max-width'] = '100%';
  * @returns {Editor} The WriteFree editor.
  */
 function WriteFree($ctn, userOptions = {}) {
+  const cssLink = document.createElement('link');
+  cssLink.setAttribute('href', './css/site.css');
+  cssLink.setAttribute('rel', 'stylesheet');
+  cssLink.setAttribute('type', 'text/css');
+  document.getElementsByTagName('head')[0].appendChild(cssLink);
   const defaultOptions = {
     divOrPar: 'p',
     sectionClass: '',
