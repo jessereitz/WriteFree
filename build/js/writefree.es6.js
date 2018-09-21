@@ -1045,6 +1045,7 @@ var editorBase = {
     this.$ctn.addEventListener('mouseup', this.positionCursor.bind(this));
     // must be added to document because of browsers.
     document.addEventListener('selectionchange', this.selectionHandler.bind(this));
+    document.addEventListener('scroll', this.insertToolbar.hide.bind(this.insertToolbar));
     return this;
   },
 
