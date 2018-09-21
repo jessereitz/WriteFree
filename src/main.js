@@ -1,6 +1,7 @@
 // writeFree.js
 
 import editorBase from './Editor.js';
+import toolbarStyle from './tb_components/style.js';
 
 const defaultContainerStyle = {
   'min-height': '2em',
@@ -40,11 +41,9 @@ defaultImgStyle['max-width'] = '100%';
  * @returns {Editor} The WriteFree editor.
  */
 function WriteFree($ctn, userOptions = {}) {
-  const cssLink = document.createElement('link');
-  cssLink.setAttribute('href', './css/site.css');
-  cssLink.setAttribute('rel', 'stylesheet');
-  cssLink.setAttribute('type', 'text/css');
-  document.getElementsByTagName('head')[0].appendChild(cssLink);
+  const $toolbarStyle = document.createElement('style');
+  $toolbarStyle.appendChild(document.createTextNode(toolbarStyle));
+  document.getElementsByTagName('head')[0].appendChild($toolbarStyle);
   const defaultOptions = {
     divOrPar: 'p',
     sectionClass: '',

@@ -18,6 +18,7 @@
     "@babel/plugin-external-helpers": "^7.0.0",
     "@babel/preset-env": "^7.0.0",
     "babel-preset-es2015-rollup": "^3.0.0",
+    "es-string": "^1.0.0",
     "eslint": "^4.19.1",
     "eslint-config-airbnb": "^17.1.0",
     "eslint-config-airbnb-base": "^13.0.0",
@@ -36,9 +37,9 @@
     "@babel/polyfill": "^7.0.0"
   },
   "scripts": {
-    "build-iife": "./node_modules/.bin/rollup -c rollupConfig/rollup.config.iife.js",
-    "build-es6": "./node_modules/.bin/rollup -c rollupConfig/rollup.config.es6.js",
+    "build-iife": "./node_modules/.bin/es-string css/site.css src/style.js && ./node_modules/.bin/rollup -c rollupConfig/rollup.config.iife.js",
+    "build-es6": "./node_modules/.bin/es-string css/site.css src/style.js && ./node_modules/.bin/rollup -c rollupConfig/rollup.config.es6.js",
     "watchBuild": "./node_modules/.bin/rollup -c -w",
-    "build-all": "npm run build-iife && npm run build-es6"
+    "build-all": "./node_modules/.bin/es-string css/site.css src/style.js && npm run build-iife && npm run build-es6"
   }
 }
