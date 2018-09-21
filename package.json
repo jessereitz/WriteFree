@@ -1,6 +1,6 @@
 {
   "name": "writefree",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A simple, clutter-free JavaScript text editor.",
   "main": "build/js/writefree.es6.js",
   "repository": {
