@@ -68,7 +68,8 @@ export default {
 
   generateClasses() {
     this.classes = {};
-    this.classes.main = ['wf__editor'];
+    this.innerCtnClass = 'wf__editor';
+    this.classes.main = [this.innerCtnClass];
     if (this.options.containerClass !== 'wf__edtior') {
       this.classes.main.push(this.options.containerClass);
     }
@@ -711,7 +712,7 @@ export default {
     } catch (exc) {
       return false;
     }
-    if (innerCtn && innerCtn.classList.contains(this.classes.main)) {
+    if (innerCtn && innerCtn.classList.contains(this.innerCtnClass)) {
       this.$ctn.innerHTML = '';
       this.$ctn.appendChild(innerCtn);
       this.$innerCtn = innerCtn;
