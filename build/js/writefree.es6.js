@@ -1675,7 +1675,7 @@ var editorBase = {
    * @returns {Element} The Editor in HTML form.
    */
   html() {
-    return this.$innerCtn;
+    return this.$innerCtn.outerHTML;
   },
 
   /**
