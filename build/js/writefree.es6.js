@@ -1672,10 +1672,15 @@ var editorBase = {
   /**
    * html - Returns the Editor in HTML form.
    *
+   * @param {boolean} [editable=false] Determines whether the returned HTML will
+   *  have contenteditable set to true or false, according to given value.
+   *
    * @returns {Element} The Editor in HTML form.
    */
-  html() {
-    return this.$innerCtn.outerHTML;
+  html(editable = false) {
+    const returnEl = this.$innerCtn.cloneNode(true);
+    returnEl.setAttribute('contenteditable', editable);
+    return returnEl.outerHTML;
   },
 
   /**
