@@ -687,6 +687,39 @@ export default {
   */
 
   /**
+   * load - Load a previous version of the editor. The given htmlSTring MUST be
+   *  that returned by this.html(true). If the given htmlString doesn not
+   *  contain the appropriate $innerCtn class, it will be rejected. If passed
+   *  correctly, the given htmlString will replace the current editor's
+   *  $innerCtn.
+   *
+   * @param {string} htmlString A string containing a previous state of a
+   *  writefree editor.
+   *
+   * @returns {boolean} Returns true if the given htmlString was formatted
+   *  properly and was inserted into the editor. Else returns false.
+   */
+  load(htmlString) {
+    const parser = new DOMParser();
+    let html = htmlString;
+    if (typeof htmlString === 'string') {
+      html = parser.parseFromString(htmlString, 'text/html');
+    }
+    let innerCtn = null;
+    try {
+      innerCtn = html.body.firstChild;
+    } catch (exc) {
+      return false;
+    }
+    if (innerCtn && innerCtn.classList.contains(this.classes.main)) {
+      this.$ctn.innerHTML = '';
+      this.$ctn.appendChild(innerCtn);
+      this.$innerCtn = innerCtn;
+    }
+    return this.$ctn.contains(innerCtn);
+  },
+
+  /**
    * html - Returns the Editor in HTML form.
    *
    * @param {boolean} [editable=false] Determines whether the returned HTML will
