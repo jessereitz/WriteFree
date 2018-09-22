@@ -1196,7 +1196,7 @@ var editorBase = {
       && nextSection.classList.contains(this.classes.containerSection)
     ) {
       e.preventDefault();
-      section.parentNode.removeChild(nextSection);
+      nextSection.parentNode.removeChild(nextSection);
     }
     return false;
   },
@@ -1534,14 +1534,12 @@ var editorBase = {
       if (
         e.key === 'Backspace'
         && sel.anchorOffset === 0
-        && sel.focusOffset === sel.focusNode.textContent.length
         && sel.anchorNode === sel.focusNode
       ) {
         this.deleteContainerSection(e);
       } else if (
         e.key === 'Delete'
         && sel.anchorOffset === sel.anchorNode.textContent.length
-        && sel.focusOffset === sel.focusNode.textContent.length
         && sel.anchorNode === sel.focusNode
       ) {
         this.deleteContainerSection(e);
