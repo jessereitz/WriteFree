@@ -48,7 +48,7 @@ function WriteFree($ctn, userOptions = {}) {
     divOrPar: 'p',
     sectionClass: '',
     sectionStyle: defaultSectionStyle,
-    containerClass: 'wf__editor',
+    containerClass: '',
     containerStyle: defaultContainerStyle,
     largeHeadingClass: '',
     largeHeadingStyle: defaultLargeHeadingStyle,
