@@ -1292,7 +1292,6 @@ var editorBase = {
       } else if (parentnode.tagName === 'DIV' || parentnode.tagName === 'P') {
         tagName = 'h1';
         klass = this.options.largeHeadingClass;
-        console.log(this.options.largeHeadingStyle);
         style = this.options.largeHeadingStyle;
       } else {
         tagName = 'h2';
@@ -1670,25 +1669,37 @@ var editorBase = {
    #######     ##    #### ########  ######
   */
 
+  /**
+   * load - Load a previous version of the editor. The given htmlSTring MUST be
+   *  that returned by this.html(true). If the given htmlString doesn not
+   *  contain the appropriate $innerCtn class, it will be rejected. If passed
+   *  correctly, the given htmlString will replace the current editor's
+   *  $innerCtn.
+   *
+   * @param {string} htmlString A string containing a previous state of a
+   *  writefree editor.
+   *
+   * @returns {boolean} Returns true if the given htmlString was formatted
+   *  properly and was inserted into the editor. Else returns false.
+   */
   load(htmlString) {
     const parser = new DOMParser();
     let html = htmlString;
     if (typeof htmlString === 'string') {
       html = parser.parseFromString(htmlString, 'text/html');
     }
-    let htmlNodes = null;
+    let innerCtn = null;
     try {
-      htmlNodes = Array.from(html.body.children);
+      innerCtn = html.body.firstChild;
     } catch (exc) {
       return false;
     }
-    console.log(html);
-    console.log(typeof html);
-    this.$innerCtn.innerHTML = '';
-    if (htmlNodes) {
-      htmlNodes.forEach(node => this.$innerCtn.appendChild(node));
+    if (innerCtn && innerCtn.classList.contains(this.classes.main)) {
+      this.$ctn.innerHTML = '';
+      this.$ctn.appendChild(innerCtn);
+      this.$innerCtn = innerCtn;
     }
-    return this.$innerCtn.contains(htmlNodes[0]);
+    return this.$ctn.contains(innerCtn);
   },
 
   /**
@@ -1801,7 +1812,6 @@ function WriteFree($ctn, userOptions = {}) {
   // Create and initialize the editor.
   const Editor = Object.create(editorBase);
   Editor.initWFEditor($ctn, options);
-  window.ed = Editor;
   return {
     html: Editor.html.bind(Editor),
   };
