@@ -21,13 +21,13 @@ const defaultSectionStyle = {
   'margin-right': 'auto',
 };
 
-const defaultLargeHeadingStyle = Object.create(defaultSectionStyle);
+const defaultLargeHeadingStyle = Object.assign({}, defaultSectionStyle);
 defaultLargeHeadingStyle['font-size'] = '2rem';
 
-const defaultSmallHeadingStyle = Object.create(defaultSectionStyle);
+const defaultSmallHeadingStyle = Object.assign({}, defaultSectionStyle);
 defaultSmallHeadingStyle['font-size'] = '1.5rem';
 
-const defaultImgStyle = Object.create(defaultSectionStyle);
+const defaultImgStyle = Object.assign({}, defaultSectionStyle);
 defaultImgStyle['max-width'] = '100%';
 
 
@@ -71,7 +71,6 @@ function WriteFree($ctn, userOptions = {}) {
   // Create and initialize the editor.
   const Editor = Object.create(editorBase);
   Editor.initWFEditor($ctn, options);
-
   return {
     html: Editor.html.bind(Editor),
   };
