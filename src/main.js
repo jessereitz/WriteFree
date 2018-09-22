@@ -73,6 +73,7 @@ function WriteFree($ctn, userOptions = {}) {
   Editor.initWFEditor($ctn, options);
   return {
     html: Editor.html.bind(Editor),
+    load: Editor.load.bind(Editor),
   };
 }
 export default WriteFree;
