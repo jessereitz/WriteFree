@@ -31,6 +31,21 @@ const defaultImgStyle = Object.assign({}, defaultSectionStyle);
 defaultImgStyle['max-width'] = '100%';
 
 
+const defaultOptions = {
+  divOrPar: 'p',
+  sectionClass: '',
+  sectionStyle: defaultSectionStyle,
+  containerClass: '',
+  containerStyle: defaultContainerStyle,
+  largeHeadingClass: '',
+  largeHeadingStyle: defaultLargeHeadingStyle,
+  smallHeadingClass: '',
+  smallHeadingStyle: defaultSmallHeadingStyle,
+  imgClass: '',
+  imgStyle: defaultImgStyle,
+  emptyPlaceholder: 'Try writing here...',
+};
+
 /**
  * WriteFree - The initialization function used to create instances of the
  *  WriteFree editor.
@@ -41,23 +56,7 @@ defaultImgStyle['max-width'] = '100%';
  * @returns {Editor} The WriteFree editor.
  */
 function WriteFree($ctn, userOptions = {}) {
-  const $toolbarStyle = document.createElement('style');
-  $toolbarStyle.appendChild(document.createTextNode(toolbarStyle));
-  document.getElementsByTagName('head')[0].appendChild($toolbarStyle);
-  const defaultOptions = {
-    divOrPar: 'p',
-    sectionClass: '',
-    sectionStyle: defaultSectionStyle,
-    containerClass: '',
-    containerStyle: defaultContainerStyle,
-    largeHeadingClass: '',
-    largeHeadingStyle: defaultLargeHeadingStyle,
-    smallHeadingClass: '',
-    smallHeadingStyle: defaultSmallHeadingStyle,
-    imgClass: '',
-    imgStyle: defaultImgStyle,
-  };
-
+  console.log(userOptions);
   const options = (function setOptions() {
     const globalOptions = Object.create(defaultOptions);
     if (userOptions && typeof userOptions === 'object') {
@@ -67,6 +66,11 @@ function WriteFree($ctn, userOptions = {}) {
     }
     return globalOptions;
   }());
+  const $toolbarStyle = document.createElement('style');
+  const newToolbarStyle = toolbarStyle.replace('placeholder_text', options.emptyPlaceholder);
+  $toolbarStyle.appendChild(document.createTextNode(newToolbarStyle));
+  document.getElementsByTagName('head')[0].appendChild($toolbarStyle);
+
 
   // Create and initialize the editor.
   const Editor = Object.create(editorBase);

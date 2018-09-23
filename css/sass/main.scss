@@ -161,7 +161,7 @@
 
   p:first-child:empty:not(:focus)::before,
   div:first-child:empty:not(:focus)::before {
-  content:'Try writing here...';
+  content:'placeholder_text';
   color:grey;
   font-style:italic;
   }

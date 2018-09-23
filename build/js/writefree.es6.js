@@ -1741,7 +1741,7 @@ var editorBase = {
   },
 };
 
-var toolbarStyle = '@import url("https://fonts.googleapis.com/css?family=Crimson+Text:400,700|Roboto");@keyframes fade-in {  from {    opacity: 0; }  to {    opacity: 1; } }@keyframes expand-width {  from {    width: 0; }  to {    width: 15em; } }.wf__toolbar {  position: fixed;  display: inline-block;  font-family: "Roboto", sans-serif;  background: linear-gradient(#555, #222);  padding: 0.25em 0.25rem;  border-radius: 0.25em;  box-shadow: 0.1rem 0.1rem 1rem 0.1rem rgba(0, 0, 0, 0.55);  animation: fade-in 0.15s ease-out;  transition: width 0.2s;  overflow: hidden;  min-width: 1em;  max-height: 1.9em; }  .wf__toolbar__btn-ctn {    transition: transform 0.2s; }  .wf__toolbar__btn {    box-sizing: border-box;    margin: 0 0.1rem;    background: none;    color: #fff;    border: 1px solid transparent;    border-radius: 0.25em;    transition: all 0.2s;    font-size: 1em;    width: 2em;    height: 1.75em;    line-height: 1.25em;    text-align: center;    padding: 0.25em 0.25rem;    outline: none;    z-index: 0;    vertical-align: baseline; }  .wf__toolbar__btn:hover {    border-color: #fff;    background: rgba(255, 255, 255, 0.075); }  .wf__toolbar__btn:active {    border-color: #bbb;    background: rgba(0, 0, 0, 0.2); }  .wf__toolbar__btn-active {    color: #A9D943;    border-color: #A9D943; }  .wf__toolbar__btn-disabled {    color: #666; }  .wf__toolbar__btn-disabled:hover {    border-color: transparent;    background: none; }  .wf__toolbar__input-ctn {    box-sizing: border-box;    position: absolute;    width: 15em;    height: 100%;    top: 0;    left: 0;    z-index: 1;    padding: 0.25em 0.25rem;    animation: fade-in 0.15s ease-out;    transition: all 0.2s; }    .wf__toolbar__input-ctn button {      display: inline-block;      position: absolute;      right: 0;      margin-right: 0; }  .wf__toolbar__input {    display: inline-block;    max-width: 100%;    height: 100%;    margin: 0;    padding: 0;    border: none;    outline: none;    background: none;    color: white;    padding-left: 0.1rem;    font-size: 1em; }  .wf__toolbar-hide-up {    transform: translateY(-150%);    visibility: hidden; }  .wf__toolbar-hide-down {    transform: translateY(150%);    visibility: hidden; }  .wf__toolbar-wide {    width: 15em; }  .wf__toolbar.hide {    display: none !important; }.wf__editor p:first-child:empty:not(:focus)::before,.wf__editor div:first-child:empty:not(:focus)::before {  content: "Try writing here...";  color: grey;  font-style: italic; }/*# sourceMappingURL=site.css.map */';
+var toolbarStyle = '@import url("https://fonts.googleapis.com/css?family=Crimson+Text:400,700|Roboto");@keyframes fade-in {  from {    opacity: 0; }  to {    opacity: 1; } }@keyframes expand-width {  from {    width: 0; }  to {    width: 15em; } }.wf__toolbar {  position: fixed;  display: inline-block;  font-family: "Roboto", sans-serif;  background: linear-gradient(#555, #222);  padding: 0.25em 0.25rem;  border-radius: 0.25em;  box-shadow: 0.1rem 0.1rem 1rem 0.1rem rgba(0, 0, 0, 0.55);  animation: fade-in 0.15s ease-out;  transition: width 0.2s;  overflow: hidden;  min-width: 1em;  max-height: 1.9em; }  .wf__toolbar__btn-ctn {    transition: transform 0.2s; }  .wf__toolbar__btn {    box-sizing: border-box;    margin: 0 0.1rem;    background: none;    color: #fff;    border: 1px solid transparent;    border-radius: 0.25em;    transition: all 0.2s;    font-size: 1em;    width: 2em;    height: 1.75em;    line-height: 1.25em;    text-align: center;    padding: 0.25em 0.25rem;    outline: none;    z-index: 0;    vertical-align: baseline; }  .wf__toolbar__btn:hover {    border-color: #fff;    background: rgba(255, 255, 255, 0.075); }  .wf__toolbar__btn:active {    border-color: #bbb;    background: rgba(0, 0, 0, 0.2); }  .wf__toolbar__btn-active {    color: #A9D943;    border-color: #A9D943; }  .wf__toolbar__btn-disabled {    color: #666; }  .wf__toolbar__btn-disabled:hover {    border-color: transparent;    background: none; }  .wf__toolbar__input-ctn {    box-sizing: border-box;    position: absolute;    width: 15em;    height: 100%;    top: 0;    left: 0;    z-index: 1;    padding: 0.25em 0.25rem;    animation: fade-in 0.15s ease-out;    transition: all 0.2s; }    .wf__toolbar__input-ctn button {      display: inline-block;      position: absolute;      right: 0;      margin-right: 0; }  .wf__toolbar__input {    display: inline-block;    max-width: 100%;    height: 100%;    margin: 0;    padding: 0;    border: none;    outline: none;    background: none;    color: white;    padding-left: 0.1rem;    font-size: 1em; }  .wf__toolbar-hide-up {    transform: translateY(-150%);    visibility: hidden; }  .wf__toolbar-hide-down {    transform: translateY(150%);    visibility: hidden; }  .wf__toolbar-wide {    width: 15em; }  .wf__toolbar.hide {    display: none !important; }.wf__editor p:first-child:empty:not(:focus)::before,.wf__editor div:first-child:empty:not(:focus)::before {  content: "placeholder_text";  color: grey;  font-style: italic; }/*# sourceMappingURL=site.css.map */';
 
 // writeFree.js
 
@@ -1773,6 +1773,21 @@ const defaultImgStyle = Object.assign({}, defaultSectionStyle);
 defaultImgStyle['max-width'] = '100%';
 
 
+const defaultOptions = {
+  divOrPar: 'p',
+  sectionClass: '',
+  sectionStyle: defaultSectionStyle,
+  containerClass: '',
+  containerStyle: defaultContainerStyle,
+  largeHeadingClass: '',
+  largeHeadingStyle: defaultLargeHeadingStyle,
+  smallHeadingClass: '',
+  smallHeadingStyle: defaultSmallHeadingStyle,
+  imgClass: '',
+  imgStyle: defaultImgStyle,
+  emptyPlaceholder: 'Try writing here...',
+};
+
 /**
  * WriteFree - The initialization function used to create instances of the
  *  WriteFree editor.
@@ -1783,23 +1798,7 @@ defaultImgStyle['max-width'] = '100%';
  * @returns {Editor} The WriteFree editor.
  */
 function WriteFree($ctn, userOptions = {}) {
-  const $toolbarStyle = document.createElement('style');
-  $toolbarStyle.appendChild(document.createTextNode(toolbarStyle));
-  document.getElementsByTagName('head')[0].appendChild($toolbarStyle);
-  const defaultOptions = {
-    divOrPar: 'p',
-    sectionClass: '',
-    sectionStyle: defaultSectionStyle,
-    containerClass: '',
-    containerStyle: defaultContainerStyle,
-    largeHeadingClass: '',
-    largeHeadingStyle: defaultLargeHeadingStyle,
-    smallHeadingClass: '',
-    smallHeadingStyle: defaultSmallHeadingStyle,
-    imgClass: '',
-    imgStyle: defaultImgStyle,
-  };
-
+  console.log(userOptions);
   const options = (function setOptions() {
     const globalOptions = Object.create(defaultOptions);
     if (userOptions && typeof userOptions === 'object') {
@@ -1809,6 +1808,11 @@ function WriteFree($ctn, userOptions = {}) {
     }
     return globalOptions;
   }());
+  const $toolbarStyle = document.createElement('style');
+  const newToolbarStyle = toolbarStyle.replace('placeholder_text', options.emptyPlaceholder);
+  $toolbarStyle.appendChild(document.createTextNode(newToolbarStyle));
+  document.getElementsByTagName('head')[0].appendChild($toolbarStyle);
+
 
   // Create and initialize the editor.
   const Editor = Object.create(editorBase);
