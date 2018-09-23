@@ -1689,18 +1689,18 @@ var editorBase = {
     if (typeof htmlString === 'string') {
       html = parser.parseFromString(htmlString, 'text/html');
     }
-    let innerCtn = null;
+    let newInnerCtn = null;
     try {
-      innerCtn = html.body.firstChild;
+      newInnerCtn = html.body.firstChild;
     } catch (exc) {
       return false;
     }
-    if (innerCtn && innerCtn.classList.contains(this.innerCtnClass)) {
-      this.$ctn.innerHTML = '';
-      this.$ctn.appendChild(innerCtn);
-      this.$innerCtn = innerCtn;
+    if (newInnerCtn && newInnerCtn.classList.contains(this.innerCtnClass)) {
+      this.$ctn.removeChild(this.$innerCtn);
+      this.$ctn.appendChild(newInnerCtn);
+      this.$innerCtn = newInnerCtn;
     }
-    return this.$ctn.contains(innerCtn);
+    return this.$ctn.contains(newInnerCtn);
   },
 
   /**
