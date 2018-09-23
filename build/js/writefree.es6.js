@@ -1798,7 +1798,6 @@ const defaultOptions = {
  * @returns {Editor} The WriteFree editor.
  */
 function WriteFree($ctn, userOptions = {}) {
-  console.log(userOptions);
   const options = (function setOptions() {
     const globalOptions = Object.create(defaultOptions);
     if (userOptions && typeof userOptions === 'object') {
