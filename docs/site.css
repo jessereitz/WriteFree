@@ -1,0 +1,10 @@
+@import url('https://fonts.googleapis.com/css?family=Comfortaa|Roboto');
+
+.page-ctn {
+  max-width: 35em;
+  margin: 1rem auto;
+}
+
+pre {
+  padding: 1em 1rem;
+}
