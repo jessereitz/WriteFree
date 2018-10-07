@@ -4,8 +4,8 @@
     <meta charset="utf-8">
     <title>WriteFree | Write Freely</title>
     <link href="./site.css" type="text/css" rel="stylesheet">
-    <script src="/home/jessereitz/Documents/dev/WriteFree/build/js/writefree.min.js" type="text/javascript"></script>
-    <!-- <script crossorigin src="https://cdn.jsdelivr.net/npm/writefree@1.2.9/build/js/writefree.min.js" type="text/javascript"></script> -->
+    <!-- <script src="/home/jessereitz/Documents/dev/WriteFree/build/js/writefree.min.js" type="text/javascript"></script> -->
+    <script crossorigin src="https://cdn.jsdelivr.net/npm/writefree@1.2.10/build/js/writefree.min.js" type="text/javascript"></script>
     <script crossorigin src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js?skin=desert"></script>
     <!-- <link href="https://cdn.jsdelivr.net/combine/gh/jessereitz/branding/assets/css/site.min.css,gh/jessereitz/branding/assets/css/code-theme.css" type="text/css" rel="stylesheet"> -->
     <link href="/home/jessereitz/Documents/dev/branding/assets/css/site.css" type="text/css" rel="stylesheet">
@@ -24,13 +24,21 @@
         experience in any environment or setting.
       </p>
 
-      <p class="v-margin-large">
-        WriteFree
-      </p>
-
       <div class="hover-card">
         <h2>Try It Out</h2>
         <div id="wfContainer"></div>
+      </div>
+
+      <p class="v-margin-large">
+        WriteFree features all that's needed to create a masterpiece and nothing
+        more. The idea is to get out of the writer's way and let them focus on
+        what they're working on while still being there for them to add basic
+        styles and insertable elements as necessary.
+      </p>
+
+      <div class="hover-card">
+        <h2>Features</h2>
+        
       </div>
 
       <div class="hover-card">
@@ -56,7 +64,22 @@ const wf = WriteFree(ctn);
 
     <script type="text/javascript">
     document.addEventListener('DOMContentLoaded', () => {
-      const wf = WriteFree(document.getElementById('wfContainer'));
+      const options = {
+        containerStyle: {
+          'min-height': '2em',
+          'max-width': '100%',
+          margin: '1em auto',
+          padding: '0',
+          'font-size': '1.25rem',
+          'font-family': "'Crimson Text', serif",
+          outline: 'none',
+          color: '#333',
+        },
+        sectionStyle: {
+          margin: '1em auto',
+        }
+      }
+      const wf = WriteFree(document.getElementById('wfContainer'), options);
     });
     </script>
   </body>
