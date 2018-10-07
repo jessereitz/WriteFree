@@ -10,7 +10,7 @@
 
 @keyframes expand-width {
   from {width: 0;}
-  to {width: 15em;}
+  to {width: 15rem;}
 }
 
 .#{$tb-prefix} {
@@ -24,7 +24,7 @@
   animation: fade-in 0.15s ease-out;
   transition: width 0.2s;
   overflow: hidden;
-  min-width: 1em;
+  min-width: 1rem;
   max-height: $tb__font-size * 1.9;
 
   &__btn-ctn {
@@ -77,7 +77,7 @@
   &__input-ctn {
     box-sizing: border-box;
     position: absolute;
-    width: 15em;
+    width: 15rem;
     height: 100%;
     top: 0;
     left: 0;
@@ -121,7 +121,7 @@
   }
 
   &-wide {
-    width: 15em;
+    width: 15rem;
   }
 
   &.hide {
@@ -130,34 +130,6 @@
 }
 
 .#{$editor-prefix} {
-  // min-height: $editor__min-height;
-  // max-width: $editor__max-width;
-  // margin: $editor__margin;
-  // padding: $editor__padding;
-  // font-size: $editor__font-size;
-  // font-family: $editor__font-stack;
-  // outline: none;
-  // color: $editor__primary-color;
-
-  // & * {
-  //   font-size: $editor__font-size;
-  //   max-width: $editor__section__max-width;
-  //   margin-left: auto;
-  //   margin-right: auto;
-  // }
-  //
-  // & div {
-  //   min-height: $editor__font-size;
-  //   margin: $editor__margin;
-  // }
-  //
-  // & h1 {
-  //   font-size: $editor__h1-size;
-  // }
-  //
-  // & h2 {
-  //   font-size: $editor__h2-size;
-  // }
 
   p:first-child:empty:not(:focus)::before,
   div:first-child:empty:not(:focus)::before {
@@ -165,8 +137,4 @@
   color:grey;
   font-style:italic;
   }
-
-  // & img {
-  //   max-width: 100%;
-  // }
 }

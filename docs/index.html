@@ -4,14 +4,18 @@
     <meta charset="utf-8">
     <title>WriteFree | Write Freely</title>
     <link href="./site.css" type="text/css" rel="stylesheet">
+    <script crossorigin src="https://cdn.jsdelivr.net/npm/writefree@1.2.6/build/js/writefree.min.js" type="text/javascript"></script>
     <script crossorigin src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js?skin=desert"></script>
-
+    <!-- <link href="https://cdn.jsdelivr.net/combine/gh/jessereitz/branding/assets/css/site.min.css,gh/jessereitz/branding/assets/css/code-theme.css" type="text/css" rel="stylesheet"> -->
+    <link href="/home/jessereitz/Documents/dev/branding/assets/css/site.css" type="text/css" rel="stylesheet">
+    <link href="/home/jessereitz/Documents/dev/branding/assets/css/code-theme.css" type="text/css" rel="stylesheet">
   </head>
   <body>
-    <div class="page-ctn">
-      <h1>WriteFree</h1>
-      <h2>Write Freely</h2>
-      <p>
+      <h1 class="align-center">WriteFree</h1>
+      <div class="align-center font-medium v-margin-large">
+        <i class="sub-heading padding-small">" Write Freely "</i>
+      </div>
+      <p class="v-margin-large">
         WriteFree is a simple and clutter-free embeddable rich text editor.
         Drawing its design from <a href="https://medium.com/" title="Medium, Inc.">
         Medium's beautiful editor</a>,
@@ -19,18 +23,38 @@
         experience in any environment or setting.
       </p>
 
-      <h2>Quick Start</h2>
+      <p class="v-margin-large">
+        WriteFree
+      </p>
+
+      <div class="hover-card">
+        <h2>Try It Out</h2>
+        <div id="wfContainer"></div>
+      </div>
+
+      <div class="hover-card">
+        <h2>Quick Start</h2>
+        <p>
+          Create a div to use as a container for WriteFree:
+        </p>
 <pre class="prettyprint lang-html">
-&lt;div class="test"&gt;
-  test
-&lt;/div&gt;
-&lt;span&gt;
-  Some more code here
-&lt;/span&gt;
+&lt;div id="wfContainer"&gt;&lt;/div&gt;
 </pre>
+        <p>
+          Initialize WriteFree, passing in the container:
+        </p>
 <pre class="prettyprint lang-javascript">
-const wf = WriteFree();
+const ctn = document.getElementById('wfContainer');
+const wf = WriteFree(ctn);
 </pre>
-  </div>
+        <p>
+          Enjoy using WriteFree. 😀
+        </p>
+    </div>
+
+
+    <script type="text/javascript">
+      const wf = WriteFree(document.getElementById('wfContainer'));
+    </script>
   </body>
 </html>
