@@ -13,6 +13,22 @@
   to {width: 15rem;}
 }
 
+.wf__ctn {
+  & * {
+    margin: 0;
+    padding: 0;
+    font-size: 16px;
+    color: inherit;
+  }
+
+  button:hover,
+  a:hover,
+  input:hover {
+    box-shadow: none;
+    transform: none;
+  }
+}
+
 .#{$tb-prefix} {
   position: fixed;
   display: inline-block;
@@ -25,13 +41,14 @@
   transition: width 0.2s;
   overflow: hidden;
   min-width: 1rem;
-  max-height: $tb__font-size * 1.9;
+  // max-height: $tb__font-size * 2;
 
   &__btn-ctn {
     transition: transform 0.2s;
   }
 
   &__btn {
+    display: inline-block;
     box-sizing: border-box;
     margin: 0 0.1rem;
     background: none;
@@ -44,19 +61,48 @@
     height: $tb__font-size * 1.75;
     line-height: $tb__font-size * 1.25;
     text-align: center;
-    padding: $tb__padding;
     outline: none;
     z-index: 0;
     vertical-align: baseline;
+    box-shadow: none;
+    transform: none;
   }
 
   &__btn:hover {
-    border-color: $tb__primary-color;
+    display: inline-block;
+    box-sizing: border-box;
+    margin: 0 0.1rem;
+    color: $tb__primary-color;
+    border: 1px solid $tb__primary-color;
+    border-radius: $tb__border-radius;
+    transition: all 0.2s;
+    font-size: $tb__font-size;
+    width: $tb__font-size * 2;
+    height: $tb__font-size * 1.75;
+    line-height: $tb__font-size * 1.25;
+    text-align: center;
+    outline: none;
+    z-index: 0;
+    vertical-align: baseline;
     background: rgba(255,255,255,0.075);
   }
 
   &__btn:active {
-    border-color: #bbb;
+    display: inline-block;
+    box-sizing: border-box;
+    margin: 0 0.1rem;
+    color: $tb__primary-color;
+    border: 1px solid  #bbb;
+    border-radius: $tb__border-radius;
+    transition: all 0.2s;
+    font-size: $tb__font-size;
+    width: $tb__font-size * 2;
+    height: $tb__font-size * 1.75;
+    line-height: $tb__font-size * 1.25;
+    text-align: center;
+    outline: none;
+    z-index: 0;
+    vertical-align: baseline;
     background: rgba(0,0,0,0.2);
   }
 
@@ -70,8 +116,24 @@
   }
 
   &__btn-disabled:hover {
-    border-color: rgba(0,0,0,0);
-    background: none;
+    display: inline-block;
+    box-sizing: border-box;
+    margin: 0 0.1rem;
+    color: $tb__primary-color;
+    border: 1px solid  $transparent;
+    border-radius: $tb__border-radius;
+    transition: all 0.2s;
+    font-size: $tb__font-size;
+    width: $tb__font-size * 2;
+    height: $tb__font-size * 1.75;
+    line-height: $tb__font-size * 1.25;
+    text-align: center;
+    outline: none;
+    z-index: 0;
+    vertical-align: baseline;
+    transform: none;
+    color: $tb__disabled-color;
+    box-shadow: none;
   }
 
   &__input-ctn {
@@ -83,13 +145,21 @@
     left: 0;
     z-index: 1;
     padding: $tb__padding;
+    padding-left: ($tb__font-size / 3);
     animation: fade-in 0.15s ease-out;
     transition: all 0.2s;
 
     & button {
       display: inline-block;
       position: absolute;
-      right: 0;
+      right: ($tb__font-size / 3);
+      margin-right: 0;
+    }
+
+    & button:hover {
+      display: inline-block;
+      position: absolute;
+      right: ($tb__font-size / 3);
       margin-right: 0;
     }
   }

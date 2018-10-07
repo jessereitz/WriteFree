@@ -508,7 +508,8 @@ const BaseToolbar = {
   getButtonsWidth() {
     const childNodes = this.$btnCtn.children;
     const boundingRect = childNodes[0].getBoundingClientRect();
-    return boundingRect.width * (childNodes.length * 1.1);
+    // debugger;
+    return (16 * 2.5) * childNodes.length;
   },
 
   /**
@@ -518,7 +519,7 @@ const BaseToolbar = {
    */
   getButtonsHeight() {
     const boundingRect = this.$btnCtn.firstChild.getBoundingClientRect();
-    return boundingRect.height * 1.25;
+    return (16 * 2.3);
   },
 
   /**
@@ -1741,7 +1742,7 @@ var editorBase = {
   },
 };
 
-var toolbarStyle = '@import url("https://fonts.googleapis.com/css?family=Crimson+Text:400,700|Roboto");@keyframes fade-in {  from {    opacity: 0;  }  to {    opacity: 1;  }}@keyframes expand-width {  from {    width: 0;  }  to {    width: 15rem;  }}.wf__toolbar {  position: fixed;  display: inline-block;  font-family: "Roboto", sans-serif;  background: linear-gradient(#555, #222);  padding: 0.25rem 0.25rem;  border-radius: 0.25rem;  box-shadow: 0.1rem 0.1rem 1rem 0.1rem rgba(0, 0, 0, 0.55);  animation: fade-in 0.15s ease-out;  transition: width 0.2s;  overflow: hidden;  min-width: 1rem;  max-height: 1.9rem;}.wf__toolbar__btn-ctn {  transition: transform 0.2s;}.wf__toolbar__btn {  box-sizing: border-box;  margin: 0 0.1rem;  background: none;  color: #fff;  border: 1px solid rgba(0, 0, 0, 0);  border-radius: 0.25rem;  transition: all 0.2s;  font-size: 1rem;  width: 2rem;  height: 1.75rem;  line-height: 1.25rem;  text-align: center;  padding: 0.25rem 0.25rem;  outline: none;  z-index: 0;  vertical-align: baseline;}.wf__toolbar__btn:hover {  border-color: #fff;  background: rgba(255, 255, 255, 0.075);}.wf__toolbar__btn:active {  border-color: #bbb;  background: rgba(0, 0, 0, 0.2);}.wf__toolbar__btn-active {  color: #A9D943;  border-color: #A9D943;}.wf__toolbar__btn-disabled {  color: #666;}.wf__toolbar__btn-disabled:hover {  border-color: rgba(0, 0, 0, 0);  background: none;}.wf__toolbar__input-ctn {  box-sizing: border-box;  position: absolute;  width: 15rem;  height: 100%;  top: 0;  left: 0;  z-index: 1;  padding: 0.25rem 0.25rem;  animation: fade-in 0.15s ease-out;  transition: all 0.2s;}.wf__toolbar__input-ctn button {  display: inline-block;  position: absolute;  right: 0;  margin-right: 0;}.wf__toolbar__input {  display: inline-block;  max-width: 100%;  height: 100%;  margin: 0;  padding: 0;  border: none;  outline: none;  background: none;  color: white;  padding-left: 0.1rem;  font-size: 1rem;}.wf__toolbar-hide-up {  transform: translateY(-150%);  visibility: hidden;}.wf__toolbar-hide-down {  transform: translateY(150%);  visibility: hidden;}.wf__toolbar-wide {  width: 15rem;}.wf__toolbar.hide {  display: none !important;}.wf__editor p:first-child:empty:not(:focus)::before,.wf__editor div:first-child:empty:not(:focus)::before {  content: "placeholder_text";  color: grey;  font-style: italic;}/*# sourceMappingURL=site.css.map */';
+var toolbarStyle = '@import url("https://fonts.googleapis.com/css?family=Crimson+Text:400,700|Roboto");@keyframes fade-in {  from {    opacity: 0;  }  to {    opacity: 1;  }}@keyframes expand-width {  from {    width: 0;  }  to {    width: 15rem;  }}.wf__ctn * {  margin: 0;  padding: 0;  font-size: 16px;  color: inherit;}.wf__ctn button:hover,.wf__ctn a:hover,.wf__ctn input:hover {  box-shadow: none;  transform: none;}.wf__toolbar {  position: fixed;  display: inline-block;  font-family: "Roboto", sans-serif;  background: linear-gradient(#555, #222);  padding: 0.25rem 0.25rem;  border-radius: 0.25rem;  box-shadow: 0.1rem 0.1rem 1rem 0.1rem rgba(0, 0, 0, 0.55);  animation: fade-in 0.15s ease-out;  transition: width 0.2s;  overflow: hidden;  min-width: 1rem;}.wf__toolbar__btn-ctn {  transition: transform 0.2s;}.wf__toolbar__btn {  display: inline-block;  box-sizing: border-box;  margin: 0 0.1rem;  background: none;  color: #fff;  border: 1px solid rgba(0, 0, 0, 0);  border-radius: 0.25rem;  transition: all 0.2s;  font-size: 16px;  width: 32px;  height: 28px;  line-height: 20px;  text-align: center;  outline: none;  z-index: 0;  vertical-align: baseline;  box-shadow: none;  transform: none;}.wf__toolbar__btn:hover {  display: inline-block;  box-sizing: border-box;  margin: 0 0.1rem;  color: #fff;  border: 1px solid #fff;  border-radius: 0.25rem;  transition: all 0.2s;  font-size: 16px;  width: 32px;  height: 28px;  line-height: 20px;  text-align: center;  outline: none;  z-index: 0;  vertical-align: baseline;  background: rgba(255, 255, 255, 0.075);}.wf__toolbar__btn:active {  display: inline-block;  box-sizing: border-box;  margin: 0 0.1rem;  color: #fff;  border: 1px solid #bbb;  border-radius: 0.25rem;  transition: all 0.2s;  font-size: 16px;  width: 32px;  height: 28px;  line-height: 20px;  text-align: center;  outline: none;  z-index: 0;  vertical-align: baseline;  background: rgba(0, 0, 0, 0.2);}.wf__toolbar__btn-active {  color: #A9D943;  border-color: #A9D943;}.wf__toolbar__btn-disabled {  color: #666;}.wf__toolbar__btn-disabled:hover {  display: inline-block;  box-sizing: border-box;  margin: 0 0.1rem;  color: #fff;  border: 1px solid rgba(0, 0, 0, 0);  border-radius: 0.25rem;  transition: all 0.2s;  font-size: 16px;  width: 32px;  height: 28px;  line-height: 20px;  text-align: center;  outline: none;  z-index: 0;  vertical-align: baseline;  transform: none;  color: #666;  box-shadow: none;}.wf__toolbar__input-ctn {  box-sizing: border-box;  position: absolute;  width: 15rem;  height: 100%;  top: 0;  left: 0;  z-index: 1;  padding: 0.25rem 0.25rem;  padding-left: 5.3333333333px;  animation: fade-in 0.15s ease-out;  transition: all 0.2s;}.wf__toolbar__input-ctn button {  display: inline-block;  position: absolute;  right: 5.3333333333px;  margin-right: 0;}.wf__toolbar__input-ctn button:hover {  display: inline-block;  position: absolute;  right: 5.3333333333px;  margin-right: 0;}.wf__toolbar__input {  display: inline-block;  max-width: 100%;  height: 100%;  margin: 0;  padding: 0;  border: none;  outline: none;  background: none;  color: white;  padding-left: 0.1rem;  font-size: 16px;}.wf__toolbar-hide-up {  transform: translateY(-150%);  visibility: hidden;}.wf__toolbar-hide-down {  transform: translateY(150%);  visibility: hidden;}.wf__toolbar-wide {  width: 15rem;}.wf__toolbar.hide {  display: none !important;}.wf__editor p:first-child:empty:not(:focus)::before,.wf__editor div:first-child:empty:not(:focus)::before {  content: "placeholder_text";  color: grey;  font-style: italic;}/*# sourceMappingURL=site.css.map */';
 
 // writeFree.js
 
@@ -1816,6 +1817,7 @@ function WriteFree($ctn, userOptions = {}) {
   // Create and initialize the editor.
   const Editor = Object.create(editorBase);
   Editor.initWFEditor($ctn, options);
+  $ctn.classList.add('wf__ctn');
   return {
     html: Editor.html.bind(Editor),
     load: Editor.load.bind(Editor),

@@ -15,6 +15,19 @@
     width: 15rem;
   }
 }
+.wf__ctn * {
+  margin: 0;
+  padding: 0;
+  font-size: 16px;
+  color: inherit;
+}
+.wf__ctn button:hover,
+.wf__ctn a:hover,
+.wf__ctn input:hover {
+  box-shadow: none;
+  transform: none;
+}
+
 .wf__toolbar {
   position: fixed;
   display: inline-block;
@@ -27,12 +40,12 @@
   transition: width 0.2s;
   overflow: hidden;
   min-width: 1rem;
-  max-height: 1.9rem;
 }
 .wf__toolbar__btn-ctn {
   transition: transform 0.2s;
 }
 .wf__toolbar__btn {
+  display: inline-block;
   box-sizing: border-box;
   margin: 0 0.1rem;
   background: none;
@@ -40,22 +53,51 @@
   border: 1px solid rgba(0, 0, 0, 0);
   border-radius: 0.25rem;
   transition: all 0.2s;
-  font-size: 1rem;
-  width: 2rem;
-  height: 1.75rem;
-  line-height: 1.25rem;
+  font-size: 16px;
+  width: 32px;
+  height: 28px;
+  line-height: 20px;
   text-align: center;
-  padding: 0.25rem 0.25rem;
   outline: none;
   z-index: 0;
   vertical-align: baseline;
+  box-shadow: none;
+  transform: none;
 }
 .wf__toolbar__btn:hover {
-  border-color: #fff;
+  display: inline-block;
+  box-sizing: border-box;
+  margin: 0 0.1rem;
+  color: #fff;
+  border: 1px solid #fff;
+  border-radius: 0.25rem;
+  transition: all 0.2s;
+  font-size: 16px;
+  width: 32px;
+  height: 28px;
+  line-height: 20px;
+  text-align: center;
+  outline: none;
+  z-index: 0;
+  vertical-align: baseline;
   background: rgba(255, 255, 255, 0.075);
 }
 .wf__toolbar__btn:active {
-  border-color: #bbb;
+  display: inline-block;
+  box-sizing: border-box;
+  margin: 0 0.1rem;
+  color: #fff;
+  border: 1px solid #bbb;
+  border-radius: 0.25rem;
+  transition: all 0.2s;
+  font-size: 16px;
+  width: 32px;
+  height: 28px;
+  line-height: 20px;
+  text-align: center;
+  outline: none;
+  z-index: 0;
+  vertical-align: baseline;
   background: rgba(0, 0, 0, 0.2);
 }
 .wf__toolbar__btn-active {
@@ -66,8 +108,24 @@
   color: #666;
 }
 .wf__toolbar__btn-disabled:hover {
-  border-color: rgba(0, 0, 0, 0);
-  background: none;
+  display: inline-block;
+  box-sizing: border-box;
+  margin: 0 0.1rem;
+  color: #fff;
+  border: 1px solid rgba(0, 0, 0, 0);
+  border-radius: 0.25rem;
+  transition: all 0.2s;
+  font-size: 16px;
+  width: 32px;
+  height: 28px;
+  line-height: 20px;
+  text-align: center;
+  outline: none;
+  z-index: 0;
+  vertical-align: baseline;
+  transform: none;
+  color: #666;
+  box-shadow: none;
 }
 .wf__toolbar__input-ctn {
   box-sizing: border-box;
@@ -78,13 +136,20 @@
   left: 0;
   z-index: 1;
   padding: 0.25rem 0.25rem;
+  padding-left: 5.3333333333px;
   animation: fade-in 0.15s ease-out;
   transition: all 0.2s;
 }
 .wf__toolbar__input-ctn button {
   display: inline-block;
   position: absolute;
-  right: 0;
+  right: 5.3333333333px;
+  margin-right: 0;
+}
+.wf__toolbar__input-ctn button:hover {
+  display: inline-block;
+  position: absolute;
+  right: 5.3333333333px;
   margin-right: 0;
 }
 .wf__toolbar__input {
@@ -98,7 +163,7 @@
   background: none;
   color: white;
   padding-left: 0.1rem;
-  font-size: 1rem;
+  font-size: 16px;
 }
 .wf__toolbar-hide-up {
   transform: translateY(-150%);

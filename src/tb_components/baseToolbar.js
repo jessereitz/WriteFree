@@ -56,8 +56,7 @@ const BaseToolbar = {
    */
   getButtonsWidth() {
     const childNodes = this.$btnCtn.children;
-    const boundingRect = childNodes[0].getBoundingClientRect();
-    return boundingRect.width * (childNodes.length * 1.1);
+    return (16 * 2.5) * childNodes.length;
   },
 
   /**
@@ -66,8 +65,7 @@ const BaseToolbar = {
    * @returns {number} The height of the button container.
    */
   getButtonsHeight() {
-    const boundingRect = this.$btnCtn.firstChild.getBoundingClientRect();
-    return boundingRect.height * 1.25;
+    return (16 * 2.3);
   },
 
   /**

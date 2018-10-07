@@ -6,12 +6,13 @@ $transparent: rgba(0,0,0,0);
 $tb-prefix: wf__toolbar;
 $tb__background: linear-gradient(#555, #222);
 $tb__font-stack: 'Roboto', sans-serif;
-$tb__font-size: 1rem;
+$tb__font-size: 16px;
 $tb__primary-color: #fff;
 $tb__disabled-color: #666;
 $tb__padding: 0.25rem 0.25rem;
 $tb__border-radius: 0.25rem;
 $tb__box-shadow: 0.1rem 0.1rem 1rem 0.1rem rgba(0,0,0,0.55);
+$tb__button-size: 16px;
 
 $editor-prefix: wf__editor;
 $editor__primary-color: #333;

@@ -74,6 +74,7 @@ function WriteFree($ctn, userOptions = {}) {
   // Create and initialize the editor.
   const Editor = Object.create(editorBase);
   Editor.initWFEditor($ctn, options);
+  $ctn.classList.add('wf__ctn');
   return {
     html: Editor.html.bind(Editor),
     load: Editor.load.bind(Editor),
