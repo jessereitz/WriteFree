@@ -2,14 +2,15 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>WriteFree | Write Freely</title>
     <link href="./site.css" type="text/css" rel="stylesheet">
     <!-- <script src="/home/jessereitz/Documents/dev/WriteFree/build/js/writefree.min.js" type="text/javascript"></script> -->
     <script crossorigin src="https://cdn.jsdelivr.net/npm/writefree@1.2.10/build/js/writefree.min.js" type="text/javascript"></script>
-    <script crossorigin src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js?skin=desert"></script>
+    <script crossorigin src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
     <!-- <link href="https://cdn.jsdelivr.net/combine/gh/jessereitz/branding/assets/css/site.min.css,gh/jessereitz/branding/assets/css/code-theme.css" type="text/css" rel="stylesheet"> -->
-    <link href="/home/jessereitz/Documents/dev/branding/assets/css/site.css" type="text/css" rel="stylesheet">
-    <link href="/home/jessereitz/Documents/dev/branding/assets/css/code-theme.css" type="text/css" rel="stylesheet">
+    <link href="./assets/css/site.css" type="text/css" rel="stylesheet">
+    <link href="./assets/css/code-theme.css" type="text/css" rel="stylesheet">
   </head>
   <body>
       <h1 class="align-center">WriteFree</h1>
@@ -25,7 +26,7 @@
       </p>
 
       <div class="hover-card">
-        <h2>Try It Out</h2>
+        <h2 id="tryItOut" class="menuTarget">Try It Out</h2>
         <div id="wfContainer"></div>
       </div>
 
@@ -37,30 +38,231 @@
       </p>
 
       <div class="hover-card">
-        <h2>Features</h2>
-        
+        <h2 id="Features" class="menuTarget">Features</h2>
+        <h3>Editing</h3>
+        <p>
+          Users will find all the editing tools they need and none that they
+          don't. Highlighting a selection of text brings up the Edit Toolbar.
+          This toolbar allows users to bold and italicize text, turn their
+          selection into two varieties of headings (via &lt;h1&gt; and
+          &lt;h2&gt; elements), and wrap selections of text in a hyperlink.
+        </p>
+
+        <h3>Insertable Elements</h3>
+        <p>
+          WriteFree allows users to insert images and horizontal rules into
+          their text via the Insert Toolar. The Insert Toolbar can be brought up
+          by selecting or creating an empty line in the editor. As of now, users
+          need the public-facing URL for any images they would like to insert.
+        </p>
       </div>
 
+      <p class="v-margin-large">
+        Using WriteFree in your next project is an easy affair. With one line of
+        JavaScript you have a fully-featured yet easy-to-use text editor ready
+        for your users.
+      </p>
+
       <div class="hover-card">
-        <h2>Quick Start</h2>
+        <h2 id="quickStart" class="menuTarget">Quick Start</h2>
         <p>
           Create a div to use as a container for WriteFree:
         </p>
 <pre class="prettyprint lang-html">
-&lt;div id="wfContainer"&gt;&lt;/div&gt;
+&lt;div id="wfCtn"&gt;&lt;/div&gt;
 </pre>
         <p>
           Initialize WriteFree, passing in the container:
         </p>
 <pre class="prettyprint lang-javascript">
-const ctn = document.getElementById('wfContainer');
-const wf = WriteFree(ctn);
+const wf = WriteFree(document.getElementById('wfCtn'));
 </pre>
         <p>
           Enjoy using WriteFree. 😀
         </p>
     </div>
 
+    <p class="v-margin-large">
+      Presumably, you're going to want to do something with what your users
+      write. WriteFree offers a couple methods to help with that.
+    </p>
+
+    <div class="hover-card">
+      <h2 id="accessContents" class="menuTarget">Accessing WriteFree Contents</h2>
+      <p>
+        As of now, there are two methods you can use to manipulate the contents
+        of the WriteFree editor:
+      </p>
+<pre class="prettyprint lang-javascript">
+const wfContents = wf.html();
+wf.load(wfContents);
+</pre>
+      <h3>WriteFree.html()</h3>
+      <p>
+        The <code class="prettyprint lang-javascript">WriteFree.html()</code>
+        method will pull the current contents of the WriteFree editor and return
+        it as a String of HTML elements. You can then use this String as you
+        wish. If you would like to reload a returned String, simply use the
+        <code class="prettyprint lang-javascript">WriteFree.load()</code> method,
+        passing in the String you previously obtained from the
+        <code class="prettyprint lang-javascript">WriteFree.html()</code> method.
+      </p>
+    </div>
+
+    <p class="v-margin-large">
+      There are a number of options that can be set on initialization. A few of
+      these are set by default but can easily be overridden.
+    </p>
+
+    <div class="hover-card">
+      <h2 id="advancedFeatures" class="menuTarget">Advanced Features</h2>
+      <p>
+        Options for a WriteFree instance are defined in a JavaScript Object
+        passed in as the second parameter to the initialization function like so:
+
+        <pre class="prettyprint lang-javascript">const wf = WriteFree(ctn, { optionsObject })</pre>
+
+        Most of the options available are dedicated to styling the editor and
+        its contents. The Edit Toolbar and Insert Toolbar are statically styled
+        and can't be customized. However, the contents of the editor can be
+        easily styled by either passing in the appropriate style Object or class.
+      </p>
+
+      <h3>Options Definitions</h3>
+      <dl>
+        <dt>divOrPar <span class="dlMeta">[ Type: String, Options: 'P' or 'DIV' ]</span></dt>
+        <dd>
+          You can choose to use paragraph (&lt;p&gt;) or div (&lt;div&gt;)
+          tags to wrap each text section within the editor. Set this to 'P' to
+          for paragraphs or 'DIV' for divs.
+        </dd>
+
+        <dt>sectionClass <span class="dlMeta">[ Type: String ]</span></dt>
+        <dd>
+          When included, the class on each
+          paragraph will be set to this String. If using this, set sectionStyle
+          (below) to an empty object to remove default styles.
+        </dd>
+
+        <dt>sectionStyle <span class="dlMeta">[ Type: Object ]</span></dt>
+        <dd>
+          An Object containing CSS rules
+          to be applied to each paragraph. If using sectionClass (above), set
+          this to an empty object to remove default styles.
+        </dd>
+
+        <dt>containerClass <span class="dlMeta">[ Type: String ]</span></dt>
+        <dd>
+          When included, the class on the editor
+          container will be set to this String. Use this to style the editor as
+          a whole. If using this, set containerStyle (below) to an empty object
+          to remove default styles.
+        </dd>
+
+        <dt>containerStyle <span class="dlMeta">[ Type: Object ]</span></dt>
+        <dd>
+          An Object containing CSS rules
+          to be applied to the editor container. Use this to style the editor as
+          a whole. If using containerClass (above), set this to an empty object
+          to remove default styles.
+        </dd>
+
+        <dt>largeHeadingClass <span class="dlMeta">[ Type: String ]</span></dt>
+        <dd>
+          When included, the class on large
+          headings (&lt;h1&gt;) will be set to this String. If using this, set
+          largeHeadingStyle (below) to an empty object to remove default styles.
+        </dd>
+
+        <dt>largeHeadingStyle <span class="dlMeta">[ Type: Object ]</span></dt>
+        <dd>
+          An Object containing CSS rules
+          to be applied to large headings (&lt;h1&gt;). If using largeHeadingClass
+          (above), set this to an empty object to remove default styles.
+        </dd>
+
+        <dt>smallHeadingClass <span class="dlMeta">[ Type: String ]</span></dt>
+        <dd>
+          When included, the class on small
+          headings (&lt;h2&gt;) will be set to this String. If using this, set
+          smallHeadingStyle (below) to an empty object to remove default styles.
+        </dd>
+
+        <dt>smallHeadingStyle <span class="dlMeta">[ Type: Object ]</span></dt>
+        <dd>
+          An Object containing CSS rules
+          to be applied to small headings (&lt;h2&gt;). If using smallHeadingClass
+          (above), set this to an empty object to remove default styles.
+        </dd>
+
+        <dt>imgClass <span class="dlMeta">[ Type: String ]</span></dt>
+        <dd>
+          When included, the class on inserted
+          images will be set to this String. If using this, set imgStyle (below)
+          to an empty object to remove default styles.
+        </dd>
+
+        <dt>imgStyle <span class="dlMeta">[ Type: Object ]</span></dt>
+        <dd>
+          An Object containing CSS rules
+          to be applied to inserted images. If using imgClass (above), set this
+          to an empty object to remove default styles.
+        </dd>
+
+        <dt>emptyPlaceholder <span class="dlMeta">[ Type: String ]</span></dt>
+        <dd>
+          The String to use as
+          the placehoder when the editor is empty.
+        </dd>
+
+      </dl>
+
+      <h3>Default Options Object</h3>
+<pre class="prettyprint lang-javascript">
+const defaultOptions = {
+  divOrPar: 'p',
+  sectionClass: '',
+  sectionStyle: {
+    'font-size': '1.25rem',
+    'max-width': '35rem',
+    'margin-left': 'auto',
+    'margin-right': 'auto',
+  },
+  containerClass: '',
+  containerStyle: {
+    'min-height': '2em',
+    'max-width': '100%',
+    margin: '1em auto',
+    padding: '0em 1.5rem',
+    'font-size': '1.25rem',
+    'font-family': "'Crimson Text', serif",
+    outline: 'none',
+    color: '#333',
+  },
+  largeHeadingClass: '',
+  largeHeadingStyle: {
+    'font-size': ''2rem',
+    'max-width': '35rem',
+    'margin-left': 'auto',
+    'margin-right': 'auto',
+  },
+  smallHeadingClass: '',
+  smallHeadingStyle: {
+    'font-size': '1.5rem',
+    'max-width': '35rem',
+    'margin-left': 'auto',
+    'margin-right': 'auto',
+  },
+  imgClass: '',
+  imgStyle: {
+    'margin-left': 'auto',
+    'margin-right': 'auto',
+    'max-width': '100%',
+  },
+  emptyPlaceholder: 'Try writing here...',
+};
+</pre>
+    </div>
 
     <script type="text/javascript">
     document.addEventListener('DOMContentLoaded', () => {
@@ -80,6 +282,7 @@ const wf = WriteFree(ctn);
         }
       }
       const wf = WriteFree(document.getElementById('wfContainer'), options);
+      window.wf = wf;
     });
     </script>
   </body>
