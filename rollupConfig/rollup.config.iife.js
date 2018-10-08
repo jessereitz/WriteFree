@@ -13,7 +13,7 @@ const plugins = [
 
 let sourceMap = true;
 
-if (process.env.buildTarget === 'PROD') {
+if (process.env.BUILDTARGET === 'PROD') {
   plugins.push(uglify());
   sourceMap = false;
 }
