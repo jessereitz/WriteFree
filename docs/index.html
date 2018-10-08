@@ -8,12 +8,11 @@
     <!-- <script src="/home/jessereitz/Documents/dev/WriteFree/build/js/writefree.min.js" type="text/javascript"></script> -->
     <script crossorigin src="https://cdn.jsdelivr.net/npm/writefree@1.2.10/build/js/writefree.min.js" type="text/javascript"></script>
     <script crossorigin src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
-    <!-- <link href="https://cdn.jsdelivr.net/combine/gh/jessereitz/branding/assets/css/site.min.css,gh/jessereitz/branding/assets/css/code-theme.css" type="text/css" rel="stylesheet"> -->
-    <link href="./assets/css/site.css" type="text/css" rel="stylesheet">
-    <link href="./assets/css/code-theme.css" type="text/css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/gh/jessereitz/branding@0.0.2/assets/js/rbrandlib.js" type="text/javascript"></script>
+    <link href="https://cdn.jsdelivr.net/combine/gh/jessereitz/branding@0.0.2/assets/css/site.min.css,gh/jessereitz/branding@0.0.2/assets/css/code-theme.css" type="text/css" rel="stylesheet">
   </head>
   <body>
-      <h1 class="align-center">WriteFree</h1>
+      <h1 id="WriteFree" class="menuTarget align-center">WriteFree</h1>
       <div class="align-center font-medium v-margin-large">
         <i class="sub-heading padding-small">" Write Freely "</i>
       </div>
@@ -65,6 +64,12 @@
 
       <div class="hover-card">
         <h2 id="quickStart" class="menuTarget">Quick Start</h2>
+        <p>
+          First, grab WriteFree from the jsDelivr CDN:
+        </p>
+<pre class="prettyprint lang-html">
+&lt;script crossorigin src="https://cdn.jsdelivr.net/npm/writefree@1.2.10/build/js/writefree.min.js" type="text/javascript"&gt;&lt;/script&gt;
+</pre>
         <p>
           Create a div to use as a container for WriteFree:
         </p>
