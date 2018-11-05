@@ -42,7 +42,7 @@
     "css-to-js": "./node_modules/.bin/es-string css/site.css src/tb_components/style.js",
     "build-iife": "./node_modules/.bin/rollup -c rollupConfig/rollup.config.iife.js",
     "build-es6": "./node_modules/.bin/rollup -c rollupConfig/rollup.config.es6.js",
-    "watchBuild": "npm run sass-watch | ./node_modules/.bin/rollup -c -w rollupConfig/rollup.config.es6.js",
+    "watchBuild": "npm run sass-watch | ./node_modules/.bin/rollup -w -c rollupConfig/rollup.config.es6.js",
     "build-prod": "npm run sass-build && npm run css-to-js && BUILDTARGET='PROD' npm run build-iife && npm run build-es6"
   }
 }

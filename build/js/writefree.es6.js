@@ -494,7 +494,12 @@ const BaseToolbar = {
     this.$btnCtn = generateElement('div', tbClass.btnCtn);
     this.$ctn.appendChild(this.$btnCtn);
 
-    // this.createToolbarBtns();
+    this.$ctn.addEventListener('click', (e) => {
+      if (e.target === this.$ctn) {
+        this.hide();
+      }
+    });
+    console.log(this.$ctn);
     this.input = Object.create(ToolbarInput);
     this.editor.$ctn.appendChild(this.$ctn);
     return this;
@@ -507,8 +512,6 @@ const BaseToolbar = {
    */
   getButtonsWidth() {
     const childNodes = this.$btnCtn.children;
-    const boundingRect = childNodes[0].getBoundingClientRect();
-    // debugger;
     return (16 * 2.5) * childNodes.length;
   },
 
@@ -518,7 +521,6 @@ const BaseToolbar = {
    * @returns {number} The height of the button container.
    */
   getButtonsHeight() {
-    const boundingRect = this.$btnCtn.firstChild.getBoundingClientRect();
     return (16 * 2.3);
   },
 

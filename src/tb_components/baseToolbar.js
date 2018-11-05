@@ -43,7 +43,11 @@ const BaseToolbar = {
     this.$btnCtn = generateElement('div', tbClass.btnCtn);
     this.$ctn.appendChild(this.$btnCtn);
 
-    // this.createToolbarBtns();
+    this.$ctn.addEventListener('click', (e) => {
+      if (e.target === this.$ctn) {
+        this.hide();
+      }
+    });
     this.input = Object.create(ToolbarInput);
     this.editor.$ctn.appendChild(this.$ctn);
     return this;
