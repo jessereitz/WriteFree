@@ -493,13 +493,6 @@ const BaseToolbar = {
     );
     this.$btnCtn = generateElement('div', tbClass.btnCtn);
     this.$ctn.appendChild(this.$btnCtn);
-
-    this.$ctn.addEventListener('click', (e) => {
-      if (e.target === this.$ctn) {
-        this.hide();
-      }
-    });
-    console.log(this.$ctn);
     this.input = Object.create(ToolbarInput);
     this.editor.$ctn.appendChild(this.$ctn);
     return this;
@@ -796,6 +789,11 @@ editToolbar.init = function init(editor, options) {
   this.initToolbar(editor, options);
   this.input.init(this.displayButtons.bind(this), this.$ctn);
   this.createToolbarBtns();
+  this.$ctn.addEventListener('click', (e) => {
+    if (e.target === this.$ctn || e.target === this.$btnCtn) {
+      this.hide();
+    }
+  });
   return this;
 };
 

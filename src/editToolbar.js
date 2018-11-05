@@ -22,6 +22,11 @@ editToolbar.init = function init(editor, options) {
   this.initToolbar(editor, options);
   this.input.init(this.displayButtons.bind(this), this.$ctn);
   this.createToolbarBtns();
+  this.$ctn.addEventListener('click', (e) => {
+    if (e.target === this.$ctn || e.target === this.$btnCtn) {
+      this.hide();
+    }
+  });
   return this;
 };
 
